@@ -4,27 +4,18 @@ import { useRef, useState } from "react";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-export default function MultipleSelect({selected, setSelected}){
+export default function MultipleSelect({selected, setSelected, dataKerja}){
   const [query, setQuery] = useState("");
   
   const [menuOpen, setMenuOpen] = useState(false);
 
   const inputRef = useRef(null);
+  const dataKerjaList = dataKerja.map((e)=>{
+    return [e.Kode, e.Nama]
+  })
 
-  const tags = [
-    ["a","Tutorial"],
-    ["b","HowTo"],
-    ["c","DIY"],
-    ["d","Review"],
-    ["e","Tech"],
-    ["f","Gaming"],
-    ["g","Travel"],
-    ["h","Fitness"],
-    ["i","Cooking"],
-    ["j","Vlog"],
-  ];
 
-  const filteredTags = tags.filter(
+  const filteredTags = dataKerjaList.filter(
     (item) =>
       item[1]?.toLocaleLowerCase()?.includes(query.toLocaleLowerCase()?.trim()) &&
       !selected.includes(item[0])
@@ -48,7 +39,7 @@ export default function MultipleSelect({selected, setSelected}){
                   className="rounded-full w-fit py-1.5 px-3 border border-gray-400 bg-gray-50 text-gray-500
                   flex items-center gap-2"
                 >
-                  {tags.find(e=>e[0]==tag)[1]}
+                  {dataKerjaList.find(e=>e[0]==tag)[1]}
                   <div
                     className="cursor-pointer"
                     onMouseDown={(e) => e.preventDefault()}
