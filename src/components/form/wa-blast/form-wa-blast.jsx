@@ -26,7 +26,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
             setSubmit(true)
             return
         }
-        
         const data = {
             awal_tenor: typeof value.startDate == 'string' ? value.startDate : `${value.startDate.getFullYear()}-${(value.startDate.getMonth() + 1).toString().padStart(2, '0')}-${value.startDate.getDate().toString().padStart(2, '0')}`,
             akhir_tenor:typeof value.endDate == 'string' ? value.endDate : `${value.endDate.getFullYear()}-${(value.endDate.getMonth() + 1).toString().padStart(2, '0')}-${value.endDate.getDate().toString().padStart(2, '0')}`,
@@ -34,14 +33,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
             kode_kerja_filter_type:kodeKerjaFilter,
             kode_kerja:selected
         }
-
-            let formData = new FormData();
-            formData.append("awal_tenor", typeof value.startDate == 'string' ? value.startDate : `${value.startDate.getFullYear()}-${(value.startDate.getMonth() + 1).toString().padStart(2, '0')}-${value.startDate.getDate().toString().padStart(2, '0')}`)
-            formData.append("akhir_tenor",typeof value.endDate == 'string' ? value.endDate : `${value.endDate.getFullYear()}-${(value.endDate.getMonth() + 1).toString().padStart(2, '0')}-${value.endDate.getDate().toString().padStart(2, '0')}`)
-            formData.append("no_leas",noLeas)
-            formData.append("kode_kerja_filter_type",kodeKerjaFilter)
-            formData.append("kode_kerja",selected)   
-
         const response = await fetch("/api/export-data-wa-blast",{
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "no-cors", // no-cors, *cors, same-origin
@@ -53,43 +44,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
         const response1 =  await response.blob()
         console.log("ini blob yg ini", response1)
 
-        // let response = await fetch("http://127.0.0.1:3001" + "/export-data-wa-blast", {
-        //     method: "POST",
-        //     headers: {
-        //     // "Content-Type": "application/json",
-        //     Accept: "*/*",
-        //     },
-        //     body: formData,
-        //     mode: "no-cors",
-        // });
-        // let response1 = await response.blob();
-        // console.log("ini data blob lagi nih", response1);
-
-        // let response;
-    //     fetch("http://127.0.0.1:3001" + "/export-data-wa-blast", {
-    //     method: "POST",
-    //     headers: {
-    //     // "Content-Type": "application/json",
-    //     Accept: "*/*",
-    //     },
-    //     body: formData,
-    //     mode: "no-cors",
-    // })
-    //     .then((data) => {
-    //     return data.blob();
-    //     })
-    //     .then(async (data) => {
-    //         response=data
-    //         console.log("ini blob ", data)
-    //         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(data)
-    //         if(aBlobUrl.current)aBlobUrl.current.download = "File Download.xlsx"
-    //         aBlobUrl.current?.click()
-    //     })
-    //     .catch((error) => {
-    //     console.log("ini errornya ", error);
-    //     });
-
-        // console.log("ini response blob", blob)  
         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(response1)
         if(aBlobUrl.current)aBlobUrl.current.download = "File Download.xlsx"
         aBlobUrl.current?.click()
