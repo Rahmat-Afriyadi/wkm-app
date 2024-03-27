@@ -1,7 +1,8 @@
 // import DatePicker from "@/components/form/datepicker/datepicker"
 
-import FormWaBlast from "@/components/form/wa-blast/form-wa-blast"
-import { getData } from "@/hooks/fetch-hook"
+import { Suspense } from "react"
+import FormWaBlast from "../../../components/form/wa-blast/form-wa-blast"
+import { getData } from "../../../hooks/fetch-hook"
 
 export default async function Page(){
 
@@ -12,7 +13,9 @@ export default async function Page(){
     return (
         <>
             <p className="text-xl font-bold">Export Data WA Blast</p>
-            <FormWaBlast dataKerja={await kerjaRes.json()} dataLeas={await leasRes.json()}/>
+            <Suspense>
+                <FormWaBlast dataKerja={await kerjaRes.json()} dataLeas={await leasRes.json()}/>
+            </Suspense>
             
         </>
     )

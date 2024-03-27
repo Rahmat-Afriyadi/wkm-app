@@ -1,7 +1,7 @@
 "use client"
 
 import { Disclosure } from "@headlessui/react";
-import { navigation, secondaryNavigation } from "@/components/organisms/sidebar/item"
+import { navigation, secondaryNavigation } from "./item"
 import { useSelectedLayoutSegment } from "next/navigation";
 import { ArrowLeftStartOnRectangleIcon,Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";

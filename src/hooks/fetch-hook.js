@@ -12,8 +12,13 @@ export const postData = async (url, data) => {
   return response;
 };
 
-export const getData = async (url) => {
+export const getData = async (url, token) => {
   const baseUrl = "http://127.0.0.1:3001";
-  const response = await fetch(baseUrl + url);
+  const response = await fetch(baseUrl + url, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
   return response;
 };

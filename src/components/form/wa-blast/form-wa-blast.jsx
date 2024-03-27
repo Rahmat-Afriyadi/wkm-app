@@ -4,8 +4,6 @@ import { useState, useRef } from "react";
 
 import DatePicker from "../datepicker/datepicker";
 import MultipleSelect from "../multiple-select";
-import { postData } from "@/hooks/fetch-hook";
-import axios from "axios"
 
 export default function FormWaBlast({dataKerja, dataLeas}){
     const [selected, setSelected] = useState([]);
@@ -18,6 +16,9 @@ export default function FormWaBlast({dataKerja, dataLeas}){
     const handleValueChange = (newValue) => {
         setValue(newValue); 
     } 
+
+
+    console.log("ini datalease ", dataLeas)
 
 
     const handleSubmit = async() =>{
