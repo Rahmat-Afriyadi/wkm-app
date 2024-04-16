@@ -2,34 +2,19 @@ import { ChartPieIcon, Cog6ToothIcon, UsersIcon, DocumentDuplicateIcon, FolderIc
 
 const navigation = [
   {
-    name: "Dashboard",
-    to: "/dashboard",
+    name: "Beranda",
+    to: "/beranda",
     icon: ChartPieIcon,
   },
   {
-    name: "Deployments",
-    to: "/deployments",
+    name: "Export WA Blast",
+    to: "/wa-blast",
     icon: UsersIcon,
   },
   {
-    name: "Assets",
-    to: "/assets",
+    name: "Edit Jenis Bayar",
+    to: "/edit-jenis-bayar",
     icon: FolderIcon,
-  },
-  {
-    name: "Sites",
-    to: "/sites",
-    icon: ChartPieIcon,
-  },
-  {
-    name: "Users",
-    to: "/users",
-    icon: UsersIcon,
-  },
-  {
-    name: "Roles",
-    to: "/roles",
-    icon: DocumentDuplicateIcon,
   },
 ];
 

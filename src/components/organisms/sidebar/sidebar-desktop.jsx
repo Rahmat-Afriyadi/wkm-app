@@ -5,7 +5,7 @@ import { navigation, secondaryNavigation } from "./item"
 import { useSelectedLayoutSegment } from "next/navigation";
 import { ArrowLeftStartOnRectangleIcon,Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-// import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -40,7 +40,7 @@ export default function SidebarDesktop({open, setOpen
                           href={item.to}
                           className={classNames(
                             item.to === `/${segment}`
-                              ? "bg-cyan-700 text-white"
+                              ? "bg-black text-yellow"
                               : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}>
@@ -50,15 +50,15 @@ export default function SidebarDesktop({open, setOpen
                           }}
                             className={classNames(
                               item.to === `/${segment}`
-                                ? "text-white"
+                                ? "bg-black text-yellow"
                                 : "text-cyan-200 group-hover:text-yellow",
-                              "h-6 w-6 shrink-0",
+                              "h-6 w-6 shrink-0 mr-2",
                               !open? "scale-125" :""
                             )}
                             aria-hidden="true"
                           />
-                          <span style={{transition: "transform 0.5s ease-in-out"}} className={`${!open? "translate-x-2":""}`}>
-                            {item.name}
+                          <span style={{transition: "transform 0.5s ease-in-out"}} className={`${!open? "translate-x-2 opacity-0":""}`}>
+                            {!open ? "- ":item.name}
                           </span>
                         </a>
                       </li>
@@ -103,11 +103,11 @@ export default function SidebarDesktop({open, setOpen
                         type="button"
                         onClick={()=>{
                           console.log("oke")
-                          // signOut({ redirect: false }).then(() => {
-                          //   void signIn();
-                          // });
+                          signOut({ redirect: false }).then(() => {
+                            void signIn();
+                          });
                         }}
-                          className="text-cyan-200 hover:text-yellow hover:bg-cyan-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold">
+                          className="text-cyan-200 hover:text-yellow hover:bg-cyan-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold cursor-pointer">
                           <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-cyan-500">
                             <ArrowLeftStartOnRectangleIcon
                             style={{

@@ -16,7 +16,7 @@ export default function Page() {
   const onSubmit = async (data) => {
     const result = await signIn("credentials", {
       redirect: false,
-      username: data.email,
+      username: data.username,
       password: data.password,
     });
     if (!result?.ok) {
@@ -26,7 +26,7 @@ export default function Page() {
     router.push(
         searchParams.get("callbackUrl")
           ? searchParams?.get("callbackUrl")
-          : "/dashboard"
+          : "/wa-blast"
       );
   };
 
@@ -39,7 +39,7 @@ export default function Page() {
       router.push(
         searchParams.get("callbackUrl")
           ? searchParams?.get("callbackUrl")
-          : "/dashboard"
+          : "/wa-blast"
       );
     }
   }, [status, router, searchParams]);
@@ -51,15 +51,15 @@ export default function Page() {
           <label
             htmlFor="email"
             className="block text-sm font-medium leading-6 text-gray-900">
-            Email address
+            Username
           </label>
           <div className="mt-2">
             <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              {...register("email", {
+              id="username"
+              name="username"
+              type="text"
+              autoComplete="username"
+              {...register("username", {
                 required: "This field is required",
               })}
               required

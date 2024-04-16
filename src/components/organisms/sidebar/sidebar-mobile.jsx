@@ -2,7 +2,7 @@ import React, { Fragment } from "react";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { Dialog, Disclosure, Transition } from "@headlessui/react";
 
-import { navigation, secondaryNavigation } from "@/components/sidebar/item"
+import { navigation, secondaryNavigation } from "@/components/organisms/sidebar/item"
 import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { signIn, signOut } from "next-auth/react";

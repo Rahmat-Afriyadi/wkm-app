@@ -18,9 +18,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
     } 
 
 
-    console.log("ini datalease ", dataLeas)
-
-
     const handleSubmit = async() =>{
         setSubmit(false)
         if(noLeas==""||selected.length==0||!value){
@@ -43,10 +40,14 @@ export default function FormWaBlast({dataKerja, dataLeas}){
             body: JSON.stringify(data)
         });
         const response1 =  await response.blob()
-        console.log("ini blob yg ini", response1)
+        const namaLeas = dataLeas[dataLeas.findIndex(e=>e.Kode==noLeas)].Nama
+        const listKerja = data.kode_kerja.map(e=>{
+            return dataKerja[dataKerja.findIndex(f=>f.Kode==e)].Nama
+        }).join(", ")
+        const filename = `Data Wa Blast ${namaLeas} ${data.kode_kerja_filter_type} [${listKerja}] periode ${data.awal_tenor} - ${data.akhir_tenor}.xlsx`
 
         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(response1)
-        if(aBlobUrl.current)aBlobUrl.current.download = "File Download.xlsx"
+        if(aBlobUrl.current)aBlobUrl.current.download = filename
         aBlobUrl.current?.click()
         console.log("ini hasil ", response)
     }
