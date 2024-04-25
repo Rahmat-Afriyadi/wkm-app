@@ -1,6 +1,4 @@
 "use client"
-import { PostFileApi } from '@/lib/fetchApi'
-import { useSession } from 'next-auth/react'
 import { useState } from 'react'
 import Files from 'react-files'
 
@@ -10,7 +8,6 @@ export default function UploadFileForm(){
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
     const [files, setFiles] = useState([])
-    const {data:session} = useSession()
 
     return (
         <div className='mt-6'>
@@ -61,7 +58,8 @@ export default function UploadFileForm(){
                 method:"POST",
                 body:data
             })
-            setMessage("Data Berhasil di update")
+            const responseResultJson = await result.json()
+            setMessage(responseResultJson.message.message)
         }}
         >Upload</button>
         </div>
