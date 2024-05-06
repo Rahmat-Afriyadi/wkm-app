@@ -34,6 +34,7 @@ export async function AuthGetApi(url) {
       Authorization: `Bearer ${session?.user.accessToken}`,
     },
   });
+  console.log("ini status code ", res.status);
   if (res.status == 403) {
     const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
     if (session) session.user.accessToken = access_token;

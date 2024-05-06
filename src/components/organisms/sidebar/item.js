@@ -16,6 +16,11 @@ const navigation = [
     to: "/edit-jenis-bayar",
     icon: FolderIcon,
   },
+  {
+    name: "Asuransi",
+    to: "/asuransi",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];

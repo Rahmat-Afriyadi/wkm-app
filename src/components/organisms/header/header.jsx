@@ -50,7 +50,7 @@ export default function Header({setSidebarOpen}) {
             />
 
             <div className="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
-              <form className="relative flex flex-1" action="#" method="GET">
+              {/* <form className="relative flex flex-1" action="#" method="GET">
                 <label htmlFor="search-field" className="sr-only">
                   Search
                 </label>
@@ -65,7 +65,7 @@ export default function Header({setSidebarOpen}) {
                   type="search"
                   name="search"
                 />
-              </form>
+              </form> */}
             </div>
             <div className="flex items-center ml-4 md:ml-6">
               {/* Profile dropdown */}
