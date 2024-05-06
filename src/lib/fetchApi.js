@@ -74,3 +74,29 @@ export async function PostFileApi(data, url) {
   }
   return await res.json();
 }
+
+export async function PostApi(data, url) {
+  const session = await getServerSession(authOptions);
+  let res = await fetch(BASE_URL + url, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${session?.user.accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+  if (res.status == 403) {
+    const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
+    if (session) session.user.accessToken = access_token;
+    if (session) session.user.refreshToken = refresh_token;
+    res = await fetch(BASE_URL + url, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.user.accessToken}`,
+      },
+      body: data,
+    });
+    return await res.json();
+  }
+  return await res.json();
+}

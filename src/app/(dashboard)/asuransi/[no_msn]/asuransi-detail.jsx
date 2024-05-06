@@ -3,14 +3,31 @@
 import { useState } from "react";
 import ListSites from "../list-items";
 import ModalListAsuransi from "../modal/list-asuransi";
+import { PostFileApi } from "../../../../lib/fetchApi";
 
 export default function AsuransiDetailPage({asuransi}){
 
 
     const [status, setStatus]= useState(asuransi.status)
-    const [submitted, setSubmit] = useState(true)
+    const [alasan, setAlasan]= useState(asuransi.alasan)
+    const [submitted, setSubmit] = useState(false)
 
     const handleSubmit = async() =>{
+        const res =  await fetch("/api/asuransi/update", {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                no_msn:asuransi.no_msn,
+                nama_customer:asuransi.nama_customer,
+                no_telepon:asuransi.no_telepon,
+                status:status,
+                alasan:alasan
+            }),
+        });
+        console.log("ini res ", res)
     }
 
     return (
@@ -59,6 +76,9 @@ export default function AsuransiDetailPage({asuransi}){
                     <select required value={status} onChange={(e)=>{
                         console.log("ini value ", e.target.value)
                         setStatus(e.target.value)
+                        if(e.target.value=="O"){
+                            setAlasan("")
+                        }
                     }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
                             <option value="P">Pending</option>
@@ -75,8 +95,8 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" />
-                    {submitted && status != "O" && "" == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
+                    type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>setAlasan(e.target.value)} disabled={status=="O"}/>
+                    {status != "O" && alasan == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
                 </div>
             </div>
             <button
