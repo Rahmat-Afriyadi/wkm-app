@@ -6,9 +6,9 @@ import Modal from "@/components/Modal/index";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Search from "@/components/Search/index"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ListKodepos from "../list-kodepos";
+import ListDealer from "../list-dealer";
 
-export default function ModalKodePos({setAlamatKirim}) {
+export default function ModalDealer({setDealer}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
@@ -44,10 +44,10 @@ function handleChange() {
             <Search
               id="search-query"
               name="search_query"
-              placeholder={"Search for a kodepos..."}/>
+              placeholder={"Search for a dealer..."}/>
             </div>
 
-            <ListKodepos searchParams={searchParams} setIsModalOpen={setIsModalOpen} setAlamatKirim={setAlamatKirim}/>
+            <ListDealer searchParams={searchParams} setIsModalOpen={setIsModalOpen} setDealer={setDealer}/>
         </div>
       </Modal>
     </>

@@ -1,12 +1,8 @@
 "use client"
 
 import { useState } from "react";
-import ListSites from "../list-items";
-import ModalListAsuransi from "../modal/list-asuransi";
-import { PostFileApi } from "../../../../lib/fetchApi";
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import ModalKodePos from "../modal/kodepos"
-import ListKodepos from "../list-kodepos"
+import ModalDealer from "../modal/dealer"
 import { useSearchParams } from "next/navigation";
 
 export default function AsuransiDetailPage({asuransi}){
@@ -20,6 +16,10 @@ export default function AsuransiDetailPage({asuransi}){
         kodepos:"",
         kelurahan:"",
         kecamatan:"",
+    })
+    const [dealer, setDealer] = useState({
+        kd_dlr:"",
+        nm_dlr:"",
     })
 
     const handleSubmit = async() =>{
@@ -134,7 +134,7 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="nm_dlr" id="" disabled/>
+                    type="text" name="nm_dlr" id="" value={dealer.nm_dlr} disabled/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -143,9 +143,10 @@ export default function AsuransiDetailPage({asuransi}){
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Kode Dealer
                 </label>    
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
+                    <ModalDealer setDealer={setDealer}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kd_dlr" id=""/>
+                    type="text" name="kd_dlr" id="" value={dealer.kd_dlr}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -180,6 +181,28 @@ export default function AsuransiDetailPage({asuransi}){
                     <ModalKodePos setAlamatKirim={setAlamatKirim}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="kodepos" id="" value={alamatKirim.kodepos}/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Jenis Barang
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="jenis_barang" id="" />
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Harga
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="number" name="kelurahan" id=""  />
                 </div>
             </div>
             <button
