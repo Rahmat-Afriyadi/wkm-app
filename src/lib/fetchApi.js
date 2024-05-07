@@ -93,8 +93,9 @@ export async function PostApi(data, url) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${session?.user.accessToken}`,
+        "Content-Type": "application/json",
       },
-      body: data,
+      body: JSON.stringify(data),
     });
     return await res.json();
   }

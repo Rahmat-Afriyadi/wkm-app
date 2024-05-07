@@ -8,7 +8,7 @@ function classNames(...classes) {
 }
 
 
-const Site = ({ site, id }) => {
+const Asuransi = ({ site, id }) => {
 
   const router = useRouter()
 
@@ -28,6 +28,6 @@ const Site = ({ site, id }) => {
   } else return null;
 };
 
-const memoizedSite = memo(Site);
+const memoizedSite = memo(Asuransi);
 
 export default memoizedSite;

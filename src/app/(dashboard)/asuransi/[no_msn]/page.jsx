@@ -6,7 +6,6 @@ import AsuransiDetailPage from "./asuransi-detail";
 export default async function Page({params}) {
     const {no_msn} = params
     const asuransi = await AuthGetApi("/asuransi/"+no_msn)
-    console.log("ini nomor mesin ", asuransi)
     return (
         <main className="h-full min-h-screen p-5">
         <ModalListAsuransi>

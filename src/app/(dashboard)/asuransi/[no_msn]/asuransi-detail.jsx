@@ -4,13 +4,23 @@ import { useState } from "react";
 import ListSites from "../list-items";
 import ModalListAsuransi from "../modal/list-asuransi";
 import { PostFileApi } from "../../../../lib/fetchApi";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import ModalKodePos from "../modal/kodepos"
+import ListKodepos from "../list-kodepos"
+import { useSearchParams } from "next/navigation";
 
 export default function AsuransiDetailPage({asuransi}){
-
+    const searchParams = useSearchParams()
 
     const [status, setStatus]= useState(asuransi.status)
     const [alasan, setAlasan]= useState(asuransi.alasan)
     const [submitted, setSubmit] = useState(false)
+    const [message, setMessage] = useState("")
+    const [alamatKirim, setAlamatKirim] = useState({
+        kodepos:"",
+        kelurahan:"",
+        kecamatan:"",
+    })
 
     const handleSubmit = async() =>{
         const res =  await fetch("/api/asuransi/update", {
@@ -27,12 +37,18 @@ export default function AsuransiDetailPage({asuransi}){
                 alasan:alasan
             }),
         });
-        console.log("ini res ", res)
+        console.log("ini status code nya", res.status)
+        if (res.status == 200) {
+            console.log("ini res nya ", await res.json().message)
+        }
     }
 
     return (
         
         <div className="mt-6 space-y-6 sm:mt-5 sm:space-y-5">
+            {message != '' && <div className='bg-green-500 rounded-lg mb-4 text-white flex justify-center text-lg p-4'>
+                {message}
+            </div>}
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="kode-kerja"
@@ -63,7 +79,18 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" value={asuransi.no_telepon}/>
+                    type="text" name="no_telepon" id="" value={asuransi.no_telepon} disabled/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Nomor Telepon 2
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="no_telepon2" id="" value={asuransi.no_telepon}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -97,6 +124,62 @@ export default function AsuransiDetailPage({asuransi}){
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>setAlasan(e.target.value)} disabled={status=="O"}/>
                     {status != "O" && alasan == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Nama Dealer
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="nm_dlr" id="" disabled/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Kode Dealer
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="kd_dlr" id=""/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Kecamatan
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="kecamatan" id="" disabled={true} value={alamatKirim.kecamatan}/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Kelurahan
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="kelurahan" id="" disabled={true} value={alamatKirim.kelurahan}/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Kode Pos
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
+                    <ModalKodePos setAlamatKirim={setAlamatKirim}/>
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="kodepos" id="" value={alamatKirim.kodepos}/>
                 </div>
             </div>
             <button

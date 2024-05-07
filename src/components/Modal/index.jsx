@@ -3,12 +3,14 @@
 import React, { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { title } from "process";
 
 export default function Modal({
   isModalOpen,
   setIsModalOpen,
   handleSubmit,
   children,
+  title
 }) {
   const cancelButtonRef = useRef(null);
 
@@ -38,7 +40,7 @@ export default function Modal({
                 leave="transform transition ease-in-out duration-500 sm:duration-700"
                 leaveFrom="translate-x-0"
                 leaveTo="translate-x-full">
-                <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
+                <Dialog.Panel className="pointer-events-auto w-screen max-w-xl">
                   <form 
                   onSubmit={handleSubmit}
                   className="flex h-full flex-col divide-y divide-gray-200 bg-white shadow-xl"
@@ -50,7 +52,7 @@ export default function Modal({
                         <div className="flex items-start justify-between space-x-3">
                           <div className="space-y-1">
                             <Dialog.Title className="text-base font-semibold leading-6 text-gray-900">
-                              List Data
+                              {title}
                             </Dialog.Title>
                           </div>
                           <div className="flex h-7 items-center">
