@@ -12,10 +12,10 @@ export default function ListDealer({setIsModalOpen, setDealer}) {
 
   useEffect(()=>{
     (async () => {
-      const response = await fetch("/api/dealer?" + new URLSearchParams({ search: searchParams.get("search_query") }))
+      const response = await fetch("/api/dealer?" + new URLSearchParams({ search: searchParams.get("search_query") === null ? "" : searchParams.get("search_query") }))
       if (response.status == 200) {
         const data = await response.json()
-        setTableContent(data.response.map((item, i) => {
+        setTableContent(data?.response.map((item, i) => {
           return (
             <Dealer
                 setDealer={setDealer}

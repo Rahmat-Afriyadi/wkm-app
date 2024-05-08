@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ModalKodePos from "../modal/kodepos"
 import ModalDealer from "../modal/dealer"
 import { useSearchParams } from "next/navigation";
@@ -12,6 +12,7 @@ export default function AsuransiDetailPage({asuransi}){
     const [alasan, setAlasan]= useState(asuransi.alasan)
     const [submitted, setSubmit] = useState(false)
     const [message, setMessage] = useState("")
+    const [produks, setProduks] = useState([])
     const [alamatKirim, setAlamatKirim] = useState({
         kodepos:"",
         kelurahan:"",
@@ -21,27 +22,35 @@ export default function AsuransiDetailPage({asuransi}){
         kd_dlr:"",
         nm_dlr:"",
     })
+    const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
+        setFormData({...formData, ...alamatKirim, ...dealer})
+        console.log("ini formdata ", formData)
         const res =  await fetch("/api/asuransi/update", {
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                no_msn:asuransi.no_msn,
-                nama_customer:asuransi.nama_customer,
-                no_telepon:asuransi.no_telepon,
-                status:status,
-                alasan:alasan
-            }),
+            body: JSON.stringify(formData),
         });
         console.log("ini status code nya", res.status)
         if (res.status == 200) {
             console.log("ini res nya ", await res.json().message)
         }
     }
+
+    useEffect(()=>{
+    (async () => {
+      const response = await fetch("/api/produk")
+      if (response.status == 200) {
+        const data = await response.json()
+        console.log("ini data ", data)
+        setProduks(data.response)
+      }
+    })()
+  },[])
 
     return (
         
@@ -101,10 +110,14 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <select required value={status} onChange={(e)=>{
-                        console.log("ini value ", e.target.value)
                         setStatus(e.target.value)
+                        setFormData({...formData, status:e.target.value})
                         if(e.target.value=="O"){
                             setAlasan("")
+                        } else if (e.target.value == 'P') {
+                            setAlasan(formData.alasan_pending)
+                        }  else if (e.target.value == 'T') {
+                            setAlasan(formData.alasan_tdk_berminat)
                         }
                     }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
@@ -122,7 +135,14 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>setAlasan(e.target.value)} disabled={status=="O"}/>
+                    type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>{
+                        if (formData.status == 'P') {
+                            setFormData({...formData, alasan_pending:e.target.value})
+                        } else if (formData.status == 'T') {
+                            setFormData({...formData, alasan_tdk_berminat:e.target.value})
+                        }
+                        setAlasan(e.target.value)
+                    }} disabled={status=="O"}/>
                     {status != "O" && alasan == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
                 </div>
             </div>
@@ -190,8 +210,17 @@ export default function AsuransiDetailPage({asuransi}){
                     Jenis Barang
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="jenis_barang" id="" />
+                    <select required value={formData.jns_brg != null ? formData.jns_brg : ""} onChange={(e)=>{
+                        setFormData({...formData, jns_brg:e.target.value})
+                        console.log("ini barang ", formData.jns_brg)
+                    }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
+                            <option value="" disabled>Please Select Status</option>
+                            {produks.length >0 && produks.map((item,i)=>{
+                                return (
+                                <option key={i} value={item.kd_produk}>{item.nm_produk}</option>
+                            )
+                            })}
+                        </select>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -202,7 +231,7 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="number" name="kelurahan" id=""  />
+                    type="number" name="kelurahan" id=""  value={formData.harga} onChange={(e)=>setFormData({...formData, harga:e.target.value})}/>
                 </div>
             </div>
             <button
@@ -216,3 +245,5 @@ export default function AsuransiDetailPage({asuransi}){
         </div>
     )
 }
+
+

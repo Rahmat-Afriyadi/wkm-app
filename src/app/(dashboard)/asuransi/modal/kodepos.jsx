@@ -24,6 +24,9 @@ export default function ModalKodePos({setAlamatKirim}) {
   }
 
 function handleChange() {
+  const params = new URLSearchParams(searchParams);
+    params.set("search_query","");
+    replace(`${pathname}?${params}`);
     setIsModalOpen(!isModalOpen);
   }
 
