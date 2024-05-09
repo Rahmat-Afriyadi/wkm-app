@@ -16,7 +16,6 @@ export default function RootLayout({ children }) {
   const segment = useSelectedLayoutSegment()
 
   useEffect(() => {
-    console.log("ini status ", status)
     if (status === "unauthenticated") {
       void signIn(segment?segment:"");
     }

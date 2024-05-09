@@ -63,7 +63,8 @@ export default function Sidebar() {
                 index === 0 && "bg-light-white"
               } `}
             >
-              <img src={`./src/assets/${Menu.src}.png`} />
+              {/* <img src={`./src/assets/${Menu.src}.png`} /> */}
+              <Image src={`./src/assets/${Menu.src}.png`} width={40} height={40} alt={Menu.title}/>
               <span className={`${!open && "hidden"} origin-left duration-200`}>
                 {Menu.title}
               </span>

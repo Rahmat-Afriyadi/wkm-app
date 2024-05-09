@@ -1,0 +1,25 @@
+[
+  { "1": "Pikir2/Ragu2" },
+  { "2": "Telp Kembali" },
+  { "3": "Telp Tidak Diangkat" },
+  { "4": "Blm Register/Diblokir" },
+
+  { "1": "Mau Gratis" },
+  { "11": "Tidak Terpakai" },
+  { "3": "Service Ditolak" },
+  { "4": "Diskon Kecil" },
+  { "5": "Tidak Boleh sama keluarga" },
+  { "6": "Punya membership lain" },
+  { "10": "Merchant Jauh" },
+  { "13": "Motor Hilang" },
+  { "14": "Motor Dijual" },
+  { "15": "Motor Tarik Leasing" },
+  { "9": "Telp bermasalah" },
+  { "12": "Renewal di AHASS/Dealer" },
+  { "17": "Lokasi diluar Area" },
+  { "16": "Telp tidak diangkat/aktif" },
+  { "18": "Pulang Kampung" },
+  { "19": "Wilayah Diisolasi" },
+  { "20": "Tidak Mau Terima Tamu" },
+  { "21": "Channel" }
+]

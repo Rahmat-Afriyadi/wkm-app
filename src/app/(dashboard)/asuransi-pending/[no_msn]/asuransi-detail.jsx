@@ -71,7 +71,7 @@ export default function AsuransiDetailPage({asuransi}){
                 text: "Data successfully updated",
                 icon: "success",
                 preConfirm: () => {
-                    router.push("/asuransi")
+                    router.push("/asuransi-pending")
                 },
             });
         }
@@ -114,17 +114,6 @@ export default function AsuransiDetailPage({asuransi}){
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="no_msn" id="" value={asuransi.no_msn} disabled/>
-                </div>
-            </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label
-                    htmlFor="kode-kerja"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Nama Motor
-                </label>    
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="nm_mtr" id="" value={formData.nama_motor} disabled/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">

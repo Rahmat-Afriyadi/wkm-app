@@ -21,6 +21,11 @@ const navigation = [
     to: "/asuransi",
     icon: FolderIcon,
   },
+  {
+    name: "Asuransi Pending",
+    to: "/asuransi-pending",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];
