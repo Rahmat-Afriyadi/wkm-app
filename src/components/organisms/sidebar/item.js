@@ -6,16 +6,16 @@ const navigation = [
     to: "/beranda",
     icon: ChartPieIcon,
   },
-  {
-    name: "Export WA Blast",
-    to: "/wa-blast",
-    icon: UsersIcon,
-  },
-  {
-    name: "Edit Jenis Bayar",
-    to: "/edit-jenis-bayar",
-    icon: FolderIcon,
-  },
+  // {
+  //   name: "Export WA Blast",
+  //   to: "/wa-blast",
+  //   icon: UsersIcon,
+  // },
+  // {
+  //   name: "Edit Jenis Bayar",
+  //   to: "/edit-jenis-bayar",
+  //   icon: FolderIcon,
+  // },
   {
     name: "Asuransi",
     to: "/asuransi",
