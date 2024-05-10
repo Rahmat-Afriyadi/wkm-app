@@ -55,8 +55,6 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
-        setFormData({...formData, ...alamatKirim, ...dealer})
-        console.log("ini formdata ", formData)
         const res =  await fetch("/api/asuransi/update", {
             method: "POST",
             headers: {
@@ -76,6 +74,14 @@ export default function AsuransiDetailPage({asuransi}){
             });
         }
     }
+
+    useEffect(()=>{
+        return setFormData({...formData, ...dealer})
+    },[dealer])
+
+    useEffect(()=>{
+        return setFormData({...formData, ...alamatKirim})
+    },[alamatKirim])
 
     useEffect(()=>{
     (async () => {

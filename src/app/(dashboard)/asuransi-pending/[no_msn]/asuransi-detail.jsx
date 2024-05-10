@@ -53,9 +53,9 @@ export default function AsuransiDetailPage({asuransi}){
         nm_dlr:asuransi.nm_dlr,
     })
     const [formData, setFormData] = useState(asuransi)
+    console.log("ini asuransi ", asuransi)
 
     const handleSubmit = async() =>{
-        setFormData({...formData, ...alamatKirim, ...dealer})
         console.log("ini formdata ", formData)
         const res =  await fetch("/api/asuransi/update", {
             method: "POST",
@@ -65,17 +65,25 @@ export default function AsuransiDetailPage({asuransi}){
             },
             body: JSON.stringify(formData),
         });
-        if (res.status == 200) {
-            Swal.fire({
-                title: "Good job!",
-                text: "Data successfully updated",
-                icon: "success",
-                preConfirm: () => {
-                    router.push("/asuransi-pending")
-                },
-            });
-        }
+        // if (res.status == 200) {
+        //     Swal.fire({
+        //         title: "Good job!",
+        //         text: "Data successfully updated",
+        //         icon: "success",
+        //         preConfirm: () => {
+        //             router.push("/asuransi-pending")
+        //         },
+        //     });
+        // }
     }
+
+    useEffect(()=>{
+        return setFormData({...formData, ...dealer})
+    },[dealer])
+
+    useEffect(()=>{
+        return setFormData({...formData, ...alamatKirim})
+    },[alamatKirim])
 
     useEffect(()=>{
     (async () => {
