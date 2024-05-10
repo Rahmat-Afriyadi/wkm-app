@@ -55,23 +55,31 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
-        const res =  await fetch("/api/asuransi/update", {
-            method: "POST",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(formData),
-        });
-        if (res.status == 200) {
+        if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
-                title: "Good job!",
-                text: "Data successfully updated",
-                icon: "success",
-                preConfirm: () => {
-                    router.push("/asuransi")
-                },
+                title: "Peringatan",
+                text: "Tolong lengkapi data ",
+                icon: "info",
             });
+        } else {
+            const res =  await fetch("/api/asuransi/update", {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+            if (res.status == 200) {
+                Swal.fire({
+                    title: "Good job!",
+                    text: "Data successfully updated",
+                    icon: "success",
+                    preConfirm: () => {
+                        router.push("/asuransi")
+                    },
+                });
+            }
         }
     }
 

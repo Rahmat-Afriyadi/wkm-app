@@ -26,7 +26,7 @@ export default function Page() {
     router.push(
         searchParams.get("callbackUrl")
           ? searchParams?.get("callbackUrl")
-          : "/wa-blast"
+          : "/beranda"
       );
   };
 
@@ -39,7 +39,7 @@ export default function Page() {
       router.push(
         searchParams.get("callbackUrl")
           ? searchParams?.get("callbackUrl")
-          : "/wa-blast"
+          : "/beranda"
       );
     }
   }, [status, router, searchParams]);

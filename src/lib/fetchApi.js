@@ -89,7 +89,6 @@ export async function PostApi(data, url) {
     },
     body: JSON.stringify(data),
   });
-  console.log("status code ", res.status);
   if (res.status == 403) {
     const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
     if (session) session.user.accessToken = access_token;
