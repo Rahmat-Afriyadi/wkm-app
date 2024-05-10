@@ -15,8 +15,9 @@ const Asuransi = ({ site, id }) => {
   if (site) {
     return (
       <>
-        <tr key={site.nama} className={classNames("cursor-pointer hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")}>
-          <td className="px-3 py-4 text-sm whitespace-nowrap" onClick={async()=>{
+        <tr key={site.nama} 
+        onClick={async()=>{
+            console.log("terklik kok ini")
             await fetch("/api/asuransi/update-ambil-data",{
               method: "POST",
               headers: {
@@ -26,10 +27,12 @@ const Asuransi = ({ site, id }) => {
               body: JSON.stringify({no_msn:site.no_msn})
             })
             router.push("/asuransi/" + site.no_msn )
-          }}>
+          }}
+        className={classNames("cursor-pointer hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")}>
+          <td className="px-3 py-4 text-sm whitespace-nowrap" >
             {site.no_msn}
           </td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap" onClick={()=>router.push("/asuransi/" + site.no_msn )}>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.nama_customer}
           </td>
         </tr>
