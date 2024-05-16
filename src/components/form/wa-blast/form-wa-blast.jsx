@@ -49,7 +49,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(response1)
         if(aBlobUrl.current)aBlobUrl.current.download = filename
         aBlobUrl.current?.click()
-        console.log("ini hasil ", response)
     }
 
 

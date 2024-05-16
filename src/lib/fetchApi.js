@@ -2,9 +2,8 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
 import { useSession } from "next-auth/react";
-import { cookies } from "next/headers";
 const BASE_URL = "http://localhost:3001";
-async function refreshToken(refreshToken) {
+export async function refreshToken(refreshToken) {
   const res = await fetch(BASE_URL + "/auth/refresh-token", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -65,8 +64,6 @@ export async function PostFileApi(data, url) {
     const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
     if (session) update({ ...session.user, accessToken: access_token });
     if (session) update({ ...session.user, refreshToken: refresh_token });
-    // if (session) session.user.accessToken = access_token;
-    // if (session) session.user.refreshToken = refresh_token;
     res = await fetch(BASE_URL + url, {
       method: "POST",
       headers: {

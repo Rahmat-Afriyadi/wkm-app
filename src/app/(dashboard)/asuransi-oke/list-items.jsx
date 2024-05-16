@@ -1,12 +1,12 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyAsuransiPending } from "@/server/asuransi/lists";
+import { readManyAsuransiOke } from "@/server/asuransi/lists";
 import dynamic from "next/dynamic";
 import Site from "./item"
 
-export default async function ListAsuransi({searchParams}) {
-  console.log("ini search params ", searchParams)
+export default async function ListSites({searchParams}) {
+
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
@@ -15,7 +15,7 @@ export default async function ListAsuransi({searchParams}) {
   const offset = limit * (pageParams - 1);
   const sortBy = searchParams?.sortBy;
 
-  const {data, page} = await readManyAsuransiPending({
+  const {data, page} = await readManyAsuransiOke({
     pageParams:pageParams,
     limit:limit,
     search:search,
@@ -50,16 +50,6 @@ export default async function ListAsuransi({searchParams}) {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Nama Customer
-                </th>
-                <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Dealer
-                </th>
-                <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Aksi
                 </th>
               </tr>
           </thead>

@@ -54,6 +54,7 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
+        console.log("ini form data yaa ", formData)
        if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
                 title: "Peringatan",
@@ -234,10 +235,11 @@ export default function AsuransiDetailPage({asuransi}){
                 <label
                     htmlFor="status-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Status
+                    Status Bayar
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={status} onChange={(e)=>{
+                    <select required defaultValue={formData.status_bayar == null ? "" : formData.status_bayar} onChange={(e)=>{
+                        setFormData({...formData, status_bayar:e.target.value})
                     }} 
                     id="status-bayar"
                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">

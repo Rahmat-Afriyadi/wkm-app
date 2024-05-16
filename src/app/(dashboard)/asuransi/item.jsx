@@ -41,6 +41,6 @@ const Asuransi = ({ site, id }) => {
   } else return null;
 };
 
-const memoizedSite = memo(Asuransi);
+const memoizedAsuransi = memo(Asuransi);
 
-export default memoizedSite;
+export default memoizedAsuransi;

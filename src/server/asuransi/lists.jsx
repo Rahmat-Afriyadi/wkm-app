@@ -11,9 +11,21 @@ export async function readManyAsuransi(query){
 }
 
 export async function readManyAsuransiPending(query){
+    const {search} = query
+
+    const response = await AuthGetApi("/asuransi/master-data-pending?" + new URLSearchParams({
+        search
+      }))
 
 
-    const response = await AuthGetApi("/asuransi/master-data-pending")
+    return {data:response,page:1}
+
+}
+
+export async function readManyAsuransiOke(query){
+
+
+    const response = await AuthGetApi("/asuransi/master-data-oke")
 
 
     return {data:response,page:1}

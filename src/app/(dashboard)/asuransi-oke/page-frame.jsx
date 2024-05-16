@@ -4,7 +4,6 @@
 import dynamic from "next/dynamic";
 import ModalFormSite from "../../../components/form/asuransi/modal-form-site";
 import { useSession } from "next-auth/react";
-import Search from "@/components/Search/index"
 
 export default function SiteFrame({children}) {
     const {data:session} = useSession()
@@ -19,13 +18,13 @@ export default function SiteFrame({children}) {
             <div className="sm:flex-auto">
             <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:items-end">
                 {/* Search */}
-                <div className="max-w-xs mr-2 w-80">
+                {/* <div className="max-w-xs mr-2 w-80">
                 <Search
                         id="search-query"
                         name="search_query"
-                        placeholder={"Search for a asuransi..."}
+                        placeholder={"Search for a site..."}
                     />
-                </div>
+                </div> */}
                 {/* <div className="w-64 mr-2">
                 <DatePicker
                     id="date_range"
@@ -43,6 +42,17 @@ export default function SiteFrame({children}) {
             </div>
             </div>
             <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            {privilege?.add ? (
+                <ModalFormSite
+                    data={undefined}
+                    type="add"
+                />
+
+            ) : (
+                <span className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-white border border-transparent rounded-md shadow-sm opacity-50 cursor-not-allowed bg-cyan-600 sm:w-auto">
+                Add site
+                </span>
+            )}
             </div>
         </div>
 

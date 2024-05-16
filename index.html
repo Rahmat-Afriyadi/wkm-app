@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <title>CardPlus</title>
+    <link href="img/8Xgl0u_cardplus_logo.png" rel="shortcut icon">
+    <link rel="stylesheet" href="bootstrap-3.6/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/dist/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="bootstrap-3.6/css/style.css">
+    <link rel="stylesheet" href="bootstrap-3.6/css/custom_style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        .b-example-divider {
+            width: 100%;
+            height: 3rem;
+            background-color: rgba(0, 0, 0, .1);
+            border: solid rgba(0, 0, 0, .15);
+            border-width: 1px 0;
+            box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+        }
+
+        .b-example-vr {
+            flex-shrink: 0;
+            width: 1.5rem;
+            height: 100vh;
+        }
+
+        .bi {
+            vertical-align: -.125em;
+            fill: currentColor;
+        }
+
+        .nav-scroller {
+            position: relative;
+            z-index: 2;
+            height: 2.75rem;
+            overflow-y: hidden;
+        }
+
+        .nav-scroller .nav {
+            display: flex;
+            flex-wrap: nowrap;
+            padding-bottom: 1rem;
+            margin-top: -1px;
+            overflow-x: auto;
+            text-align: center;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .btn-bd-primary {
+            --bd-violet-bg: #712cf9;
+            --bd-violet-rgb: 112.520718, 44.062154, 249.437846;
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: var(--bs-white);
+            --bs-btn-bg: var(--bd-violet-bg);
+            --bs-btn-border-color: var(--bd-violet-bg);
+            --bs-btn-hover-color: var(--bs-white);
+            --bs-btn-hover-bg: #6528e0;
+            --bs-btn-hover-border-color: #6528e0;
+            --bs-btn-focus-shadow-rgb: var(--bd-violet-rgb);
+            --bs-btn-active-color: var(--bs-btn-hover-color);
+            --bs-btn-active-bg: #5a23c8;
+            --bs-btn-active-border-color: #5a23c8;
+        }
+
+        .bd-mode-toggle {
+            z-index: 1500;
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="carousel.css" rel="stylesheet">
+</head>
+
+<body style="padding-bottom:0;">
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid " style="padding-top:9px;">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <a>
+                    <img class="img-responsive" src="img/8Xgl0u_cardplus_logo.png" width="150" height="40" />
+                </a>
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a class="nav-link  active" href="index.html">Home</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="our-profile.html">Our Company</a>
+                    </li>
+                    <li>
+                        <a href="our-service.html">Our Services
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="nav-link" href="#">Merchants</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">Our Clients</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">News</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="#">Contact</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container-fluid -->
+    </nav>
+    <main>
+        <!-- Marketing messaging and featurettes
+            ================================================== -->
+        <!-- Wrap the rest of the page in another container to center all the content. -->
+        <div class="row cus_con mc_con">
+            <div class="col-lg-3 col-md-3 col-sm-2 col-xs-12"></div>
+            <div class="col-lg-6 col-md-6 col-sm-8 col-xs-12">
+                <div class="row panel-group" id="accordion">
+                    <div class="panel panel-default mc_ac_def">
+                        <div class="panel-heading mc_cus_tab mc_tab_1 mc_tab_active">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
+                                    href="#ac_1">
+                                    KESEHATAN &amp; OLAHRAGA
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="ac_1" class="mc_cus_ac panel-collapse collapse in" data-id="1">
+                            <div class="panel-body">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row mc_ac_pad">
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Prodia Logo Full Color.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Helix.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/8jNz7v_Ocean_Dental.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/8Fb2yV_Lab_Kimia_Farma.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/MD2uTU_samson_fitness_logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row panel-group" id="accordion">
+                    <div class="panel panel-default mc_ac_def">
+                        <div class="panel-heading mc_cus_tab mc_tab_2 mc_tab_active">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle " data-toggle="collapse" data-parent="#accordion"
+                                    href="#ac_2">
+                                    LIFE STYLE &amp; GAYA HIDUP
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="ac_2" class="mc_cus_ac panel-collapse collapse in" data-id="2">
+                            <div class="panel-body">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="row mc_ac_pad">
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/lwzml9_Sakura_Group.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/amaris solo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/O1vNIr_Amaris.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Parkside Logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Fusion Motocare & Detailing.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Hotel Santika Banyuwangi.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Hotel Santika Kelapa Gading JKT.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Hotel Santika Logo Pekalongan.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Hotel Santika Palembang.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="row mc_ac_pad">
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/One of A Kind Bintan - Trikora Beach.jpg"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/OPTIK MELAWAI logo_1.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/RumaRuma House logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Restomax.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/MaxOne Hotels_Logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Nunia Logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Respiro Baru (Black).png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Sun In Pangandaran hotel.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <img src="img/merchant/Yello Logo.png"
+                                                    onerror="this.src='img/not_found/merchant-none.png';"
+                                                    class="img-responsive img_center" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Nite & Day Hotels.JPG"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Hotels Zia_Logo.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Marc Hotels.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row panel-group" id="accordion">
+                <div class="panel panel-default mc_ac_def">
+                    <div class="panel-heading mc_cus_tab mc_tab_3 mc_tab_active">
+                        <h4 class="panel-title">
+                            <a class="accordion-toggle " data-toggle="collapse" data-parent="#accordion" href="#ac_3">
+                                HIBURAN &amp; REKREASI
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="ac_3" class="mc_cus_ac panel-collapse collapse in" data-id="3">
+                        <div class="panel-body">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="row mc_ac_pad">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Qoy3Bk_KMC.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/CYIJ6L_Transera.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/NEWTOWN (2).png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/JLA high ress.PNG"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/XU35R8_Waterboom_Lippo_Cikarang.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/jzAtiv_Arus_Liar.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Jungle Waterpark.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Palm Bay.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Water Kingdom.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mc_ac_pad">
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Qoy3Bk_KMC.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/CYIJ6L_Transera.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/NEWTOWN (2).png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/JLA high ress.PNG"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/XU35R8_Waterboom_Lippo_Cikarang.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/jzAtiv_Arus_Liar.jpg"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Jungle Waterpark.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Palm Bay.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 mc_ac_col">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <img src="img/merchant/Water Kingdom.png"
+                                                onerror="this.src='img/not_found/merchant-none.png';"
+                                                class="img-responsive img_center" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row foot_cons">
+            <div class="row cus_con">
+                <div class="row cus_con2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <a href="http://www.localhost/wahana"><img src="img/Relationship Solution.png"
+                                                alt="CardPlus" class="img-footer" /></a>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <a href="http://www.localhost/wahana"><img src="img/Customer Care.png"
+                                                alt="CardPlus" class="img-footer" /></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="col-lg-offset-3 col-lg-3 col-md-offset-2 col-md-4 col-sm-offset-1 col-sm-5 col-xs-12">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 foot_link_con">
+                                        <a href="https://www.facebook.com/cardplusidn/" class="foot_link">
+                                            <img src="img/fb_icon.gif" class="foot_soc"></img>
+                                        </a>
+                                        <a href="https://twitter.com/CardPlus_IDN" class="foot_link">
+                                            <img src="img/twitter_icon.gif" class="foot_soc"></img>
+                                        </a>
+                                        <a href="https://www.instagram.com/cardplus.idn/" class="foot_link">
+                                            <img src="img/insta_icon_03.gif" class="foot_soc"></img>
+                                        </a>
+                                        <a href="https://www.linkedin.com/company/cardplus-indonesia/"
+                                            class="foot_link">
+                                            <img src="img/linkedin_icon.gif" class="foot_soc"></img>
+                                        </a>
+                                    </div>
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <div class="row">
+                                                <p class="foot_copy">Copyright 2024, Wahana</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    </main>
+    <script type="text/javascript" src="bootstrap-3.6/js/jquery.min.js"></script>
+    <script src="bootstrap-3.6/js/bootstrap.min.js"></script>
+    <script type="text/javascript"
+        src="http://www.localhost/wahana/components/front/js/idangerous.swiper.min.js"></script>
+    <script type="text/javascript"
+        src="http://www.localhost/wahana/components/plugins/swiper-slider/swiper.jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".mc_cus_ac").on("hide.bs.collapse", function () {
+                var a = $(this).data('id');
+                $(".mc_tab_" + a).addClass('mc_tab_inactive');
+                $(".mc_tab_" + a).removeClass('mc_tab_active');
+            });
+            $(".mc_cus_ac").on("show.bs.collapse", function () {
+                var a = $(this).data('id');
+                $(".mc_tab_" + a).addClass('mc_tab_active');
+                $(".mc_tab_" + a).removeClass('mc_tab_inactive');
+
+            });
+        });
+    </script>
+</body>
+
+</html>

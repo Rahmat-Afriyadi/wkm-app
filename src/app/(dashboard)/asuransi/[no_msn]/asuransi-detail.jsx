@@ -55,6 +55,7 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
+        console.log("ini form data yaa ", formData)
         if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
                 title: "Peringatan",
@@ -85,11 +86,11 @@ export default function AsuransiDetailPage({asuransi}){
 
     useEffect(()=>{
         return setFormData({...formData, ...dealer})
-    },[dealer])
+    },[dealer]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(()=>{
         return setFormData({...formData, ...alamatKirim})
-    },[alamatKirim])
+    },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(()=>{
     (async () => {

@@ -6,11 +6,11 @@ const navigation = [
     to: "/beranda",
     icon: ChartPieIcon,
   },
-  // {
-  //   name: "Export WA Blast",
-  //   to: "/wa-blast",
-  //   icon: UsersIcon,
-  // },
+  {
+    name: "Export WA Blast",
+    to: "/wa-blast",
+    icon: UsersIcon,
+  },
   // {
   //   name: "Edit Jenis Bayar",
   //   to: "/edit-jenis-bayar",
@@ -24,6 +24,11 @@ const navigation = [
   {
     name: "Asuransi Pending",
     to: "/asuransi-pending",
+    icon: FolderIcon,
+  },
+  {
+    name: "Asuransi Berminat",
+    to: "/asuransi-oke",
     icon: FolderIcon,
   },
 ];

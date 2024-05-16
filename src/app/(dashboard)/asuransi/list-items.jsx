@@ -3,9 +3,9 @@
 import Pagination from "@/components/Pagination/index";
 import { readManyAsuransi } from "@/server/asuransi/lists";
 import dynamic from "next/dynamic";
-import Site from "./item"
+import Asuransi from "./item"
 
-export default async function ListSites({searchParams}) {
+export default async function ListItem({searchParams}) {
 
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
@@ -29,7 +29,7 @@ export default async function ListSites({searchParams}) {
   const tableContent = data.map((item, i) => {
 
       return (
-        <Site
+        <Asuransi
           key={i}
           id={i}
           site={{ ...item }}

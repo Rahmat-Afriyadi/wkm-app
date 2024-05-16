@@ -1,6 +1,7 @@
 import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useEffect } from "react";
 
 export default function Search({ id, name, placeholder }) {
   const searchParams = useSearchParams();
@@ -12,6 +13,12 @@ export default function Search({ id, name, placeholder }) {
     params.set("search_query", e.target.value.trim());
     replace(`${pathname}?${params}`);
   }
+
+  useEffect(()=>{
+    const params = new URLSearchParams(searchParams);
+    params.set("search_query", "");
+    replace(`${pathname}?${params}`);
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
