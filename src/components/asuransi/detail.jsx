@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import ModalKodePos from "@/components/Modal/asuransi/kodepos"
-import ModalDealer from "@/components/Modal/asuransi/dealer"
+import ModalKodePos from "@/components/Modal/asuransi/modal-kodepos"
+import ModalDealer from "@/components/Modal/asuransi/modal-dealer"
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { PhoneIcon } from "@heroicons/react/20/solid";
@@ -72,14 +72,14 @@ export default function AsuransiDetailPage({asuransi}){
                 body: JSON.stringify(formData),
             });
             if (res.status == 200) {
-                Swal.fire({
-                    title: "Good job!",
-                    text: "Data successfully updated",
-                    icon: "success",
-                    preConfirm: () => {
-                        router.push("/asuransi")
-                    },
-                });
+                // Swal.fire({
+                //     title: "Good job!",
+                //     text: "Data successfully updated",
+                //     icon: "success",
+                //     preConfirm: () => {
+                //         router.push("/asuransi")
+                //     },
+                // });
             }
         }
     }

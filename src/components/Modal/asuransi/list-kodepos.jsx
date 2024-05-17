@@ -15,6 +15,7 @@ export default function ListKodepos({setIsModalOpen, setAlamatKirim}) {
       const response = await fetch("/api/kodepos?" + new URLSearchParams({ search: searchParams.get("search_query") === null ? "" : searchParams.get("search_query") }))
       if (response.status == 200) {
         const data = await response.json()
+        console.log("ini data kodepos ", data)
         setTableContent(data?.response?.map((item, i) => {
           return (
             <Kodepos
