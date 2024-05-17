@@ -144,8 +144,8 @@ export default function AsuransiDetailPage({asuransi}){
                     disabled={true}
                      className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
-                            <option value="1">Personal Accident</option>
-                            <option value="2">Motor</option>
+                            <option value="1">Motor</option>
+                            <option value="2">Personal Accident</option>
                             <option value="3" >Personal Accident & Motor</option>
                         </select>
                 </div>
