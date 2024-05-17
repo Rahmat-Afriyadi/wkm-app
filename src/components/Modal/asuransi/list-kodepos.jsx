@@ -1,6 +1,6 @@
 "use client"
 
-import Kodepos from "./modal-kodepos"
+import Kodepos from "./kodepos"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -12,11 +12,13 @@ export default function ListKodepos({setIsModalOpen, setAlamatKirim}) {
 
   useEffect(()=>{
     (async () => {
+      console.log("ini kode pos")
       const response = await fetch("/api/kodepos?" + new URLSearchParams({ search: searchParams.get("search_query") === null ? "" : searchParams.get("search_query") }))
       if (response.status == 200) {
         const data = await response.json()
-        console.log("ini data kodepos ", data)
+        console.log("ini data kodepos ", data?.response[0])
         setTableContent(data?.response?.map((item, i) => {
+          console.log("ini loopint kodepos ", item)
           return (
             <Kodepos
                 setAlamatKirim={setAlamatKirim}
