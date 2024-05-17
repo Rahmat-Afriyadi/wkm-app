@@ -72,14 +72,14 @@ export default function AsuransiDetailPage({asuransi}){
                 body: JSON.stringify(formData),
             });
             if (res.status == 200) {
-                // Swal.fire({
-                //     title: "Good job!",
-                //     text: "Data successfully updated",
-                //     icon: "success",
-                //     preConfirm: () => {
-                //         router.push("/asuransi")
-                //     },
-                // });
+                Swal.fire({
+                    title: "Good job!",
+                    text: "Data successfully updated",
+                    icon: "success",
+                    preConfirm: () => {
+                        router.push("/asuransi")
+                    },
+                });
             }
         }
     }
