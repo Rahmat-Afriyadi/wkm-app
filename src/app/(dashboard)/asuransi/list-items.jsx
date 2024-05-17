@@ -18,6 +18,7 @@ export default async function ListItem({searchParams}) {
   const {data, page} = await readManyAsuransi({
     pageParams:pageParams,
     limit:limit,
+    dataSource:searchParams?.dataSource,
     search:search,
     offset:offset,
     sortBy:sortBy,
@@ -50,6 +51,11 @@ export default async function ListItem({searchParams}) {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Nama Customer
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Jenis Asuransi
                 </th>
               </tr>
           </thead>

@@ -1,9 +1,11 @@
-import { PencilIcon } from "@heroicons/react/24/outline";
-import ModalListAsuransi from "./modal/list-asuransi"
 import ListAsuransi from "./list-items"
 import SiteFrame from "./page-frame"
-export default function Page({searchParams}) {
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+export default async function Page({searchParams}) {
     
+    const session = await getServerSession(authOptions);
+    searchParams.dataSource = session?.user.dataSource
     return (
     <main className="h-full min-h-screen p-5">
         

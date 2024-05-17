@@ -19,6 +19,7 @@ export default async function ListSites({searchParams}) {
     pageParams:pageParams,
     limit:limit,
     search:search,
+    dataSource:searchParams?.dataSource,
     offset:offset,
     sortBy:sortBy,
     active:active,
@@ -50,6 +51,16 @@ export default async function ListSites({searchParams}) {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Nama Customer
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Nama Dealer
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Aksi
                 </th>
               </tr>
           </thead>

@@ -1,8 +1,6 @@
 "use client"
 
 
-import dynamic from "next/dynamic";
-import ModalFormSite from "../../../components/form/asuransi/modal-form-site";
 import { useSession } from "next-auth/react";
 import Search from "@/components/Search/index"
 

@@ -1,15 +1,16 @@
 "use client"
 
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 
 import Modal from "@/components/Modal/index";
+import { PencilIcon } from "@heroicons/react/20/solid";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
-import { useSession } from "next-auth/react";
 
 export default function ModalListAsuransi({children}) {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const {data:session} = useSession()
+
 
   function resetModal() {
     setIsModalOpen(false)
@@ -24,8 +25,8 @@ function handleChange() {
     <>
 
         <button className="text-yellow hover:text-white bg-black p-1 rounded-lg" onClick={handleChange}>
-            <AdjustmentsHorizontalIcon className="w-6 h-5" aria-hidden="true" />
-        </button>
+                <AdjustmentsHorizontalIcon className="w-6 h-5" aria-hidden="true" />
+            </button>
 
       <Modal
         isModalOpen={isModalOpen}

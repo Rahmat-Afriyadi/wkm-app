@@ -2,8 +2,11 @@ import {AuthGetApi} from "@/lib/fetchApi"
 
 export async function readManyAsuransi(query){
 
+    const {dataSource} = query
 
-    const response = await AuthGetApi("/asuransi/master-data")
+    const response = await AuthGetApi("/asuransi/master-data?" + new URLSearchParams({
+        dataSource
+    }))
 
 
     return {data:response,page:1}
@@ -11,10 +14,11 @@ export async function readManyAsuransi(query){
 }
 
 export async function readManyAsuransiPending(query){
-    const {search} = query
+    const {search, dataSource} = query
 
     const response = await AuthGetApi("/asuransi/master-data-pending?" + new URLSearchParams({
-        search
+        search,
+        dataSource
       }))
 
 
@@ -23,9 +27,13 @@ export async function readManyAsuransiPending(query){
 }
 
 export async function readManyAsuransiOke(query){
+    const {search, dataSource} = query
 
 
-    const response = await AuthGetApi("/asuransi/master-data-oke")
+    const response = await AuthGetApi("/asuransi/master-data-oke?" + new URLSearchParams({
+        search,
+        dataSource
+      }))
 
 
     return {data:response,page:1}

@@ -35,6 +35,9 @@ const Asuransi = ({ site, id }) => {
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.nama_customer}
           </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
+            {site.jenis_asuransi == '1' ? 'Personal Accident' : site.jenis_asuransi == '2' ? 'Motor' : site.jenis_asuransi == '3' ? 'Personal Accident & Motor' :'' }
+          </td>
         </tr>
       </>
     );

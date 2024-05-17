@@ -1,6 +1,6 @@
 "use client"
 
-import Dealer from "./dealer"
+import Dealer from "./modal-dealer"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 

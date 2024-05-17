@@ -54,6 +54,7 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
+        console.log("ini form data diatas ", formData)
        if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
                 title: "Peringatan",
@@ -61,6 +62,7 @@ export default function AsuransiDetailPage({asuransi}){
                 icon: "info",
             });
         } else {
+            console.log("ini formData else ", formData)
             const res =  await fetch("/api/asuransi/update", {
                 method: "POST",
                 headers: {
@@ -92,7 +94,9 @@ export default function AsuransiDetailPage({asuransi}){
 
     useEffect(()=>{
     (async () => {
-      const response = await fetch("/api/produk")
+      const response = await fetch("/api/produk?" + new URLSearchParams({
+        jenis_asuransi:asuransi.jenis_asuransi
+    }))
       if (response.status == 200) {
         const data = await response.json()
         console.log("ini data ", data)

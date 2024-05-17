@@ -1,7 +1,7 @@
 import { AuthGetApi } from "../../../../lib/fetchApi";
 import ListSites from "../list-items";
 import ModalListAsuransi from "../modal/list-asuransi";
-import AsuransiDetailPage from "./asuransi-detail";
+import AsuransiDetailPage from "@/components/asuransi/detail";
 
 export default async function Page({params}) {
     const {no_msn} = params

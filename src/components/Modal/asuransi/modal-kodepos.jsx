@@ -6,7 +6,7 @@ import Modal from "@/components/Modal/index";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import Search from "@/components/Search/index"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ListKodepos from "../list-kodepos";
+import ListKodepos from "./list-kodepos";
 
 export default function ModalKodePos({setAlamatKirim}) {
     const searchParams = useSearchParams();

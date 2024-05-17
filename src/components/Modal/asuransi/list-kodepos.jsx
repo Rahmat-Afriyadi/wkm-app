@@ -1,6 +1,6 @@
 "use client"
 
-import Kodepos from "./kodepos"
+import Kodepos from "./modal-kodepos"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 

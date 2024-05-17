@@ -33,6 +33,6 @@ const Dealer = ({ dealer, id, setIsModalOpen, setDealer }) => {
   } else return null;
 };
 
-const memoizedDealer = memo(Dealer);
+const memoizedSite = memo(Dealer);
 
-export default memoizedDealer;
+export default memoizedSite;

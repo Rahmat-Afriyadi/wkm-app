@@ -43,6 +43,7 @@ export const authOptions = {
           name: resResult.name,
           accessToken: "resResult.access_token",
           refreshToken: resResult.refresh_token,
+          dataSource: resResult.data_source,
           // accessToken: resResult.access_token,
           // refreshToken: resResult.refresh_token,
         };

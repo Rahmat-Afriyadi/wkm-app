@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import ModalKodePos from "../modal/kodepos"
-import ModalDealer from "../modal/dealer"
+import ModalKodePos from "@/components/Modal/asuransi/kodepos"
+import ModalDealer from "@/components/Modal/asuransi/dealer"
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { PhoneIcon } from "@heroicons/react/20/solid";
@@ -54,7 +54,7 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
-        console.log("ini form data yaa ", formData)
+        console.log("ini form data diatas ", formData)
        if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
                 title: "Peringatan",
@@ -62,6 +62,7 @@ export default function AsuransiDetailPage({asuransi}){
                 icon: "info",
             });
         } else {
+            console.log("ini formData else ", formData)
             const res =  await fetch("/api/asuransi/update", {
                 method: "POST",
                 headers: {
@@ -93,14 +94,16 @@ export default function AsuransiDetailPage({asuransi}){
 
     useEffect(()=>{
     (async () => {
-      const response = await fetch("/api/produk")
+      const response = await fetch("/api/produk?" + new URLSearchParams({
+        jenis_asuransi:asuransi.jenis_asuransi
+    }))
       if (response.status == 200) {
         const data = await response.json()
         console.log("ini data ", data)
         setProduks(data.response)
       }
     })()
-  },[])
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         
@@ -128,6 +131,23 @@ export default function AsuransiDetailPage({asuransi}){
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="no_msn" id="" defaultValue={formData.no_msn} disabled/>
+                </div>
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Jenis Asuransi
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <select required defaultValue={formData.jenis_asuransi} 
+                    disabled={true}
+                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
+                            <option value="" disabled>Please Select Status</option>
+                            <option value="1">Personal Accident</option>
+                            <option value="2">Motor</option>
+                            <option value="3" >Personal Accident & Motor</option>
+                        </select>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -182,7 +202,7 @@ export default function AsuransiDetailPage({asuransi}){
                     Status
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required value={status} onChange={(e)=>{
+                    <select required defaultValue={status} onChange={(e)=>{
                         setStatus(e.target.value)
                         setFormData({...formData, status:e.target.value})
                         if(e.target.value=="O"){
@@ -208,7 +228,7 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <select className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>{
+                    type="text" name="no_telepon" id="" defaultValue={alasan} onChange={(e)=>{
                         if (formData.status == 'P') {
                             setFormData({...formData, alasan_pending:e.target.value})
                         } else if (formData.status == 'T') {
@@ -235,11 +255,10 @@ export default function AsuransiDetailPage({asuransi}){
                 <label
                     htmlFor="status-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Status Bayar
+                    Status
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={formData.status_bayar == null ? "" : formData.status_bayar} onChange={(e)=>{
-                        setFormData({...formData, status_bayar:e.target.value})
+                    <select required defaultValue={status} onChange={(e)=>{
                     }} 
                     id="status-bayar"
                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">

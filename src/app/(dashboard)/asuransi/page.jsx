@@ -1,14 +1,17 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
 import ModalListAsuransi from "./modal/list-asuransi"
 import ListSites from "./list-items"
-export default function Page() {
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+export default async function Page() {
 
-    
+    const session = await getServerSession(authOptions);
+
     return (
     <main className="h-full min-h-screen p-5">
         
         <ModalListAsuransi>
-            <ListSites/>
+            <ListSites searchParams={{dataSource:session?.user.dataSource}}/>
         </ModalListAsuransi>
         <div className="mt-6 space-y-6 sm:mt-5 sm:space-y-5">
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -62,7 +65,7 @@ export default function Page() {
                     Status
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required value={""} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
+                    <select required defaultValue={""} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
                             <option value="pending" disabled>Pending</option>
                             <option value="no" disabled>Tidak Berminat</option>

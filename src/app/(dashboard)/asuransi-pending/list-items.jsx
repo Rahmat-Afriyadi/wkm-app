@@ -6,7 +6,6 @@ import dynamic from "next/dynamic";
 import Site from "./item"
 
 export default async function ListAsuransi({searchParams}) {
-  console.log("ini search params ", searchParams)
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
@@ -17,6 +16,7 @@ export default async function ListAsuransi({searchParams}) {
 
   const {data, page} = await readManyAsuransiPending({
     pageParams:pageParams,
+    dataSource:searchParams?.dataSource,
     limit:limit,
     search:search,
     offset:offset,
