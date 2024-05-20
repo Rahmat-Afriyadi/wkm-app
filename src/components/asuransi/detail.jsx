@@ -11,7 +11,8 @@ const alasan_pending_list = [
     { "key":"1","value": "Pikir2/Ragu2" },
     { "key":"2","value": "Telp Kembali" },
     { "key":"3","value": "Telp Tidak Diangkat" },
-    { "key":"4","value": "Blm Register/Diblokir" }
+    { "key":"4","value": "Blm Register/Diblokir" },
+    { "key":"5","value": "Nomor Telepon Salah Sambung" }
 ]
 
 const alasan_tdk_berminat_list = [
