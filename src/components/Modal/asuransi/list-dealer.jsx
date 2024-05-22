@@ -4,31 +4,7 @@ import Dealer from "./dealer"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function ListDealer({setIsModalOpen, setDealer}) {
-  const searchParams = useSearchParams()
-
-  const search = searchParams.get("search_query");  
-  const [tableContent, setTableContent] = useState([])
-
-  useEffect(()=>{
-    (async () => {
-      const response = await fetch("/api/dealer?" + new URLSearchParams({ search: searchParams.get("search_query") === null ? "" : searchParams.get("search_query") }))
-      if (response.status == 200) {
-        const data = await response.json()
-        setTableContent(data?.response.map((item, i) => {
-          return (
-            <Dealer
-                setDealer={setDealer}
-                setIsModalOpen={setIsModalOpen}
-                key={i}
-                id={i}
-                dealer={{ ...item }}
-              />
-          );
-        }))
-      }
-    })()
-  },[search, searchParams, setDealer, setIsModalOpen])
+export default function ListDealer({setIsModalOpen, setDealer, dealer}) {
 
 
     return (
@@ -48,8 +24,18 @@ export default function ListDealer({setIsModalOpen, setDealer}) {
               </tr>
           </thead>
           <tbody className="bg-white">
-              {tableContent.length > 0 ? (
-              tableContent
+              {dealer.length > 0 ? (
+              dealer.map((item, i) => {
+                return (
+                  <Dealer
+                      setDealer={setDealer}
+                      setIsModalOpen={setIsModalOpen}
+                      key={i}
+                      id={i}
+                      dealer={{ ...item }}
+                    />
+                );
+              })
               ) : (
               <tr>
                   <td

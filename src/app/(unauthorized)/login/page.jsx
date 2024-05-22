@@ -2,7 +2,7 @@
 
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { BounceLoader } from "react-spinners";
 
@@ -12,6 +12,7 @@ export default function Page() {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [message, setMessage] = useState("")
 
   const onSubmit = async (data) => {
     const result = await signIn("credentials", {
@@ -21,6 +22,7 @@ export default function Page() {
     });
     if (!result?.ok) {
       console.log("Login error", result?.error);
+      setMessage(result?.error)
       return;
     }
     router.push(
@@ -46,6 +48,8 @@ export default function Page() {
   
   return (
     <>
+    {message != "" && <div className="text-center bg-red rounded-lg text-white py-1 ">{message}</div>}
+    <br/>
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label
@@ -75,13 +79,6 @@ export default function Page() {
               className="block text-sm font-medium leading-6 text-gray-900">
               Password
             </label>
-            <div className="text-sm">
-              <a
-                href="#"
-                className="font-semibold text-indigo-600 hover:text-indigo-500">
-                Forgot password?
-              </a>
-            </div>
           </div>
           <div className="mt-2">
             <input

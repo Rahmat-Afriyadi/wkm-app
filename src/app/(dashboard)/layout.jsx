@@ -23,7 +23,6 @@ export default function RootLayout({ children }) {
 
   return (
           <>
-          <SidebarMobile sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
             <SidebarDesktop open={open} setOpen={setOpen}/>
             <Header setSidebarOpen={setOpen} />
             <div className={`lg:pl-72 ${!open? "-translate-x-[220px]" : ""} duration-700 ease-in-out`}>

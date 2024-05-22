@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import ModalKodePos from "@/components/Modal/asuransi/modal-kodepos"
 import ModalDealer from "@/components/Modal/asuransi/modal-dealer"
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
 import { PhoneIcon } from "@heroicons/react/20/solid";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const alasan_pending_list = [
     { "key":"1","value": "Pikir2/Ragu2" },
@@ -35,7 +35,7 @@ const alasan_tdk_berminat_list = [
     { "key":"20", "value": "Tidak Mau Terima Tamu" },
     { "key":"21", "value": "Channel" }]
 
-export default function AsuransiDetailPage({asuransi}){
+export default function AsuransiDetailPage({asuransi, kodepos, dealerList}){
     const router = useRouter()
 
     const [status, setStatus]= useState(asuransi.status)
@@ -72,7 +72,30 @@ export default function AsuransiDetailPage({asuransi}){
                 },
                 body: JSON.stringify(formData),
             });
+            
             if (res.status == 200) {
+                if (formData.status == 'O' && asuransi.status != 'O') {
+                    const resOke =  await fetch("/api/asuransi/update/berminat", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({no_msn:formData.no_msn}),
+                    });
+                }
+
+                if (formData.status_bayar == 'C' && asuransi.status == 'O') {
+                    const resOke =  await fetch("/api/asuransi/update/batal-bayar", {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({no_msn:formData.no_msn}),
+                    });
+                }
+
                 Swal.fire({
                     title: "Good job!",
                     text: "Data successfully updated",
@@ -93,6 +116,7 @@ export default function AsuransiDetailPage({asuransi}){
         return setFormData({...formData, ...alamatKirim})
     },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
 
+
     useEffect(()=>{
     (async () => {
       const response = await fetch("/api/produk?" + new URLSearchParams({
@@ -108,9 +132,20 @@ export default function AsuransiDetailPage({asuransi}){
 
     return (
         
-        <div className="mt-6 space-y-6 sm:mt-5 sm:space-y-5">
+        <div className=" space-y-6 sm:mt-5 sm:space-y-5">
             {message != '' && <div className='bg-green-500 rounded-lg mb-4 text-white flex justify-center text-lg p-4'>
                 {message}
+            </div>}
+            {formData.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <label
+                    htmlFor="kode-kerja"
+                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                    Id Transaksi
+                </label>    
+                <div className="mt-1 sm:mt-0 sm:col-span-2">
+                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
+                    type="text" name="id_transaksi" id="id_transaksi" defaultValue={formData.id_transaksi} disabled/>
+                </div>
             </div>}
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
@@ -175,25 +210,25 @@ export default function AsuransiDetailPage({asuransi}){
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="kode-kerja"
+                    htmlFor="no_telp"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Nomor Telepon
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
                     <a href={"tel:" + formData.no_telepon}><PhoneIcon className="w-6 h-5 absolute left-[475px]  cursor-pointer top-2 hover:text-yellow" aria-hidden="true"/></a>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" defaultValue={formData.no_telepon} disabled/>
+                    type="text" name="no_telp" id="" defaultValue={formData.no_telp} disabled/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="kode-kerja"
+                    htmlFor="no_telp2"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Nomor Telepon 2
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon2" id="" defaultValue={formData.no_telepon}/>
+                    type="text" name="no_telp2" id="" defaultValue={formData.no_telp2} onChange={(e)=>{setFormData({...formData, no_telp2:e.target.value})}}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -252,25 +287,26 @@ export default function AsuransiDetailPage({asuransi}){
                     {status != "O" && alasan == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
                 </div>
             </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            {asuransi.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="status-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Status
+                    Status Bayar
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={status} onChange={(e)=>{
+                    <select required defaultValue={formData.status_bayar} onChange={(e)=>{
+                        setFormData({...formData, status_bayar:e.target.value})
                     }} 
                     id="status-bayar"
                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
-                            <option value="" disabled>Please Select Status</option>
+                            <option value="">Please Select Status</option>
                             <option value="S">Sudah Bayar</option>
                             <option value="B">Belum Bayar</option>
                             <option value="C" >Batal</option>
                         </select>
                 </div>
-            </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            </div>}
+            {asuransi.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="tgl-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -280,7 +316,7 @@ export default function AsuransiDetailPage({asuransi}){
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="date" name="tgl_bayar" id="tgl-bayar" disabled={formData.status == 'O' ? false : true}  defaultValue={formData.tgl_bayar != null ? formData.tgl_bayar.slice(0,10) : ""} onChange={(e)=>{setFormData({...formData, tgl_bayar:e.target.value})}}/>
                 </div>
-            </div>
+            </div>}
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="kode-kerja"
@@ -299,7 +335,7 @@ export default function AsuransiDetailPage({asuransi}){
                     Kode Dealer
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalDealer setDealer={setDealer}/>
+                    <ModalDealer setDealer={setDealer} dealer={dealerList}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="kd_dlr" id="" defaultValue={dealer.kd_dlr}/>
                 </div>
@@ -312,7 +348,7 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.kecamatan}/>
+                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.kecamatan} value={alamatKirim.kecamatan}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -323,7 +359,7 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kelurahan" id="" disabled={true} defaultValue={alamatKirim.kelurahan}/>
+                    type="text" name="kelurahan" id="" disabled={true} defaultValue={alamatKirim.kelurahan} value={alamatKirim.kelurahan}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -333,9 +369,9 @@ export default function AsuransiDetailPage({asuransi}){
                     Kode Pos
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalKodePos setAlamatKirim={setAlamatKirim}/>
+                    <ModalKodePos setAlamatKirim={setAlamatKirim} kodepos={kodepos}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos}/>
+                    type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos} value={alamatKirim.kodepos}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">

@@ -8,7 +8,7 @@ import Search from "@/components/Search/index"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ListKodepos from "./list-kodepos";
 
-export default function ModalKodePos({setAlamatKirim}) {
+export default function ModalKodePos({setAlamatKirim, kodepos}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
@@ -50,7 +50,7 @@ function handleChange() {
               placeholder={"Search for a kodepos..."}/>
             </div>
 
-            <ListKodepos searchParams={searchParams} setIsModalOpen={setIsModalOpen} setAlamatKirim={setAlamatKirim}/>
+            <ListKodepos setIsModalOpen={setIsModalOpen} setAlamatKirim={setAlamatKirim} kodepos={kodepos}/>
         </div>
       </Modal>
     </>

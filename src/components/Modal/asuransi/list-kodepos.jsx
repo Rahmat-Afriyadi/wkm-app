@@ -1,38 +1,8 @@
 "use client"
 
 import Kodepos from "./kodepos"
-import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 
-export default function ListKodepos({setIsModalOpen, setAlamatKirim}) {
-  const searchParams = useSearchParams()
-
-  const search = searchParams.get("search_query");  
-  const [tableContent, setTableContent] = useState([])
-
-  useEffect(()=>{
-    (async () => {
-      console.log("ini kode pos")
-      const response = await fetch("/api/kodepos?" + new URLSearchParams({ search: searchParams.get("search_query") === null ? "" : searchParams.get("search_query") }))
-      if (response.status == 200) {
-        const data = await response.json()
-        console.log("ini data kodepos ", data?.response[0])
-        setTableContent(data?.response?.map((item, i) => {
-          console.log("ini loopint kodepos ", item)
-          return (
-            <Kodepos
-                setAlamatKirim={setAlamatKirim}
-                setIsModalOpen={setIsModalOpen}
-                key={i}
-                id={i}
-                kodepos={{ ...item }}
-              />
-          );
-        }))
-      }
-    })()
-  },[search, searchParams, setAlamatKirim, setIsModalOpen])
-
+export default function ListKodepos({setIsModalOpen, setAlamatKirim, kodepos}) {
 
     return (
       <table className="min-w-full divide-y divide-gray-300">
@@ -56,8 +26,18 @@ export default function ListKodepos({setIsModalOpen, setAlamatKirim}) {
               </tr>
           </thead>
           <tbody className="bg-white">
-              {tableContent.length > 0 ? (
-              tableContent
+              {kodepos.length > 0 ? (
+              kodepos.map((item, i) => {
+                return (
+                  <Kodepos
+                      setAlamatKirim={setAlamatKirim}
+                      setIsModalOpen={setIsModalOpen}
+                      key={i}
+                      id={i}
+                      kodepos={{ ...item }}
+                    />
+                );
+              })
               ) : (
               <tr>
                   <td

@@ -1,18 +1,24 @@
 import { AuthGetApi } from "../../../../lib/fetchApi";
-import ListSites from "../list-items";
-import ModalListAsuransi from "../modal/list-asuransi";
-// import AsuransiDetailPage from "./asuransi-detail";
 import AsuransiDetailPage from "@/components/asuransi/detail";
 
-export default async function Page({params}) {
+export default async function Page({params, searchParams}) {
     const {no_msn} = params
     const asuransi = await AuthGetApi("/asuransi/"+no_msn)
+    const kodepos = await AuthGetApi(
+        "/kodepos/master-data?" +
+        new URLSearchParams({
+            search: searchParams.search_query,
+        })
+    )
+    const dealer = await AuthGetApi(
+        "/dealer/master-data?" +
+        new URLSearchParams({
+            search: searchParams.search_query,
+        })
+    )
     return (
         <main className="h-full min-h-screen p-5">
-        <ModalListAsuransi>
-            <ListSites/>
-        </ModalListAsuransi>
-        <AsuransiDetailPage asuransi={asuransi}/>
+        <AsuransiDetailPage asuransi={asuransi} kodepos={kodepos} dealerList={dealer}/>
 
         </main>
     )

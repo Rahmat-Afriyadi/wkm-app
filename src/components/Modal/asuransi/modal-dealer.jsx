@@ -8,7 +8,7 @@ import Search from "@/components/Search/index"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ListDealer from "./list-dealer";
 
-export default function ModalDealer({setDealer}) {
+export default function ModalDealer({setDealer, dealer}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
@@ -50,7 +50,7 @@ function handleChange() {
               placeholder={"Search for a dealer..."}/>
             </div>
 
-            <ListDealer searchParams={searchParams} setIsModalOpen={setIsModalOpen} setDealer={setDealer}/>
+            <ListDealer searchParams={searchParams} setIsModalOpen={setIsModalOpen} setDealer={setDealer} dealer={dealer}/>
         </div>
       </Modal>
     </>
