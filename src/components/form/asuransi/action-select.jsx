@@ -19,7 +19,6 @@ export default function ActionSelect({
 
   function handleChange(e) {
     const params = new URLSearchParams(searchParams);
-    console.log(e.target.value)
     params.set("active", e.target.value.trim());
     replace(`${pathname}?${params}`);
   }

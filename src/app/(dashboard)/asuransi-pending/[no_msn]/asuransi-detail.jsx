@@ -54,7 +54,6 @@ export default function AsuransiDetailPage({asuransi}){
     const [formData, setFormData] = useState(asuransi)
 
     const handleSubmit = async() =>{
-        console.log("ini form data diatas ", formData)
        if((formData.status == 'P' || formData.status == 'T') && alasan == ''){
             Swal.fire({
                 title: "Peringatan",
@@ -62,7 +61,6 @@ export default function AsuransiDetailPage({asuransi}){
                 icon: "info",
             });
         } else {
-            console.log("ini formData else ", formData)
             const res =  await fetch("/api/asuransi/update", {
                 method: "POST",
                 headers: {
@@ -99,7 +97,6 @@ export default function AsuransiDetailPage({asuransi}){
     }))
       if (response.status == 200) {
         const data = await response.json()
-        console.log("ini data ", data)
         setProduks(data.response)
       }
     })()
@@ -329,7 +326,6 @@ export default function AsuransiDetailPage({asuransi}){
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <select required defaultValue={formData.jns_brg != null ? formData.jns_brg : ""} onChange={(e)=>{
                         setFormData({...formData, jns_brg:e.target.value})
-                        console.log("ini barang ", formData.jns_brg)
                     }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
                             {produks.length >0 && produks.map((item,i)=>{

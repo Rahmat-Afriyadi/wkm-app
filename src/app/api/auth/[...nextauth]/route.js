@@ -44,6 +44,7 @@ export const authOptions = {
           accessToken: "resResult.access_token",
           refreshToken: resResult.refresh_token,
           dataSource: resResult.data_source,
+          permissions: resResult.permissions,
           // accessToken: resResult.access_token,
           // refreshToken: resResult.refresh_token,
         };

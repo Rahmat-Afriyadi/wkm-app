@@ -19,7 +19,6 @@ export default function UploadFileForm(){
                 setError('')
                 setMessage('')
                 setFiles(files)
-                console.log("ini files ", files)
             }}
             onError={(error, file) => {
                 console.log("error file ", error)
@@ -50,7 +49,6 @@ export default function UploadFileForm(){
             const data = new FormData();
 
             for (const file of files) {
-                console.log("ini nama filenya ", file.name);
                 data.append("files[]", file, file.name);
             }
             setFiles([])

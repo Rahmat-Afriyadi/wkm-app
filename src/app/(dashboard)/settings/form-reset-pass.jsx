@@ -25,7 +25,6 @@ export default function ResetPassForm(){
       showLoaderOnConfirm: true,
       preConfirm : async () => {
         try {
-          console.log(values);
           const res =  await fetch("/api/reset-password", {
                 method: "POST",
                 headers: {
@@ -34,9 +33,7 @@ export default function ResetPassForm(){
                 },
                 body: JSON.stringify(values),
             });
-            console.log("ini res status ", res.status)
             if(res.status == 200 ){
-                console.log("masuk sini gk")
                 Swal.fire("Saved!", "Your password has been changed.", "success").then(() => {});
             }else {
                 const resResult = await res.json()

@@ -6,9 +6,6 @@ import Search from "@/components/Search/index"
 
 export default function SiteFrame({children}) {
     const {data:session} = useSession()
-    if (!session?.user?.permissions?.includes("Asuransi Pending")) {
-        
-    }
     // const privileges = session?.user.role.privileges;
     // const privilege  = privileges?.filter((val) => val.name === "Sites")[0];
     const privilege  = {add:true,};

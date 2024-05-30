@@ -1,19 +1,29 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyAsuransi } from "@/server/asuransi/lists";
+import { readManyRekapAsuransi } from "@/server/asuransi/lists";
 import dynamic from "next/dynamic";
 import Site from "./item"
 
 export default async function ListSites({searchParams}) {
 
   const pageParams = searchParams?.page || 1;
+  const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
+  const active = searchParams?.active;
+  const period = searchParams?.period;
+  const offset = limit * (pageParams - 1);
+  const sortBy = searchParams?.sortBy;
 
-  const {data, page} = await readManyAsuransi({
-    search,
+  const {data, page} = await readManyRekapAsuransi({
+    pageParams:pageParams,
+    limit:limit,
+    search:search,
     dataSource:searchParams?.dataSource,
-    sts:"O"
+    offset:offset,
+    sortBy:sortBy,
+    active:active,
+    period:period
   })
 
 
@@ -35,22 +45,32 @@ export default async function ListSites({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nomor Mesin
+                        ID
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Customer
+                        Nama Tele
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Dealer
+                        Jumlah Data
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Aksi
+                        Pending
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Tidak Berminat
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Berminat
                 </th>
               </tr>
           </thead>

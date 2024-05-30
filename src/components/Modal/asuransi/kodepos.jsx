@@ -14,7 +14,6 @@ const Kodepos = ({ kodepos, id, setIsModalOpen, setAlamatKirim }) => {
       <>
         <tr 
         onClick={()=>{
-          console.log("ini terklik ", kodepos)
           setAlamatKirim({
             kelurahan:kodepos.kelurahan,
             kecamatan:kodepos.kecamatan,

@@ -17,7 +17,6 @@ const Asuransi = ({ site, id }) => {
       <>
         <tr key={site.nama} 
         onClick={async()=>{
-            console.log("terklik kok ini")
             await fetch("/api/asuransi/update-ambil-data",{
               method: "POST",
               headers: {

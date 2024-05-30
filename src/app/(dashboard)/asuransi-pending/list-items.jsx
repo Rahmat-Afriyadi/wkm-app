@@ -1,28 +1,17 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyAsuransiPending } from "@/server/asuransi/lists";
+import { readManyAsuransi } from "@/server/asuransi/lists";
 import dynamic from "next/dynamic";
 import Site from "./item"
 
 export default async function ListAsuransi({searchParams}) {
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
-  const search = searchParams?.search_query;
-  const active = searchParams?.active;
-  const period = searchParams?.period;
-  const offset = limit * (pageParams - 1);
-  const sortBy = searchParams?.sortBy;
 
-  const {data, page} = await readManyAsuransiPending({
-    pageParams:pageParams,
+  const {data, page} = await readManyAsuransi({
     dataSource:searchParams?.dataSource,
-    limit:limit,
-    search:search,
-    offset:offset,
-    sortBy:sortBy,
-    active:active,
-    period:period
+    sts:"P"
   })
 
 

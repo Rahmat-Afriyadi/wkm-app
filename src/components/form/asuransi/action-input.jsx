@@ -10,7 +10,6 @@ export default function ActionInput({
   register,
   errors,
 }) {
-  console.log("ini required ", required)
   return (
     <>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">

@@ -16,14 +16,8 @@ export default async function ListItem({searchParams}) {
   const sortBy = searchParams?.sortBy;
 
   const {data, page} = await readManyAsuransi({
-    pageParams:pageParams,
-    limit:limit,
     dataSource:searchParams?.dataSource,
-    search:search,
-    offset:offset,
-    sortBy:sortBy,
-    active:active,
-    period:period
+    sts: ""
   })
 
 

@@ -2,8 +2,8 @@ import { ChartPieIcon, Cog6ToothIcon, UsersIcon, DocumentDuplicateIcon, FolderIc
 
 const navigation = [
   {
-    name: "Beranda",
-    to: "/beranda",
+    name: "Dashboard",
+    to: "/dashboard",
     icon: ChartPieIcon,
   },
   {
@@ -11,11 +11,11 @@ const navigation = [
     to: "/wa-blast",
     icon: UsersIcon,
   },
-  // {
-  //   name: "Edit Jenis Bayar",
-  //   to: "/edit-jenis-bayar",
-  //   icon: FolderIcon,
-  // },
+  {
+    name: "Edit Jenis Bayar",
+    to: "/edit-jenis-bayar",
+    icon: FolderIcon,
+  },
   {
     name: "Asuransi",
     to: "/asuransi",
@@ -29,6 +29,11 @@ const navigation = [
   {
     name: "Asuransi Berminat",
     to: "/asuransi-oke",
+    icon: FolderIcon,
+  },
+  {
+    name: "Rekap Verifikasi",
+    to: "/rekap",
     icon: FolderIcon,
   },
 ];
