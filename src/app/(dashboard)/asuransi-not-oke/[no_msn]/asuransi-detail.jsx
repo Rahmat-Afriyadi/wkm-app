@@ -1,26 +1,42 @@
 "use client"
 
 import { useState, useEffect } from "react";
-import ModalKodePos from "@/components/Modal/asuransi/modal-kodepos"
-import ModalDealer from "@/components/Modal/asuransi/modal-dealer"
+import ModalKodePos from "../modal/kodepos"
+import ModalDealer from "../modal/dealer"
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 import { PhoneIcon } from "@heroicons/react/20/solid";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 
+const alasan_pending_list = [
+    { "key":"1","value": "Pikir2/Ragu2" },
+    { "key":"2","value": "Telp Kembali" },
+    { "key":"3","value": "Telp Tidak Diangkat" },
+    { "key":"4","value": "Blm Register/Diblokir" }
+]
 
-export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasan_pending, alasan_tdk_berminat}){
+const alasan_tdk_berminat_list = [
+    { "key":"1", "value": "Mau Gratis" },
+    { "key":"11", "value": "Tidak Terpakai" },
+    { "key":"3", "value": "Service Ditolak" },
+    { "key":"4", "value": "Diskon Kecil" },
+    { "key":"5", "value": "Tidak Boleh sama keluarga" },
+    { "key":"6", "value": "Punya membership lain" },
+    { "key":"10", "value": "Merchant Jauh" },
+    { "key":"13", "value": "Motor Hilang" },
+    { "key":"14", "value": "Motor Dijual" },
+    { "key":"15", "value": "Motor Tarik Leasing" },
+    { "key":"9", "value": "Telp bermasalah" },
+    { "key":"12", "value": "Renewal di AHASS/Dealer" },
+    { "key":"17", "value": "Lokasi diluar Area" },
+    { "key":"16", "value": "Telp tidak diangkat/aktif" },
+    { "key":"18", "value": "Pulang Kampung" },
+    { "key":"19", "value": "Wilayah Diisolasi" },
+    { "key":"20", "value": "Tidak Mau Terima Tamu" },
+    { "key":"21", "value": "Channel" }]
 
-    console.log("ini alasan ", alasan_pending)
-    const {data:session} = useSession()
+export default function AsuransiDetailPage({asuransi}){
     const router = useRouter()
 
-    useEffect(()=>{
-        if (session?.user?.dataSource && session?.user?.dataSource != asuransi.jenis_source) {
-            router.push("/page-not-found")
-        }
-    },[session]) // eslint-disable-line react-hooks/exhaustive-deps
-    
     const [status, setStatus]= useState(asuransi.status)
     const [alasan, setAlasan]= useState(asuransi.status == 'P' ? asuransi.alasan_pending : asuransi.status == 'T' ? asuransi.alasan_tdk_berminat : "")
     const [submitted, setSubmit] = useState(false)
@@ -53,30 +69,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 },
                 body: JSON.stringify(formData),
             });
-            
             if (res.status == 200) {
-                if (asuransi.jenis_source == "E" && formData.status == 'O' && asuransi.status != 'O') {
-                    const resOke =  await fetch("/api/asuransi/update/berminat", {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({no_msn:formData.no_msn}),
-                    });
-                }
-
-                if (asuransi.jenis_source == "E" && formData.status_bayar == 'C' && asuransi.status == 'O') {
-                    const resOke =  await fetch("/api/asuransi/update/batal-bayar", {
-                        method: "POST",
-                        headers: {
-                            Accept: "application/json",
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({no_msn:formData.no_msn}),
-                    });
-                }
-
                 Swal.fire({
                     title: "Good job!",
                     text: "Data successfully updated",
@@ -97,7 +90,6 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
         return setFormData({...formData, ...alamatKirim})
     },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
 
-
     useEffect(()=>{
     (async () => {
       const response = await fetch("/api/produk?" + new URLSearchParams({
@@ -108,36 +100,14 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
         setProduks(data.response)
       }
     })()
-  },[]) // eslint-disable-line react-hooks/exhaustive-deps
+  },[])
 
     return (
         
-        <div className=" space-y-6 sm:mt-5 sm:space-y-5">
+        <div className="mt-6 space-y-6 sm:mt-5 sm:space-y-5">
             {message != '' && <div className='bg-green-500 rounded-lg mb-4 text-white flex justify-center text-lg p-4'>
                 {message}
             </div>}
-            {formData.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label
-                    htmlFor="kode-kerja"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Id Transaksi
-                </label>    
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="id_transaksi" id="id_transaksi" defaultValue={formData.id_transaksi} disabled/>
-                </div>
-            </div>}
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label
-                    htmlFor="nik"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    NIK
-                </label>    
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="nik" id="nik" defaultValue={formData.nik} disabled/>
-                </div>
-            </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="kode-kerja"
@@ -164,23 +134,6 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 <label
                     htmlFor="kode-kerja"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Jenis Asuransi
-                </label>    
-                <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={formData.jenis_asuransi} 
-                    disabled={true}
-                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
-                            <option value="" disabled>Please Select Status</option>
-                            <option value="1">Motor</option>
-                            <option value="2">Personal Accident</option>
-                            <option value="3" >Personal Accident & Motor</option>
-                        </select>
-                </div>
-            </div>
-            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <label
-                    htmlFor="kode-kerja"
-                    className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Nama Motor
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
@@ -201,25 +154,25 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="no_telp"
+                    htmlFor="kode-kerja"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Nomor Telepon
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
                     <a href={"tel:" + formData.no_telepon}><PhoneIcon className="w-6 h-5 absolute left-[475px]  cursor-pointer top-2 hover:text-yellow" aria-hidden="true"/></a>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telp" id="" defaultValue={formData.no_telp} disabled/>
+                    type="text" name="no_telepon" id="" defaultValue={formData.no_telepon} disabled/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="no_telp2"
+                    htmlFor="kode-kerja"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                     Nomor Telepon 2
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telp2" id="" defaultValue={formData.no_telp2} onChange={(e)=>{setFormData({...formData, no_telp2:e.target.value})}}/>
+                    type="text" name="no_telepon2" id="" defaultValue={formData.no_telepon}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -229,7 +182,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Status
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={status} onChange={(e)=>{
+                    <select required value={status} onChange={(e)=>{
                         setStatus(e.target.value)
                         setFormData({...formData, status:e.target.value})
                         if(e.target.value=="O"){
@@ -239,9 +192,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                         }  else if (e.target.value == 'T') {
                             setAlasan(formData.alasan_tdk_berminat)
                         }
-                    }} 
-                    disabled={asuransi.status == "O"}
-                    className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
+                    }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>
                             <option value="P">Pending</option>
                             <option value="T">Tidak Berminat</option>
@@ -257,7 +208,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <select className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="no_telepon" id="" defaultValue={alasan} onChange={(e)=>{
+                    type="text" name="no_telepon" id="" value={alasan} onChange={(e)=>{
                         if (formData.status == 'P') {
                             setFormData({...formData, alasan_pending:e.target.value})
                         } else if (formData.status == 'T') {
@@ -266,40 +217,39 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                         setAlasan(e.target.value)
                     }} disabled={status=="O"}>
                         <option value="" disabled>Please Select Alasan</option>
-                        {formData.status == "P" && alasan_pending.map((item, i)=>{
+                        {formData.status == "P" && alasan_pending_list.map((item, i)=>{
                             return (
-                                <option key={i} value={item.id}>{item.name}</option>
+                                <option key={i} value={item.key}>{item.value}</option>
                             )
                         })}
-                        {formData.status == "T" && alasan_tdk_berminat.map((item, i)=>{
+                        {formData.status == "T" && alasan_tdk_berminat_list.map((item, i)=>{
                             return (
-                                <option key={i} value={item.id}>{item.name}</option>
+                                <option key={i} value={item.key}>{item.value}</option>
                             )
                         })}
                     </select>
                     {status != "O" && alasan == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
                 </div>
             </div>
-            {asuransi.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="status-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Status Bayar
+                    Status
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required defaultValue={formData.status_bayar} value={formData.status_bayar} onChange={(e)=>{
-                        setFormData({...formData, status_bayar:e.target.value})
+                    <select required defaultValue={status} onChange={(e)=>{
                     }} 
                     id="status-bayar"
                     className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
-                            <option value="">Please Select Status</option>
+                            <option value="" disabled>Please Select Status</option>
                             <option value="S">Sudah Bayar</option>
                             <option value="B">Belum Bayar</option>
                             <option value="C" >Batal</option>
                         </select>
                 </div>
-            </div>}
-            {asuransi.jenis_source == "E" && <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+            </div>
+            <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="tgl-bayar"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -307,9 +257,9 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="date" name="tgl_bayar" id="tgl-bayar" disabled={formData.status == 'O' ? false : true}  value={formData.tgl_bayar != null ? formData.tgl_bayar.slice(0,10) : ""} defaultValue={formData.tgl_bayar != null ? formData.tgl_bayar.slice(0,10) : ""} onChange={(e)=>{setFormData({...formData, tgl_bayar:e.target.value})}}/>
+                    type="date" name="tgl_bayar" id="tgl-bayar" disabled={formData.status == 'O' ? false : true}  defaultValue={formData.tgl_bayar != null ? formData.tgl_bayar.slice(0,10) : ""} onChange={(e)=>{setFormData({...formData, tgl_bayar:e.target.value})}}/>
                 </div>
-            </div>}
+            </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
                     htmlFor="kode-kerja"
@@ -328,7 +278,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Kode Dealer
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalDealer setDealer={setDealer} dealer={dealerList}/>
+                    <ModalDealer setDealer={setDealer}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="kd_dlr" id="" defaultValue={dealer.kd_dlr}/>
                 </div>
@@ -341,7 +291,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.kecamatan} value={alamatKirim.kecamatan}/>
+                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.kecamatan}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -352,7 +302,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kelurahan" id="" disabled={true} defaultValue={alamatKirim.kelurahan} value={alamatKirim.kelurahan}/>
+                    type="text" name="kelurahan" id="" disabled={true} defaultValue={alamatKirim.kelurahan}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -362,9 +312,9 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Kode Pos
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalKodePos setAlamatKirim={setAlamatKirim} kodepos={kodepos}/>
+                    <ModalKodePos setAlamatKirim={setAlamatKirim}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos} value={alamatKirim.kodepos}/>
+                    type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -374,7 +324,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Jenis Barang
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
-                    <select required value={formData.jns_brg != null ? formData.jns_brg : ""} onChange={(e)=>{
+                    <select required defaultValue={formData.jns_brg != null ? formData.jns_brg : ""} onChange={(e)=>{
                         setFormData({...formData, jns_brg:e.target.value})
                     }} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
                             <option value="" disabled>Please Select Status</option>

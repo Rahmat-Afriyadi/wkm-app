@@ -1,4 +1,13 @@
-import { ChartPieIcon, Cog6ToothIcon, UsersIcon, DocumentDuplicateIcon, FolderIcon } from "@heroicons/react/24/outline";
+import {
+  ChartPieIcon,
+  Cog6ToothIcon,
+  UsersIcon,
+  DocumentDuplicateIcon,
+  FolderIcon,
+  LockClosedIcon,
+  CurrencyDollarIcon,
+  SignalIcon,
+} from "@heroicons/react/24/outline";
 
 const navigation = [
   {
@@ -24,12 +33,17 @@ const navigation = [
   {
     name: "Asuransi Pending",
     to: "/asuransi-pending",
-    icon: FolderIcon,
+    icon: SignalIcon,
+  },
+  {
+    name: "Asuransi Tidak Berminat",
+    to: "/asuransi-not-oke",
+    icon: LockClosedIcon,
   },
   {
     name: "Asuransi Berminat",
     to: "/asuransi-oke",
-    icon: FolderIcon,
+    icon: CurrencyDollarIcon,
   },
   {
     name: "Rekap Verifikasi",

@@ -17,7 +17,7 @@ export default async function ListItem({searchParams}) {
 
   const {data, page} = await readManyAsuransi({
     dataSource:searchParams?.dataSource,
-    sts: ""
+    sts: "pre"
   })
 
 

@@ -16,9 +16,11 @@ export default async function Page({params, searchParams}) {
             search: searchParams.search_query,
         })
     )
+    const alasan_pending = await AuthGetApi("/asuransi/master-alasan-pending")
+    const alasan_tdk_berminat = await AuthGetApi("/asuransi/master-alasan-tdk-berminat")
     return (
         <main className="h-full min-h-screen p-5">
-        <AsuransiDetailPage asuransi={asuransi} kodepos={kodepos} dealerList={dealer}/>
+        <AsuransiDetailPage asuransi={asuransi} kodepos={kodepos} dealerList={dealer} alasan_pending={alasan_pending} alasan_tdk_berminat={alasan_tdk_berminat}/>
 
         </main>
     )

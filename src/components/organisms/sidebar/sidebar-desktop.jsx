@@ -83,7 +83,7 @@ export default function SidebarDesktop({open, setOpen
                           href={item.to}
                           className={classNames(
                             item.to === `/${segment}`
-                              ? "bg-cyan-700 text-white"
+                              ? "bg-black text-yellow"
                               : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                           )}>
@@ -94,7 +94,7 @@ export default function SidebarDesktop({open, setOpen
                             }}
                             className={classNames(
                               item.to === `/${segment}`
-                                ? "text-white"
+                                ? "bg-black text-yellow"
                                 : "text-cyan-200 group-hover:text-yellow",
                               "h-6 w-6 shrink-0",
                               !open? "scale-125" :""
