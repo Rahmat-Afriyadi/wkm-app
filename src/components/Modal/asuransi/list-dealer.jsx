@@ -4,7 +4,21 @@ import Dealer from "./dealer"
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function ListDealer({setIsModalOpen, setDealer, dealer}) {
+export default function ListDealer({setIsModalOpen, setDealer}) {
+
+  const searchParams = useSearchParams()
+
+  const [dealer, setDealerList] = useState([])
+
+  useEffect(()=>{
+    (async () => {
+      const response = await fetch("/api/dealer?" + new URLSearchParams({ search: searchParams.get("search_query_dealer") === null ? "" : searchParams.get("search_query_dealer") }))
+      if (response.status == 200) {
+        const data = await response.json()
+        setDealerList(data?.response)
+      }
+    })()
+  },[searchParams.get("search_query_dealer")])   // eslint-disable-line react-hooks/exhaustive-deps
 
 
     return (

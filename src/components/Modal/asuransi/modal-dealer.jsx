@@ -1,14 +1,14 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Modal from "@/components/Modal/index";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import Search from "@/components/Search/index"
+import Search from "@/components/Search/dynamic"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ListDealer from "./list-dealer";
 
-export default function ModalDealer({setDealer, dealer}) {
+export default function ModalDealer({setDealer}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
@@ -16,16 +16,17 @@ export default function ModalDealer({setDealer, dealer}) {
   const [isModalOpen, setIsModalOpen] = useState(false)
 
 
+
   function resetModal() {
     const params = new URLSearchParams(searchParams);
-    params.set("search_query","");
+    params.set("search_query_dealer","");
     replace(`${pathname}?${params}`);
     setIsModalOpen(false)
   }
 
 function handleChange() {
     const params = new URLSearchParams(searchParams);
-    params.set("search_query","");
+    params.set("search_query_dealer","");
     replace(`${pathname}?${params}`);
     setIsModalOpen(!isModalOpen);
   }
@@ -46,11 +47,11 @@ function handleChange() {
             <div className="max-w-xs px-0">
             <Search
               id="search-query"
-              name="search_query"
+              name="search_query_dealer"
               placeholder={"Search for a dealer..."}/>
             </div>
 
-            <ListDealer searchParams={searchParams} setIsModalOpen={setIsModalOpen} setDealer={setDealer} dealer={dealer}/>
+            <ListDealer searchParams={searchParams} setIsModalOpen={setIsModalOpen} setDealer={setDealer}/>
         </div>
       </Modal>
     </>

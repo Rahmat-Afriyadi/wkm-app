@@ -41,7 +41,7 @@ export const authOptions = {
         if (resResult.status == "fail") throw new Error(resResult.message);
         return {
           name: resResult.name,
-          accessToken: "resResult.access_token",
+          accessToken: resResult.access_token,
           refreshToken: resResult.refresh_token,
           dataSource: resResult.data_source,
           permissions: resResult.permissions,

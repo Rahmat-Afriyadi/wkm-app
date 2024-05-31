@@ -9,9 +9,27 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 
-export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasan_pending, alasan_tdk_berminat}){
+export default function AsuransiDetailPage({asuransi}){
 
-    console.log("ini alasan ", alasan_pending)
+    const [alasanPending, setAlasanPending] = useState([])
+    const [alasanTdkBerminat, setAlasanTdkBerminat] = useState([])
+
+    useEffect(()=>{
+    (async () => {
+      let response = await fetch("/api/alasan/pending")
+      let data = []
+      if (response.status == 200) {
+        data = await response.json()
+        setAlasanPending(data?.response)
+      }
+      response = await fetch("/api/alasan/tdk-berminat")
+      if (response.status == 200) {
+        data = await response.json()
+        setAlasanTdkBerminat(data?.response)
+      }
+    })()
+  },[])   // eslint-disable-line react-hooks/exhaustive-deps
+
     const {data:session} = useSession()
     const router = useRouter()
 
@@ -266,12 +284,12 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                         setAlasan(e.target.value)
                     }} disabled={status=="O"}>
                         <option value="" disabled>Please Select Alasan</option>
-                        {formData.status == "P" && alasan_pending.map((item, i)=>{
+                        {formData.status == "P" && alasanPending.map((item, i)=>{
                             return (
                                 <option key={i} value={item.id}>{item.name}</option>
                             )
                         })}
-                        {formData.status == "T" && alasan_tdk_berminat.map((item, i)=>{
+                        {formData.status == "T" && alasanTdkBerminat.map((item, i)=>{
                             return (
                                 <option key={i} value={item.id}>{item.name}</option>
                             )
@@ -328,7 +346,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Kode Dealer
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalDealer setDealer={setDealer} dealer={dealerList}/>
+                    <ModalDealer setDealer={setDealer}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="kd_dlr" id="" defaultValue={dealer.kd_dlr}/>
                 </div>
@@ -362,7 +380,7 @@ export default function AsuransiDetailPage({asuransi, kodepos, dealerList, alasa
                     Kode Pos
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
-                    <ModalKodePos setAlamatKirim={setAlamatKirim} kodepos={kodepos}/>
+                    <ModalKodePos setAlamatKirim={setAlamatKirim}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
                     type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos} value={alamatKirim.kodepos}/>
                 </div>

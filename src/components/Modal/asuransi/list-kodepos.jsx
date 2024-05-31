@@ -1,8 +1,25 @@
 "use client"
 
 import Kodepos from "./kodepos"
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
-export default function ListKodepos({setIsModalOpen, setAlamatKirim, kodepos}) {
+export default function ListKodepos({setIsModalOpen, setAlamatKirim}) {
+
+    const searchParams = useSearchParams()
+
+  const search = searchParams.get("search_query_kodepos");  
+  const [kodepos, setKodeposList] = useState([])
+
+  useEffect(()=>{
+    (async () => {
+      const response = await fetch("/api/kodepos?" + new URLSearchParams({ search: searchParams.get("search_query_kodepos") === null ? "" : searchParams.get("search_query_kodepos") }))
+      if (response.status == 200) {
+        const data = await response.json()
+        setKodeposList(data?.response)
+      }
+    })()
+  },[searchParams.get("search_query_kodepos")])   // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
       <table className="min-w-full divide-y divide-gray-300">

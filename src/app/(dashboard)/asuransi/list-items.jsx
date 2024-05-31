@@ -17,7 +17,9 @@ export default async function ListItem({searchParams}) {
 
   const {data, page} = await readManyAsuransi({
     dataSource:searchParams?.dataSource,
-    sts: "pre"
+    sts: "pre",
+    pageParams,
+    limit
   })
 
 
@@ -67,15 +69,6 @@ export default async function ListItem({searchParams}) {
               </tr>
               )}
               <tr>
-              <td colSpan={7}>
-                  <Pagination
-                  rows={data.length}
-                  postsPerPage={10}
-                  currentPage={pageParams}
-                  totalRows={page.total_rows}
-                  totalPages={page.total_pages}
-                  />
-              </td>
               </tr>
           </tbody>
       </table>

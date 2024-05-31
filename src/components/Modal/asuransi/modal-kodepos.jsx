@@ -4,11 +4,11 @@ import React, { useState } from "react";
 
 import Modal from "@/components/Modal/index";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import Search from "@/components/Search/index"
+import Search from "@/components/Search/dynamic"
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import ListKodepos from "./list-kodepos";
 
-export default function ModalKodePos({setAlamatKirim, kodepos}) {
+export default function ModalKodePos({setAlamatKirim}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
@@ -18,14 +18,14 @@ export default function ModalKodePos({setAlamatKirim, kodepos}) {
 
   function resetModal() {
     const params = new URLSearchParams(searchParams);
-    params.set("search_query","");
+    params.set("search_query_kodepos","");
     replace(`${pathname}?${params}`);
     setIsModalOpen(false)
   }
 
 function handleChange() {
   const params = new URLSearchParams(searchParams);
-    params.set("search_query","");
+    params.set("search_query_kodepos","");
     replace(`${pathname}?${params}`);
     setIsModalOpen(!isModalOpen);
   }
@@ -46,11 +46,11 @@ function handleChange() {
             <div className="max-w-xs px-0">
             <Search
               id="search-query"
-              name="search_query"
+              name="search_query_kodepos"
               placeholder={"Search for a kodepos..."}/>
             </div>
 
-            <ListKodepos setIsModalOpen={setIsModalOpen} setAlamatKirim={setAlamatKirim} kodepos={kodepos}/>
+            <ListKodepos setIsModalOpen={setIsModalOpen} setAlamatKirim={setAlamatKirim}/>
         </div>
       </Modal>
     </>

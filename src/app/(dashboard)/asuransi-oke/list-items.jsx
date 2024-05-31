@@ -8,12 +8,15 @@ import Site from "./item"
 export default async function ListSites({searchParams}) {
 
   const pageParams = searchParams?.page || 1;
+  const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
 
   const {data, page} = await readManyAsuransi({
     search,
     dataSource:searchParams?.dataSource,
-    sts:"O"
+    sts:"O",
+    pageParams,
+    limit
   })
 
 
@@ -70,11 +73,11 @@ export default async function ListSites({searchParams}) {
               <tr>
               <td colSpan={7}>
                   <Pagination
-                  rows={data.length}
-                  postsPerPage={10}
-                  currentPage={pageParams}
-                  totalRows={page.total_rows}
-                  totalPages={page.total_pages}
+                    rows={data.length}
+                    postsPerPage={10}
+                    currentPage={pageParams}
+                    totalRows={page.total_rows}
+                    totalPages={page.total_pages}
                   />
               </td>
               </tr>
