@@ -56,7 +56,8 @@ export default function UploadFileForm(){
                 method:"POST",
                 body:data
             })
-            const responseResultJson = await result.json()
+            // const responseResultJson = await result.json()
+            console.log("ini result yaa ", result)
             setMessage(responseResultJson.message.message)
         }}
         >Upload</button>

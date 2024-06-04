@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
-import { useSession } from "next-auth/react";
 const BASE_URL = "http://localhost:3001";
 export async function refreshToken(refreshToken) {
   const res = await fetch(BASE_URL + "/auth/refresh-token", {
@@ -51,7 +50,6 @@ export async function AuthGetApi(url) {
 }
 
 export async function PostFileApi(data, url) {
-  const { data: session1, update } = useSession();
   const session = await getServerSession(authOptions);
   let res = await fetch(BASE_URL + url, {
     method: "POST",

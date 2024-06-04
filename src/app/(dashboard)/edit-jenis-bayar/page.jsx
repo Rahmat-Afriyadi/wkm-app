@@ -1,7 +1,8 @@
-"use client"; // This is a client component 👈🏽
+"use server"
+
 import UploadFileForm from "@/components/form/upload-file/upload-file-form"
 
-export default function EditJenisBayar() {
+export default async function EditJenisBayar() {
 
 
   return (

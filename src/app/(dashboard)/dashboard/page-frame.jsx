@@ -4,6 +4,7 @@
 import { LockClosedIcon, CurrencyDollarIcon, SignalIcon} from "@heroicons/react/24/outline";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import FormExportReportAsuransi  from "@/components/form/report-asuransi/form-export"
 
 
 export default function PageFrame({data}) {
@@ -81,6 +82,8 @@ export default function PageFrame({data}) {
           </div>
         ))}
       </div>
+
+      <FormExportReportAsuransi/>
 
         
 
