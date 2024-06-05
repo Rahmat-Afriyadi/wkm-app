@@ -12,7 +12,8 @@ export default async function ListAsuransi({searchParams}) {
   const {data, page} = await readManyAsuransi({
     dataSource:searchParams?.dataSource,
     sts:"all",
-    tgl1:searchParams?.tgl,
+    tgl1:searchParams?.tgl1,
+    tgl2:searchParams?.tgl2,
     search,
     limit,
     pageParams

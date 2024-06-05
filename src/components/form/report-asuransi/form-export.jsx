@@ -18,7 +18,6 @@ export default function ButttonExportReportAsuransi({params}){
             body: JSON.stringify({awal_tgl, akhir_tgl})
         });
         const response1 =  await response.blob()
-        console.log("ini blob nya yaa ", response1)
         const filename = `Data Report Asuransi periode ${awal_tgl} - ${akhir_tgl}.xlsx`
 
         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(response1)

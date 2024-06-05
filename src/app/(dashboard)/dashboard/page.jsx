@@ -16,8 +16,10 @@ export default async function Page({searchParams}) {
         })
     )
     const session = await getServerSession(authOptions);
-    searchParams.dataSource = session?.user.dataSource
-
+    if (session?.user?.role == 1) {
+        searchParams.dataSource = session?.user.dataSource
+    }
+    
     return (
         <>
             <PageFrame data={data}>

@@ -35,8 +35,6 @@ export const POST = async (_req) => {
     });
   }
 
-  console.log("ini blob rouete 1", response);
   let response1 = await response.blob();
-  console.log("ini blob rouete ", response1);
   return new NextResponse(response1);
 };
