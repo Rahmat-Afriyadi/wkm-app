@@ -1,20 +1,17 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyAsuransi } from "@/server/asuransi/lists";
-import Site from "./item"
+import { rekapAsuransiByStatusKdUser } from "@/server/asuransi/lists";
+import Site from "./item-ts"
 
-export default async function ListAsuransi({searchParams}) {
+export default async function ListAsuransiTS({searchParams}) {
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
 
-  const {data, page} = await readManyAsuransi({
-    dataSource:searchParams?.dataSource,
-    sts:"P",
-    search,
-    limit,
-    pageParams
+  const {data, page} = await rekapAsuransiByStatusKdUser({
+    tgl1:searchParams?.tgl1,
+    tgl2:searchParams?.tgl2,
   })
 
 
@@ -36,22 +33,32 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nomor Mesin
+                        Kode User
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Customer
+                        Nama Telesales
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Dealer
+                        Pending
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Aksi
+                        Tidak Berminat
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Berminat
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Total
                 </th>
               </tr>
           </thead>

@@ -19,6 +19,7 @@ export const POST = async (_req) => {
     mode: "no-cors",
   });
   if (response.status == 403) {
+    console.log("masuk refresh ", session?.user?.accessToken);
     const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
     if (session) session.user.accessToken = access_token;
     if (session) session.user.refreshToken = refresh_token;
@@ -33,6 +34,9 @@ export const POST = async (_req) => {
       mode: "no-cors",
     });
   }
+
+  console.log("ini blob rouete 1", response);
   let response1 = await response.blob();
+  console.log("ini blob rouete ", response1);
   return new NextResponse(response1);
 };

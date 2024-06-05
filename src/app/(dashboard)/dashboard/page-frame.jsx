@@ -3,25 +3,37 @@
 
 import { LockClosedIcon, CurrencyDollarIcon, SignalIcon} from "@heroicons/react/24/outline";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import FormExportReportAsuransi  from "@/components/form/report-asuransi/form-export"
+import { useEffect, useState } from "react";
+import Search from "@/components/Search/index"
+import Datepicker from "react-tailwindcss-datepicker";
+import { useSession } from "next-auth/react";
+import ButttonExportReportAsuransi from "@/components/form/report-asuransi/form-export"
 
 
-export default function PageFrame({data}) {
+export default function PageFrame({children, data}) {
 
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
-
   const today = new Date()
-  const [tgl, setTgl] = useState(today.toISOString().split('T')[0])
+  const {data:session} =useSession()
+  
+  const [value, setValue] = useState({startDate:today.toISOString().split('T')[0], endDate:today.toISOString().split('T')[0]}); 
 
-  function handleChange(e) {
+  useEffect(()=>{
     const params = new URLSearchParams(searchParams);
-    params.set("tgl", e.target.value);
-    setTgl(e.target.value)
-    replace(`${pathname}?${params}`);
-  }
+      params.set("tgl1", value.startDate);
+      params.set("tgl2", value.endDate);
+      replace(`${pathname}?${params}`);
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleValueChange = (newValue) => {
+      const params = new URLSearchParams(searchParams);
+      params.set("tgl1", newValue.startDate);
+      params.set("tgl2", newValue.endDate);
+      replace(`${pathname}?${params}`);
+      setValue(newValue); 
+  } 
 
   let content;
 
@@ -51,9 +63,21 @@ export default function PageFrame({data}) {
 
         <div className="grid gap-6 mb-6 md:grid-cols-2">
             <div>
-                <label htmlFor="periode" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Periode</label>
-                <input type="date" id="periode" value={tgl} onChange={handleChange} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John" required />
+              <label htmlFor="range_verifikasi" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Range Periode</label>
+                
+                <Datepicker
+                id={"range_verifikasi"}
+                // inputClassName="z-40 max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200"
+                toggleClassName="absolute rounded-r-lg -top-0  right-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" 
+                inputClassName="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" 
+
+                name={"range_verifikasi"}
+                value={value}
+                primaryColor={"amber"}
+                onChange={handleValueChange}/>
             </div>
+            
+            <ButttonExportReportAsuransi params={{awal_tgl:value.startDate,  akhir_tgl:value.endDate}}/>
         </div>
 
       <div className="grid grid-cols-1 gap-5 mt-5 sm:grid-cols-3">
@@ -64,9 +88,9 @@ export default function PageFrame({data}) {
             key={item.id}
             className="relative px-4 py-5 overflow-hidden bg-white rounded-lg shadow sm:pt-6 sm:px-6">
             <dt>
-              <div className=" absolute p-3 rounded-md bg-cyan">
+              <div className=" absolute p-3 rounded-md bg-yellow">
                 <item.icon
-                  className="w-6 h-6 text-white"
+                  className="w-6 h-6 text-black"
                   aria-hidden="true"
                 />
               </div>
@@ -83,9 +107,33 @@ export default function PageFrame({data}) {
         ))}
       </div>
 
-      <FormExportReportAsuransi/>
+        <br></br>
 
-        
+        <div className="sm:flex lg:items-center">
+            <div className="sm:flex-auto">
+            <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:items-end">
+                <div className="max-w-xs mr-2 w-80">
+                  <Search
+                          id="search-query"
+                          name="search_query"
+                          placeholder={"Search for a asuransi..."}
+                      />
+                </div>
+            </div>
+            </div>
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+            </div>
+        </div>
+
+        <div className="flex flex-col mt-8">
+            <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                    {children}
+                </div>
+            </div>
+            </div>
+        </div>
 
     </>
   );
