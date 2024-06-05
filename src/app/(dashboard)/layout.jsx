@@ -25,9 +25,9 @@ export default function RootLayout({ children }) {
           <>
             <SidebarDesktop open={open} setOpen={setOpen}/>
             <Header setSidebarOpen={setOpen} />
-            <div className={`lg:pl-72 ${!open? "-translate-x-[220px]" : ""} duration-700 ease-in-out`}>
+            <div className={`lg:pl-72 ${!open? "-translate-x-[220px] " : ""} duration-700 ease-in-out`}>
               <main>
-                <div className="px-4 mx-auto mb-6 max-w-7xl sm:px-6 md:px-8 lg:mt-6 md:mt-4 sm:mt-2">
+                <div className="px-4 mx-auto mb-6 sm:px-6 md:px-8 lg:mt-6 md:mt-4 sm:mt-2">
                   <Suspense>
                     {children}
                   </Suspense>
