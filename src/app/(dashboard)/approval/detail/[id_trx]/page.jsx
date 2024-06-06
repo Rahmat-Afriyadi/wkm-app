@@ -7,6 +7,9 @@ export default async function Page({params}){
     const approval = await AuthGetApi("/asuransi/detail-approval/"+id_trx)
 
     return (
-        <PageFrame approval={approval}/>
+        <>
+            <p className="text-2xl font-bold mb-9">Detail Approval</p>
+            <PageFrame approval={approval}/>
+        </>
     )
 }
