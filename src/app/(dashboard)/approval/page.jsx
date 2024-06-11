@@ -1,8 +1,11 @@
+import ListItem from "./list-items"
 import PageFrame from "./page-frame"
 
-export default async function Page(){
+export default async function Page({searchParams}){
 
     return (
-        <PageFrame/>
+        <PageFrame>
+            <ListItem searchParams={searchParams}/>
+        </PageFrame>
     )
 }

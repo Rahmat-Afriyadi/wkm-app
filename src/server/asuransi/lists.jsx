@@ -28,6 +28,32 @@ export async function readManyAsuransi(query){
 
 }
 
+export async function readManyApproval(query){
+
+    const {search, limit, pageParams, tgl1, tgl2} = query
+
+    const response = await AuthGetApi("/asuransi/master-approval?" + new URLSearchParams({
+        search,
+        tgl1,
+        tgl2,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/asuransi/master-approval-count?" + new URLSearchParams({
+        search,
+        tgl1,
+        tgl2,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
 export async function readManyRekapAsuransi(query){
 
 
