@@ -2,7 +2,6 @@ import {
   ChartPieIcon,
   Cog6ToothIcon,
   UsersIcon,
-  DocumentDuplicateIcon,
   FolderIcon,
   LockClosedIcon,
   CurrencyDollarIcon,
@@ -48,6 +47,11 @@ const navigation = [
   {
     name: "Rekap Verifikasi",
     to: "/rekap",
+    icon: FolderIcon,
+  },
+  {
+    name: "Approval",
+    to: "/approval",
     icon: FolderIcon,
   },
 ];

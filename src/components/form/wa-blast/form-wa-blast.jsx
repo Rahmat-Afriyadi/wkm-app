@@ -59,24 +59,6 @@ export default function FormWaBlast({dataKerja, dataLeas}){
                     <label
                         htmlFor="kode-kerja"
                         className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                        Nomor Leas
-                    </label>    
-                    <div className="mt-1 sm:mt-0 sm:col-span-2">
-                        <select required value={noLeas} onChange={(e)=>setNoLeas(e.target.value)} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
-                            <option value="" disabled>Please Select No Leas</option>
-                            {dataLeas && dataLeas.map((e)=>{
-                                return <option key={e.Kode} value={e.Kode} className=" cursor-pointer">
-                                    {e.Nama}
-                                </option>
-                            })}
-                        </select>
-                        {submitted && noLeas == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
-                    </div>
-                </div>
-                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                    <label
-                        htmlFor="kode-kerja"
-                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
                         Tanggal Akhir Tenor
                     </label>    
                     <div className="mt-1 sm:mt-0 sm:col-span-2">
@@ -90,6 +72,24 @@ export default function FormWaBlast({dataKerja, dataLeas}){
                             />
                         </div>
                         {submitted && !value && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
+                    </div>
+                </div>
+                <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                    <label
+                        htmlFor="kode-kerja"
+                        className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                        Nomor Leas
+                    </label>    
+                    <div className="mt-1 sm:mt-0 sm:col-span-2">
+                        <select required value={noLeas} onChange={(e)=>setNoLeas(e.target.value)} className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer">
+                            <option value="" disabled>Please Select No Leas</option>
+                            {dataLeas && dataLeas.map((e)=>{
+                                return <option key={e.Kode} value={e.Kode} className=" cursor-pointer">
+                                    {e.Nama}
+                                </option>
+                            })}
+                        </select>
+                        {submitted && noLeas == "" && <p className="bg-red text-white rounded-lg px-2 py-1 max-w-lg mt-2">Wajib Diisi</p>}
                     </div>
                 </div>
                 <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">

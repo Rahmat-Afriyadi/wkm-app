@@ -13,8 +13,8 @@ export default function PageFrame({approval}){
         formState: { errors },
     } = useForm({ defaultValues: approval });
 
+
   const onSubmit = async (values) => {
-    console.log("ini values guys ", values)
 
     Swal.fire({
       title: "Do you want to save the record?",
@@ -34,7 +34,6 @@ export default function PageFrame({approval}){
               },
               body: JSON.stringify(values)
             })
-            const resResult = await res.json()
         } catch (error) {
           Swal.fire("Failed!", error.message, "error");
         }
@@ -135,7 +134,7 @@ export default function PageFrame({approval}){
                                 <select {...register("sts_beli", {
                                         required: "This field is required",
                                     })}
-                                    defaultValue={approval?.sts_beli ? approval?.sts_beli : "" }
+                                    defaultValue={approval?.sts_beli == "" ? parseInt(approval?.sts_pembelian) > 1 ? 1 : parseInt(approval?.sts_pembelian) == 1 ? "" :0 : approval?.sts_beli }
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                     <option value="" disabled={true}> Status Pembayaran</option>
                                     <option value={1}>Approve</option>
@@ -164,6 +163,12 @@ export default function PageFrame({approval}){
                                 Warna
                             </label>
                             <input disabled={true} defaultValue={approval?.warna} className="cursor-not-allowed appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="warna" type="text" />
+                        </div>
+                        <div className="w-full px-3 grid grid-cols-12 mb-5 align-middle">
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor="nama-motor">
+                                Nama Motor
+                            </label>
+                            <input disabled={true} defaultValue={approval?.nm_mtr} className="cursor-not-allowed appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="nama-motor" type="text" />
                         </div>
                         <div className="w-full px-3 grid grid-cols-12 mb-5 align-middle">
                             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor="no-msn">
