@@ -100,7 +100,7 @@ export default function AsuransiDetailPage({asuransi}){
         setProduks(data.response)
       }
     })()
-  },[])
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
         
