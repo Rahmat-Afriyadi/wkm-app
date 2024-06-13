@@ -1,3 +1,5 @@
+"use server"
+
 import ListItem from "./list-items"
 import PageFrame from "./page-frame"
 

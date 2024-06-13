@@ -30,7 +30,9 @@ const Asuransi = ({ site, id }) => {
             {new Date(site.tgl_beli).toISOString().split('T')[0]}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.sts_pembelian}
+            {site.sts_pembelian == 1 && <p className="shadow-md bg-gray-200 text-center rounded-lg p-1 font-bold text-md">Apply</p>}
+            {site.sts_pembelian == 2 && <p className="shadow-md bg-orange-400 text-center rounded-lg p-1 font-bold text-white">Process</p>}
+            {site.sts_pembelian == 3 && <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">Done</p>}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/approval/detail/" + site.id_transaksi)}>
             <span className="text-blue-600 ">
