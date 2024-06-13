@@ -10,6 +10,7 @@ export default function PageFrame({approval}){
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm({ defaultValues: approval });
 

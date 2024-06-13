@@ -15,21 +15,21 @@ const Kodepos = ({ kodepos, id, setIsModalOpen, setAlamatKirim }) => {
         <tr 
         onClick={()=>{
           setAlamatKirim({
-            kelurahan:kodepos.kelurahan,
-            kecamatan:kodepos.kecamatan,
-            kodepos:kodepos.kodepos,
+            province:{name:kodepos.province,code:kodepos.province_code},
+            city:{name:kodepos.city,code:kodepos.city_code},
+            subdistrict:{name:kodepos.subdistrict,code:kodepos.subdistrict_code},
           })
           setIsModalOpen(false)
         }}
         key={kodepos.nama} className={classNames("cursor-pointer hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")}>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-              {kodepos.kodepos}
+              {kodepos.province}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {kodepos.kelurahan}
+            {kodepos.city}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {kodepos.kecamatan}
+            {kodepos.subdistrict}
           </td>
         </tr>
       </>

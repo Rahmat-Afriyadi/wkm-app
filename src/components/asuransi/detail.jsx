@@ -45,9 +45,9 @@ export default function AsuransiDetailPage({asuransi}){
     const [message, setMessage] = useState("")
     const [produks, setProduks] = useState([])
     const [alamatKirim, setAlamatKirim] = useState({
-        kodepos:asuransi.kodepos,
-        kelurahan:asuransi.kelurahan,
-        kecamatan:asuransi.kecamatan,
+        province:{name:asuransi.province_name, code:asuransi.province_code},
+        city:{name:asuransi.city_name, code:asuransi.city_code},
+        subdistrict:{name:asuransi.subdistrict_name, code:asuransi.subdistrict_code},
     })
     const [dealer, setDealer] = useState({
         kd_dlr:asuransi.kd_dlr,
@@ -112,7 +112,8 @@ export default function AsuransiDetailPage({asuransi}){
     },[dealer]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(()=>{
-        return setFormData({...formData, ...alamatKirim})
+        console.log("ini data alamat  ", alamatKirim)
+        return setFormData({...formData, province:alamatKirim.province.code, city:alamatKirim.city.code, subdistrict:alamatKirim.subdistrict.code})
     },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
@@ -359,30 +360,30 @@ export default function AsuransiDetailPage({asuransi}){
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.kecamatan} value={alamatKirim.kecamatan}/>
+                    type="text" name="kecamatan" id="" disabled={true} defaultValue={alamatKirim.subdistrict.name} value={alamatKirim.subdistrict.name}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="kode-kerja"
+                    htmlFor="kota"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Kelurahan
+                    Kota
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2">
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kelurahan" id="" disabled={true} defaultValue={alamatKirim.kelurahan} value={alamatKirim.kelurahan}/>
+                    type="text" name="kota" id="kota" disabled={true} defaultValue={alamatKirim.city.name} value={alamatKirim.city.name}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label
-                    htmlFor="kode-kerja"
+                    htmlFor="province"
                     className="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Kode Pos
+                    Province
                 </label>    
                 <div className="mt-1 sm:mt-0 sm:col-span-2 relative">
                     <ModalKodePos setAlamatKirim={setAlamatKirim}/>
                     <input className="max-w-lg pt-3 pb-2 block w-full px-0 mt-0 bg-transparent border-0 border-b-2 appearance-none z-1 focus:outline-none focus:ring-0 focus:border-black border-gray-200 cursor-pointer" 
-                    type="text" name="kodepos" id="" defaultValue={alamatKirim.kodepos} value={alamatKirim.kodepos}/>
+                    type="text" name="province" id="province" defaultValue={alamatKirim.province.name} value={alamatKirim.province.name}/>
                 </div>
             </div>
             <div className="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
