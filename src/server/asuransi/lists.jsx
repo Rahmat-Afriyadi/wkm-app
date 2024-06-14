@@ -56,8 +56,11 @@ export async function readManyApproval(query){
 
 export async function readManyRekapAsuransi(query){
 
-
-    const response = await AuthGetApi("/asuransi/master-data-rekap")
+    const {tgl1, tgl2} = query
+    const response = await AuthGetApi("/asuransi/master-data-rekap?" + new URLSearchParams({
+        tgl1,
+        tgl2,
+    }))
 
 
     return {data:response,page:1}

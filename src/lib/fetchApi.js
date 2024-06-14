@@ -102,23 +102,12 @@ export async function PostApi(data, url) {
   return await res.json();
 }
 
-export async function PostMokita(data, url) {
-  const resMokita = await fetch("https://api-ahass.wahanahonda.com/api/v1/ddms/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: "wahana@mokita",
-      password: "Wahana@Mokita2020!",
-    }),
-  });
-  const resResultMokita = await resMokita.json();
+export async function PostMokita(data, url, token) {
   let res = await fetch(BASE_URL_MOKITA + url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${resResultMokita?.data}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       AppTransId: data.AppTransId,
@@ -127,6 +116,25 @@ export async function PostMokita(data, url) {
     }),
   });
   let resUpdate = await res.json();
+
+  if (resUpdate.Status == -1) {
+    const resMokita = await fetch("https://api-ahass.wahanahonda.com/api/v1/ddms/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: "wahana@mokita",
+        password: "Wahana@Mokita2020!",
+      }),
+    });
+    if (resMokita.status != 200) {
+      return { message: "Token tidak berhasil digenerate" };
+    }
+    const resResultMokita = await resMokita.json();
+    PostMokita(data, url, resResultMokita.Data);
+  }
+
   if (resUpdate.Status == 0) {
     return { message: "Gagal Update transaksi tidak ditemukan" };
   }

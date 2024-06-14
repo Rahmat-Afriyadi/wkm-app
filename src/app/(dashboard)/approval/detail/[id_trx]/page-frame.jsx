@@ -1,6 +1,8 @@
 "use client"
 
+import ModalKodePos from "@/components/Modal/asuransi/modal-kodepos";
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 
@@ -13,6 +15,25 @@ export default function PageFrame({approval}){
         setValue,
         formState: { errors },
     } = useForm({ defaultValues: approval });
+
+    const [alamatKirim, setAlamatKirim] = useState({
+        province:{name:approval.province_name, code:approval.province_code},
+        city:{name:approval.city_name, code:approval.city_code},
+        subdistrict:{name:approval.subdistrict_name, code:approval.subdistrict_code},
+    })
+
+    useEffect(()=>{
+        setValue("province_name", alamatKirim.province.name)
+        setValue("city_name", alamatKirim.city.name)
+        setValue("subdistrict_name", alamatKirim.subdistrict.name)
+        setValue("province", alamatKirim.province.code)
+        setValue("city", alamatKirim.city.code)
+        setValue("subdistrict", alamatKirim.subdistrict.code)
+    },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    useEffect(()=>{
+        setValue("sts_beli", parseInt(approval?.sts_pembelian) > 1 && parseInt(approval?.sts_pembelian) < 4 ?  1 : parseInt(approval?.sts_pembelian) == 1 ? "" :0)
+    },[]) // eslint-disable-line react-hooks/exhaustive-deps
 
 
   const onSubmit = async (values) => {
@@ -35,6 +56,11 @@ export default function PageFrame({approval}){
               },
               body: JSON.stringify(values)
             })
+            if(res.status ==200){
+                const message = await res.json()
+                Swal.fire("Info", message.message, "info");
+            }
+
         } catch (error) {
           Swal.fire("Failed!", error.message, "error");
         }
@@ -124,6 +150,25 @@ export default function PageFrame({approval}){
                             </label>
                             <textarea {...register("alamat", {  required:  "This field is required",})}  className="h-20 border-gray-500 border-2 poin appearance-none block w-full bg-white text-gray-700 rounded col-span-8 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="alamat" type="text" />
                         </div>
+                        <div className="w-full px-3 grid grid-cols-12 mb-5 align-middle">
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor="province">
+                                Provinsi
+                            </label>
+                            <textarea {...register("province_name", {  required:  "This field is required",})}  className="h-20 border-gray-500 border-2 poin appearance-none block w-full bg-white text-gray-700 rounded col-span-8 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="province" type="text" />
+                        </div>
+                        <div className="w-full px-3 grid grid-cols-12 mb-5 align-middle">
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor="city">
+                                City
+                            </label>
+                            <textarea {...register("city_name", {  required:  "This field is required",})}  className="h-20 border-gray-500 border-2 poin appearance-none block w-full bg-white text-gray-700 rounded col-span-8 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="city" type="text" />
+                        </div>
+                        <div className="w-full px-3 grid grid-cols-12 mb-5 align-middle relative">
+                            <ModalKodePos setAlamatKirim={setAlamatKirim}/>
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor="subdistrict">
+                                Kecamatan
+                            </label>
+                            <textarea {...register("subdistrict_name", {  required:  "This field is required",})}  className="h-20 border-gray-500 border-2 poin appearance-none block w-full bg-white text-gray-700 rounded col-span-8 py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="subdistrict" type="text" />
+                        </div>
 
                         <br />
                         <p className="text-lg font-bold mb-5 ml-2">Approval</p>
@@ -135,7 +180,7 @@ export default function PageFrame({approval}){
                                 <select {...register("sts_beli", {
                                         required: "This field is required",
                                     })}
-                                    defaultValue={approval?.sts_beli == "" ? parseInt(approval?.sts_pembelian) > 1 ? 1 : parseInt(approval?.sts_pembelian) == 1 ? "" :0 : approval?.sts_beli }
+                                    // defaultValue={approval?.sts_beli == "" ? parseInt(approval?.sts_pembelian) > 1 ? 1 : parseInt(approval?.sts_pembelian) == 1 ? "" :0 : approval?.sts_beli }
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                     <option value="" disabled={true}> Status Pembayaran</option>
                                     <option value={1}>Approve</option>

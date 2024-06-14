@@ -33,7 +33,7 @@ const Asuransi = ({ site, id }) => {
             {site.sts_pembelian == 1 && <p className="shadow-md bg-gray-200 text-center rounded-lg p-1 font-bold text-md">Apply</p>}
             {site.sts_pembelian == 2 && <p className="shadow-md bg-orange-400 text-center rounded-lg p-1 font-bold text-white">Process</p>}
             {site.sts_pembelian == 3 && <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">Done</p>}
-            {site.sts_pembelian == 4 && <p className="shadow-md bg-red text-center rounded-lg p-1 font-bold text-md text-white">De Claim</p>}
+            {site.sts_pembelian == 4 && <p className="shadow-md bg-red text-center rounded-lg p-1 font-bold text-md text-white">Decline</p>}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/approval/detail/" + site.id_transaksi)}>
             <span className="text-blue-600 ">
