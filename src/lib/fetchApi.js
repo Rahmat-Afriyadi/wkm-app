@@ -110,9 +110,9 @@ export async function PostMokita(data, url, token) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      AppTransId: data.AppTransId,
-      InsuranceTransId: data.InsuranceTransId,
-      Status: data.Status,
+      AppTransId: "data.AppTransId",
+      InsuranceTransId: "data.InsuranceTransId",
+      Status: "data.Status",
     }),
   });
   let resUpdate = await res.json();

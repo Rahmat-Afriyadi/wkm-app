@@ -34,9 +34,10 @@ export default function AsuransiDetailPage({asuransi}){
     const router = useRouter()
 
     useEffect(()=>{
-        if (session?.user?.dataSource && session?.user?.dataSource != asuransi.jenis_source) {
-            router.push("/page-not-found")
-        }
+        console.log("ini data ",session?.user?.dataSource && session?.user?.dataSource, asuransi)
+        // if (session?.user?.dataSource && session?.user?.dataSource != asuransi.jenis_source) {
+        //     router.push("/page-not-found")
+        // }
     },[session]) // eslint-disable-line react-hooks/exhaustive-deps
     
     const [status, setStatus]= useState(asuransi.status)

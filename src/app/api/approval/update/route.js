@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { PostApi, PostMokita } from "@/lib/fetchApi";
+import { PostApi, PostMokita, AuthGetApi } from "@/lib/fetchApi";
 export const POST = async (_req) => {
   let message = { message: "Awal nih" };
   const body = await _req.json();
