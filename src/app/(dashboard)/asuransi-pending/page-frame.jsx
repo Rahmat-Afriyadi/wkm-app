@@ -3,9 +3,37 @@
 
 import { useSession } from "next-auth/react";
 import Search from "@/components/Search/index"
+import Datepicker from "react-tailwindcss-datepicker";
+import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function SiteFrame({children}) {
     const {data:session} = useSession()
+    const searchParams = useSearchParams();
+    const { replace } = useRouter();
+    const pathname = usePathname();
+    const [alasanPending, setAlasanPending]= useState("")
+
+    const today = new Date()
+    const [value, setValue] = useState({startDate:"", endDate:""}); 
+
+    useEffect(()=>{
+        const params = new URLSearchParams(searchParams);
+        params.set("tgl1", "");
+        params.set("tgl2", "");
+        replace(`${pathname}?${params}`);
+    },[]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    const handleValueChange = (newValue) => {
+        const params = new URLSearchParams(searchParams);
+        if (newValue.startDate != null && newValue.endDate) {
+            params.set("tgl1", newValue.startDate);
+            params.set("tgl2", newValue.endDate);
+            replace(`${pathname}?${params}`);
+        }
+        setValue(newValue); 
+    } 
+
     if (!session?.user?.permissions?.includes("Asuransi Pending")) {
         
     }
@@ -27,19 +55,33 @@ export default function SiteFrame({children}) {
                         placeholder={"Search for a asuransi..."}
                     />
                 </div>
-                {/* <div className="w-64 mr-2">
-                <DatePicker
-                    id="date_range"
-                    name="date_range"
-                    primaryColor={"amber"}
-                />
-                </div> */}
-                <div className="w-fit">
+                <div className="max-w-xs mr-2 w-80">
+                    
+                    <Datepicker
+                        id={"range_verifikasi"}
+                        toggleClassName="absolute rounded-r-lg -top-0  right-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed" 
+                        inputClassName="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-9 sm:text-sm" 
+
+                        name={"range_verifikasi"}
+                        value={value}
+                        primaryColor={"amber"}
+                        onChange={handleValueChange}
+                    />
+                </div>
+                <div className="max-w-xs mr-2 w-80">
                 {/* <ActionSelect
                     id={"active"}
                     name={"active"}
                     required={false}
                 /> */}
+                    <select 
+                    value={alasanPending}
+                    onChange={(e)=>{setAlasanPending(e.target.value)}}
+                    className="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-9 sm:text-sm" id="grid-state">
+                        <option value=""> Pilih Alasan</option>
+                        <option value={1}>Approve</option>
+                        <option value={0}>Not Approve</option>
+                    </select>
                 </div>
             </div>
             </div>

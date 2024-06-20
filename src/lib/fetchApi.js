@@ -110,9 +110,9 @@ export async function PostMokita(data, url, token) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
-      AppTransId: "data.AppTransId",
-      InsuranceTransId: "data.InsuranceTransId",
-      Status: "data.Status",
+      AppTransId: data.AppTransId,
+      InsuranceTransId: data.InsuranceTransId,
+      Status: data.Status,
     }),
   });
   let resUpdate = await res.json();
@@ -132,9 +132,10 @@ export async function PostMokita(data, url, token) {
       return { message: "Token tidak berhasil digenerate" };
     }
     const resResultMokita = await resMokita.json();
+    await PostApi({ token: resResultMokita.Data }, "/mokita/update/token");
     PostMokita(data, url, resResultMokita.Data);
   }
-
+  console.log("ini log mokita ", resUpdate);
   if (resUpdate.Status == 0) {
     return { message: "Gagal Update transaksi tidak ditemukan" };
   }

@@ -29,6 +29,9 @@ const Asuransi = ({ site, id }) => {
             {site.nm_dlr}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
+            {new Date(site.tgl_verifikasi).toISOString().split('T')[0]}
+          </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
             <span className="text-blue-600 ">
               <PencilIcon className="w-6 h-5" aria-hidden="true" />
             </span>
