@@ -2,7 +2,7 @@ import {AuthGetApi} from "@/lib/fetchApi"
 
 export async function readManyAsuransi(query){
 
-    const {dataSource, sts, search, limit, pageParams, tgl1, tgl2} = query
+    const {dataSource, sts, search, limit, pageParams, tgl1, tgl2, ap} = query
 
     const response = await AuthGetApi("/asuransi/master-data/" + sts + "?" + new URLSearchParams({
         dataSource,
@@ -10,6 +10,7 @@ export async function readManyAsuransi(query){
         tgl1,
         tgl2,
         limit,
+        ap,
         pageParams
     }))
 
@@ -18,6 +19,7 @@ export async function readManyAsuransi(query){
         search,
         tgl1,
         tgl2,
+        ap,
     }))
 
 

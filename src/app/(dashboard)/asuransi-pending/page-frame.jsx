@@ -7,14 +7,13 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-export default function SiteFrame({children}) {
+export default function SiteFrame({children, alasanPendingList}) {
     const {data:session} = useSession()
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
     const [alasanPending, setAlasanPending]= useState("")
 
-    const today = new Date()
     const [value, setValue] = useState({startDate:"", endDate:""}); 
 
     useEffect(()=>{
@@ -29,6 +28,10 @@ export default function SiteFrame({children}) {
         if (newValue.startDate != null && newValue.endDate) {
             params.set("tgl1", newValue.startDate);
             params.set("tgl2", newValue.endDate);
+            replace(`${pathname}?${params}`);
+        } else {
+            params.set("tgl1", "");
+            params.set("tgl2", "");
             replace(`${pathname}?${params}`);
         }
         setValue(newValue); 
@@ -76,11 +79,19 @@ export default function SiteFrame({children}) {
                 /> */}
                     <select 
                     value={alasanPending}
-                    onChange={(e)=>{setAlasanPending(e.target.value)}}
-                    className="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-9 sm:text-sm" id="grid-state">
-                        <option value=""> Pilih Alasan</option>
-                        <option value={1}>Approve</option>
-                        <option value={0}>Not Approve</option>
+                    onChange={(e)=>{
+                        const params = new URLSearchParams(searchParams);
+                        params.set("ap", e.target.value);
+                        replace(`${pathname}?${params}`);
+                        setAlasanPending(e.target.value)
+                    }}
+                    className="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-2 sm:text-sm" id="grid-state">
+                        <option value="">Pilih Alasan</option>
+                        {alasanPendingList.map((e)=>{
+                            return (
+                                <option key={e.name} value={e.id}>{e.name}</option>
+                            )
+                        })}
                     </select>
                 </div>
             </div>
