@@ -180,7 +180,6 @@ export default function PageFrame({approval}){
                                 <select {...register("sts_beli", {
                                         required: "This field is required",
                                     })}
-                                    // defaultValue={approval?.sts_beli == "" ? parseInt(approval?.sts_pembelian) > 1 ? 1 : parseInt(approval?.sts_pembelian) == 1 ? "" :0 : approval?.sts_beli }
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                     <option value="" disabled={true}> Status Pembayaran</option>
                                     <option value={1}>Approve</option>
@@ -237,7 +236,7 @@ export default function PageFrame({approval}){
                     </div>
                 </div>
 
-                    <br />
+                <br />
                 
                 <button
                     id="button"

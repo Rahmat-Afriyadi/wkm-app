@@ -34,10 +34,9 @@ export default function AsuransiDetailPage({asuransi}){
     const router = useRouter()
 
     useEffect(()=>{
-        console.log("ini data ",session?.user?.dataSource && session?.user?.dataSource, asuransi)
-        // if (session?.user?.dataSource && session?.user?.dataSource != asuransi.jenis_source) {
-        //     router.push("/page-not-found")
-        // }
+        if (session?.user?.dataSource && session?.user?.dataSource != asuransi.jenis_source) {
+            router.push("/page-not-found")
+        }
     },[session]) // eslint-disable-line react-hooks/exhaustive-deps
     
     const [status, setStatus]= useState(asuransi.status)
@@ -113,7 +112,6 @@ export default function AsuransiDetailPage({asuransi}){
     },[dealer]) // eslint-disable-line react-hooks/exhaustive-deps
 
     useEffect(()=>{
-        console.log("ini data alamat  ", alamatKirim)
         return setFormData({...formData, province:alamatKirim.province.code, city:alamatKirim.city.code, subdistrict:alamatKirim.subdistrict.code})
     },[alamatKirim]) // eslint-disable-line react-hooks/exhaustive-deps
 
