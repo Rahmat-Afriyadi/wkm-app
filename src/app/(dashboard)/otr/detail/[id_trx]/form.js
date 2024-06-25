@@ -18,8 +18,8 @@ const form = [
   },
   {
     title: "Motor Price Kode",
-    name: "motorprice_code",
-    id: "motorprice_code",
+    name: "motorprice_kode",
+    id: "motorprice_kode",
     disabled: true,
     type: "text",
   },

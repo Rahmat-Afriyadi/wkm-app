@@ -15,7 +15,7 @@ const Produk = ({ produk, id, setIsModalOpen, setDetailOtr }) => {
         <tr 
         onClick={()=>{
           setDetailOtr({
-            motorprice_code:produk.kd_mdl,
+            motorprice_kode:produk.kd_mdl,
             product_nama:produk.nm_mtr,
             tahun:produk.tahun,
           })

@@ -15,7 +15,7 @@ function classNames(...classes) {
 export default function PageFrame({approval}){
 
     const [detailOtr, setDetailOtr] = useState({
-        motorprice_code:null,
+        motorprice_kode:null,
         product_nama:null,
         tahun:null,
     })
@@ -31,7 +31,7 @@ export default function PageFrame({approval}){
 
 
     useEffect(()=>{
-        setValue("motorprice_code", detailOtr.motorprice_code)
+        setValue("motorprice_kode", detailOtr.motorprice_kode)
         setValue("product_nama", detailOtr.product_nama)
         setValue("tahun", detailOtr.tahun)
     },[detailOtr]) // eslint-disable-line react-hooks/exhaustive-deps

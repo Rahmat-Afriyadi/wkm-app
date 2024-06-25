@@ -18,8 +18,8 @@ const form = [
   },
   {
     title: "Motor Price Kode",
-    name: "motorprice_code",
-    id: "motorprice_code",
+    name: "motorprice_kode",
+    id: "motorprice_kode",
     disabled: true,
     type: "text",
   },
@@ -29,6 +29,20 @@ const form = [
     id: "otr",
     disabled: false,
     type: "number",
+  },
+  {
+    title: "Produk Kode",
+    name: "product_kode",
+    id: "product_kode",
+    disabled: false,
+    type: "text",
+  },
+  {
+    title: "Wrn Kode",
+    name: "wrn_kode",
+    id: "wrn_kode",
+    disabled: false,
+    type: "text",
   },
   {
     title: "Tahun",

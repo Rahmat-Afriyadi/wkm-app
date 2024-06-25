@@ -17,11 +17,10 @@ export default function PageFrame(){
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const [detailOtr, setDetailOtr] = useState({
-        motorprice_code:null,
+        motorprice_kode:null,
         product_nama:null,
         tahun:null,
     })
-
 
 
     const {
@@ -29,18 +28,29 @@ export default function PageFrame(){
         handleSubmit,
         setValue,
         watch,
+        reset,
         formState: { errors },
-    } = useForm({ defaultValues: {create_form:"form"} });
+    } = useForm({ defaultValues: {create_from:"form"} });
 
     const createFrom = watch("create_from", "form")
 
     useEffect(()=>{
-        setValue("motorprice_code", detailOtr.motorprice_code)
+        const today = new Date()
+        setValue("motorprice_kode", detailOtr.motorprice_kode)
         setValue("product_nama", detailOtr.product_nama)
-        setValue("tahun", detailOtr.tahun)
+        setValue("tahun", detailOtr.tahun ? detailOtr.tahun :today.getFullYear()  )
     },[detailOtr]) // eslint-disable-line react-hooks/exhaustive-deps
 
+    useEffect(()=>{
+        setValue("motorprice_kode", "")
+        setValue("product_nama", "")
+        setValue("tahun", "" )
+    },[watch("create_from")]) // eslint-disable-line react-hooks/exhaustive-deps
+
     const onSubmit = async (values) => {
+
+        values.otr = parseInt(values.otr)
+        values.tahun = parseInt(values.tahun)
 
         Swal.fire({
         title: "Do you want to save the record?",
@@ -52,19 +62,18 @@ export default function PageFrame(){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                console.log("ini valuess ",values)
-                // const res = await fetch("/api/approval/update",{
-                //   method: "POST",
-                //   headers: {
-                //       Accept: "application/json",
-                //       "Content-Type": "application/json",
-                //   },
-                //   body: JSON.stringify(values)
-                // })
-                // if(res.status ==200){
-                //     const message = await res.json()
-                //     Swal.fire("Info", message.message, "info");
-                // }
+                const res = await fetch("/api/otr/create",{
+                  method: "POST",
+                  headers: {
+                      Accept: "application/json",
+                      "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(values)
+                })
+                if(res.status ==200){
+                    const message = await res.json()
+                    Swal.fire("Info", message.message, "info");
+                }
 
             } catch (error) {
             Swal.fire("Failed!", error.message, "error");
@@ -108,7 +117,7 @@ export default function PageFrame(){
                     </div>
 
                     {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                        return <InputForm disabled={createFrom != "form" && e.disabled == true} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
                     })}
                 </div>
 

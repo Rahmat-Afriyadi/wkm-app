@@ -14,7 +14,7 @@ const OtrNa = ({ otrNa, id, setIsModalOpen, setDetailOtr }) => {
         <tr 
         onClick={()=>{
           setDetailOtr({
-            motorprice_code:otrNa.motorprice_kode,
+            motorprice_kode:otrNa.motorprice_kode,
             product_nama:otrNa.nm_mtr,
             tahun:otrNa.tahun,
           })

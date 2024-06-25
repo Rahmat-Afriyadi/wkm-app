@@ -27,6 +27,7 @@ export default async function Page({searchParams}) {
                 tgl2: searchParams.tgl2 ? searchParams.tgl2 : today.toISOString().split('T')[0],
             })
         )
+       
     }
         
     return (
