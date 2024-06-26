@@ -56,9 +56,12 @@ export default function UploadFileForm(){
                 method:"POST",
                 body:data
             })
-            // const responseResultJson = await result.json()
-            console.log("ini result yaa ", result)
-            setMessage(responseResultJson.message.message)
+            if (result.status == 200) {
+                const responseResultJson = await result.json()
+                setMessage(responseResultJson.message)
+            }else {
+                setMessage("Terjadi masalah hubungin Rahmat")
+            }
         }}
         >Upload</button>
         </div>
