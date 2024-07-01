@@ -3,13 +3,13 @@ import PageFrame from "./page-frame"
 
 export default async function Page({params, searchParams}){
 
-    const {id_trx} = params
-    const approval = await AuthGetApi("/asuransi/detail-approval/"+id_trx)
+    const {id} = params
+    const otr = await AuthGetApi("/otr/detail-otr/"+id)
 
     return (
         <>
             <p className="text-2xl font-bold mb-9">Detail OTR</p>
-            <PageFrame approval={approval}/>
+            <PageFrame otr={otr}/>
         </>
     )
 }

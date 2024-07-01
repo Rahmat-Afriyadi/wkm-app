@@ -1,8 +1,5 @@
 "use client"
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index"
 
 export default function PageFrame({children}){
@@ -11,11 +8,11 @@ export default function PageFrame({children}){
         <>
             <div className="grid gap-6 mb-6 md:grid-cols-2">
                 <div className="max-w-xs mr-2 w-80 mt-2 flex justify-start">
-                    <a href="/otr/create" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create</a>
+                    <a href="/mst-mtr/create" class="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Create</a>
                     <Search
                             id="search-query"
                             name="search_query"
-                            placeholder={"Search for a OTR..."}
+                            placeholder={"Mencari kendaraan..."}
                         />
                 </div>
             </div>

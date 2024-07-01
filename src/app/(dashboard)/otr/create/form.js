@@ -1,13 +1,3 @@
-import {
-  ChartPieIcon,
-  Cog6ToothIcon,
-  UsersIcon,
-  FolderIcon,
-  LockClosedIcon,
-  CurrencyDollarIcon,
-  SignalIcon,
-} from "@heroicons/react/24/outline";
-
 const form = [
   {
     title: "Nama Produk",

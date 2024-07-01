@@ -1,7 +1,7 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyOtr } from "@/server/asuransi/lists";
+import { readManyMstMtr } from "@/server/asuransi/lists";
 import Site from "./item"
 
 export default async function ListAsuransi({searchParams}) {
@@ -9,7 +9,7 @@ export default async function ListAsuransi({searchParams}) {
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
 
-  const {data, page} = await readManyOtr({
+  const {data, page} = await readManyMstMtr({
     search,
     limit,
     pageParams
@@ -34,27 +34,27 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Motor Price Code
+                        Nomor Kendaraan
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Kode Produk
+                        Kode Model
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Produk
+                        Nama Kendaraan
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        OTR
+                        Merek
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Tahun
+                        Jenis Kendaraan
                 </th>
                 <th
                     scope="col"

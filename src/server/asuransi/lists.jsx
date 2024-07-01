@@ -30,6 +30,50 @@ export async function readManyAsuransi(query){
 
 }
 
+export async function readManyOtr(query){
+
+    const {search, limit, pageParams} = query
+
+    const response = await AuthGetApi("/otr/master-data?" + new URLSearchParams({
+        search,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/otr/master-data-count?" + new URLSearchParams({
+        search,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
+export async function readManyMstMtr(query){
+
+    const {search, limit, pageParams} = query
+
+    const response = await AuthGetApi("/mst-mtr/master-data?" + new URLSearchParams({
+        search,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/mst-mtr/master-data-count?" + new URLSearchParams({
+        search,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
 export async function readManyApproval(query){
 
     const {search, limit, pageParams, tgl1, tgl2} = query
