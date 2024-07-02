@@ -9,7 +9,7 @@ function classNames(...classes) {
 }
 
 
-const Asuransi = ({ site, id }) => {
+const Asuransi = ({ site, id, alasanPending }) => {
 
   const router = useRouter()
 
@@ -27,6 +27,9 @@ const Asuransi = ({ site, id }) => {
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.nm_dlr}
+          </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
+            {alasanPending.filter((e)=>e.id== site.alasan_pending)[0].name}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {new Date(site.tgl_verifikasi).toISOString().split('T')[0]}

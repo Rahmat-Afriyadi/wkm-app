@@ -4,7 +4,7 @@ import Pagination from "@/components/Pagination/index";
 import { readManyAsuransi } from "@/server/asuransi/lists";
 import Site from "./item"
 
-export default async function ListAsuransi({searchParams}) {
+export default async function ListAsuransi({searchParams, alasanPending}) {
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
@@ -31,6 +31,7 @@ export default async function ListAsuransi({searchParams}) {
           key={i}
           id={i}
           site={{ ...item }}
+          alasanPending={alasanPending}
         />
       );
     });
@@ -53,6 +54,11 @@ export default async function ListAsuransi({searchParams}) {
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Nama Dealer
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Alasan Pending
                 </th>
                 <th
                     scope="col"

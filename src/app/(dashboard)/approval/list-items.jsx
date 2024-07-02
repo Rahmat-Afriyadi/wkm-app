@@ -8,10 +8,12 @@ export default async function ListAsuransi({searchParams}) {
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
+  const sb = searchParams?.sb 
 
   const {data, page} = await readManyApproval({
     tgl1:searchParams?.tgl1,
     tgl2:searchParams?.tgl2,
+    sb,
     search,
     limit,
     pageParams

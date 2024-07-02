@@ -21,13 +21,10 @@ const Asuransi = ({ site, id }) => {
             {site.motorprice_kode}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.product_kode}
-          </td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.product_nama}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.otr}
+            {site.otr.toLocaleString()}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.tahun}

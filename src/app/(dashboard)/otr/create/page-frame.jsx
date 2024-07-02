@@ -7,6 +7,7 @@ import { form } from "./form"
 import ModalProduk from "@/components/Modal/otr/modal-produk"
 import OtrNa from "@/components/Modal/otr/modal-otr-na"
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 
 function classNames(...classes) {
@@ -23,6 +24,8 @@ export default function PageFrame(){
     })
 
 
+    const router = useRouter()
+
     const {
         register,
         handleSubmit,
@@ -30,7 +33,7 @@ export default function PageFrame(){
         watch,
         reset,
         formState: { errors },
-    } = useForm({ defaultValues: {create_from:"form"} });
+    } = useForm({ defaultValues: {create_from:"otrna"} });
 
     const createFrom = watch("create_from", "form")
 
@@ -48,7 +51,6 @@ export default function PageFrame(){
     },[watch("create_from")]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onSubmit = async (values) => {
-
         values.otr = parseInt(values.otr)
         values.tahun = parseInt(values.tahun)
 
@@ -73,6 +75,7 @@ export default function PageFrame(){
                 if(res.status ==200){
                     const message = await res.json()
                     Swal.fire("Info", message.message, "info");
+                    router.push("/otr")
                 }
 
             } catch (error) {
@@ -99,7 +102,6 @@ export default function PageFrame(){
                                     required: "This field is required",
                                 })}
                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                <option value="form">Form</option>
                                 <option value="otrna">OTR NA</option>
                                 <option value="motorprice">Motorprice</option>
                             </select>
@@ -117,7 +119,7 @@ export default function PageFrame(){
                     </div>
 
                     {form.map((e)=>{
-                        return <InputForm disabled={createFrom != "form" && e.disabled == true} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                        return <InputForm disabled={createFrom == "motorprice" && e.name == "tahun"? false : e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
                     })}
                 </div>
 

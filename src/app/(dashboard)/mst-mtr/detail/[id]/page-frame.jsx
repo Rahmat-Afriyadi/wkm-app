@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
+import { useRouter } from "next/navigation";
 
 export default function PageFrame({otr}){
 
@@ -13,8 +14,13 @@ export default function PageFrame({otr}){
         formState: { errors },
     } = useForm({ defaultValues: otr });
 
+    const router = useRouter()
+
     const onSubmit = async (values) => {
         values.jenis_kendaraan = parseInt(values.jenis_kendaraan)
+        if (parseInt(values.jenis_kendaraan) == 0) {
+            return Swal.fire("Failed!", error.message, "error");
+        }
 
         Swal.fire({
         title: "Do you want to save the record?",
@@ -37,6 +43,7 @@ export default function PageFrame({otr}){
                 if(res.status ==200){
                     const message = await res.json()
                     Swal.fire("Info", message.message, "info");
+                    router.push("/mst-mtr")
                 }
 
             } catch (error) {
@@ -59,24 +66,45 @@ export default function PageFrame({otr}){
                     })}
 
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="grid-state">
-                                Jenis Kendaraan
-                            </label>
-                            <div className="relative col-span-8 ">
-                                <select {...register("jenis_kendaraan", {
-                                        required: "This field is required",
-                                    })}
-                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value="" disabled={true}> Jenis_kendaraan</option>
-                                    <option value={1}>Motor</option>
-                                    <option value={2}>Mobil</option>
-                                </select>
-                                {errors["sts_beli"] && (
-                                    <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}
-                                        
-                                    </p>
-                                )}
-                            </div>
+                        <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="grid-state">
+                            Jenis Kendaraan
+                        </label>
+                        <div className="relative col-span-8 ">
+                            <select {...register("jenis_kendaraan", {
+                                    required: "This field is required",
+                                })}
+                                    className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                                <option value="" disabled={true}> Jenis_kendaraan</option>
+                                <option value={1}>Motor</option>
+                                <option value={2}>Mobil</option>
+                            </select>
+                            {errors["sts_beli"] && (
+                                <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}
+                                    
+                                </p>
+                            )}
+                        </div>
+                    </div>
+                    
+                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                        <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="merk">
+                            Merk
+                        </label>
+                        <div className="relative col-span-8 ">
+                            <select {...register("merk", {
+                                    required: "This field is required",
+                                })}
+                                    className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="merk">
+                                <option value="" disabled={true} selected>Pilih Merk</option>
+                                <option value="Honda">Honda</option>
+                                <option value="Yamaha">Yamaha</option>
+                            </select>
+                            {errors["sts_beli"] && (
+                                <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}
+                                    
+                                </p>
+                            )}
+                        </div>
                     </div>
 
                 </div>

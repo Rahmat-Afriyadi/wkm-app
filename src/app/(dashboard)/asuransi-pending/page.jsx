@@ -13,7 +13,7 @@ export default async function Page({searchParams}) {
     <main className="h-full min-h-screen p-5">
         
         <SiteFrame alasanPendingList={alasanPendingList}>
-            <ListAsuransi searchParams={searchParams}/>
+            <ListAsuransi searchParams={searchParams} alasanPending={alasanPendingList}/>
         </SiteFrame>
     </main>
   )

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
+import { useRouter } from "next/navigation";
 
 export default function PageFrame({otr}){
 
@@ -12,6 +13,8 @@ export default function PageFrame({otr}){
         handleSubmit,
         formState: { errors },
     } = useForm({ defaultValues: otr });
+
+    const router = useRouter()
 
     const onSubmit = async (values) => {
         values.id = otr.id
@@ -39,6 +42,7 @@ export default function PageFrame({otr}){
                 if(res.status ==200){
                     const message = await res.json()
                     Swal.fire("Info", message.message, "info");
+                    router.push("/otr")
                 }
 
             } catch (error) {

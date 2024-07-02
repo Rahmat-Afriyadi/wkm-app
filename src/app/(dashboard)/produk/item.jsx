@@ -10,7 +10,6 @@ function classNames(...classes) {
 
 
 const Asuransi = ({ site, id }) => {
-
   const router = useRouter()
 
   if (site) {
@@ -18,21 +17,24 @@ const Asuransi = ({ site, id }) => {
       <>
         <tr key={site.nama} className={classNames("hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")} >
           <td className="px-3 py-4 text-sm whitespace-nowrap font-bold">
-            {site.no_mtr}
+            {site.kd_produk}
+          </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap font-bold">
+            {site.nm_produk}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.kd_mdl}
+            {site.jns_asuransi == "1" ? "Kendaraan" : site.jns_asuransi == "2" ? "Jiwa":""}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.nm_mtr}
+            {site.nilai_pertanggungan.toLocaleString()}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.merk}
+            {site.premi.toLocaleString()}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.jenis_kendaraan == 1 ? "Motor" : site.jenis_kendaraan == 2 ? "Mobil":""}
+            {site.admin.toLocaleString()}
           </td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/mst-mtr/detail/" + site.id)}>
+          <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/produk/detail/" + site.kd_produk)}>
             <span className="text-blue-600 ">
               <PencilIcon className="w-6 h-5" aria-hidden="true" />
             </span>

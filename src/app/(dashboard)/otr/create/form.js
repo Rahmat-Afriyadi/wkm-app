@@ -21,20 +21,6 @@ const form = [
     type: "number",
   },
   {
-    title: "Produk Kode",
-    name: "product_kode",
-    id: "product_kode",
-    disabled: false,
-    type: "text",
-  },
-  {
-    title: "Wrn Kode",
-    name: "wrn_kode",
-    id: "wrn_kode",
-    disabled: false,
-    type: "text",
-  },
-  {
     title: "Tahun",
     name: "tahun",
     id: "tahun",

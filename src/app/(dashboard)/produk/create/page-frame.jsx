@@ -83,8 +83,9 @@ export default function PageFrame(){
                                 <select {...register("jenis_asuransi", {
                                         required: "This field is required",
                                     })}
+                                    
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value={0} disabled={true}> Jenis Asuransi</option>
+                                    <option value={0} disabled={true} selected> Jenis Asuransi</option>
                                     <option value={1}>Asuransi Kendaraan</option>
                                     <option value={2}>Asuransi Jiwa</option>
                                 </select>

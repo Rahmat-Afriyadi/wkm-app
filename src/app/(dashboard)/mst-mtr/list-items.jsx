@@ -34,11 +34,6 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nomor Kendaraan
-                </th>
-                <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Kode Model
                 </th>
                 <th

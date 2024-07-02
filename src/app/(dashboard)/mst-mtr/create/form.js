@@ -1,13 +1,6 @@
 const form = [
   {
-    title: "Nomor Kendaraan",
-    name: "no_mtr",
-    id: "no_mtr",
-    disabled: false,
-    type: "text",
-  },
-  {
-    title: "Model Kendaraan",
+    title: "Kode Model",
     name: "kd_mdl",
     id: "kd_mdl",
     disabled: false,

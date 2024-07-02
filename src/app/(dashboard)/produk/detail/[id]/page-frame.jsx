@@ -5,13 +5,13 @@ import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 
-export default function PageFrame({otr}){
+export default function PageFrame({item}){
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({ defaultValues: otr });
+    } = useForm({ defaultValues: item });
 
     const onSubmit = async (values) => {
         values.jenis_kendaraan = parseInt(values.jenis_kendaraan)
@@ -63,13 +63,13 @@ export default function PageFrame({otr}){
                                 Jenis Kendaraan
                             </label>
                             <div className="relative col-span-8 ">
-                                <select {...register("jenis_kendaraan", {
+                                <select {...register("jns_asuransi", {
                                         required: "This field is required",
                                     })}
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value="" disabled={true}> Jenis_kendaraan</option>
-                                    <option value={1}>Motor</option>
-                                    <option value={2}>Mobil</option>
+                                    <option value="" disabled={true}> Jenis asuransi</option>
+                                    <option value="1">Kendaraan</option>
+                                    <option value="2">Jiwa</option>
                                 </select>
                                 {errors["sts_beli"] && (
                                     <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}

@@ -17,9 +17,6 @@ const Asuransi = ({ site, id }) => {
     return (
       <>
         <tr key={site.nama} className={classNames("hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")} >
-          <td className="px-3 py-4 text-sm whitespace-nowrap font-bold">
-            {site.no_mtr}
-          </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.kd_mdl}
           </td>

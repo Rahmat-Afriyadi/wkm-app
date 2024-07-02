@@ -74,12 +74,37 @@ export async function readManyMstMtr(query){
 
 }
 
+export async function readManyProduk(query){
+
+    const {search, jenis_asuransi, limit, pageParams} = query
+
+    const response = await AuthGetApi("/produk/master-data?" + new URLSearchParams({
+        search,
+        jenis_asuransi,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/produk/master-data-count?" + new URLSearchParams({
+        search,
+        jenis_asuransi,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
 export async function readManyApproval(query){
 
-    const {search, limit, pageParams, tgl1, tgl2} = query
+    const {search, limit, pageParams, tgl1, tgl2, sb} = query
 
     const response = await AuthGetApi("/asuransi/master-approval?" + new URLSearchParams({
         search,
+        sb,
         tgl1,
         tgl2,
         limit,
@@ -88,6 +113,7 @@ export async function readManyApproval(query){
 
     const resultLength = await AuthGetApi("/asuransi/master-approval-count?" + new URLSearchParams({
         search,
+        sb,
         tgl1,
         tgl2,
     }))

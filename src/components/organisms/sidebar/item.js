@@ -54,6 +54,16 @@ const navigation = [
     to: "/approval",
     icon: FolderIcon,
   },
+  {
+    name: "On The Road",
+    to: "/otr",
+    icon: FolderIcon,
+  },
+  {
+    name: "Master Kendaraan",
+    to: "/mst-mtr",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];

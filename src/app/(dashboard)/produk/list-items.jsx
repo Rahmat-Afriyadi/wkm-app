@@ -1,16 +1,18 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyMstMtr } from "@/server/asuransi/lists";
+import { readManyProduk } from "@/server/asuransi/lists";
 import Site from "./item"
 
 export default async function ListAsuransi({searchParams}) {
   const pageParams = searchParams?.page || 1;
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
+  const jenis_asuransi = searchParams?.jenis_asuransi
 
-  const {data, page} = await readManyMstMtr({
+  const {data, page} = await readManyProduk({
     search,
+    jenis_asuransi,
     limit,
     pageParams
   })
@@ -34,27 +36,32 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nomor Kendaraan
+                        Kode Produk
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Kode Model
+                        Nama Produk
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Nama Kendaraan
+                        Jenis Asuransi
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Merek
+                        Nilai Pertanggungan
                 </th>
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Jenis Kendaraan
+                        Premi
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Admin
                 </th>
                 <th
                     scope="col"

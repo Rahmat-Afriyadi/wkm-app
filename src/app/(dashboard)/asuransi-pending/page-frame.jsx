@@ -12,7 +12,7 @@ export default function SiteFrame({children, alasanPendingList}) {
     const searchParams = useSearchParams();
     const { replace } = useRouter();
     const pathname = usePathname();
-    const [alasanPending, setAlasanPending]= useState("")
+    const [alasanPending, setAlasanPending]= useState(searchParams.get("ap") ? searchParams.get("ap") : "")
 
     const [value, setValue] = useState({startDate:"", endDate:""}); 
 
@@ -40,8 +40,6 @@ export default function SiteFrame({children, alasanPendingList}) {
     if (!session?.user?.permissions?.includes("Asuransi Pending")) {
         
     }
-    // const privileges = session?.user.role.privileges;
-    // const privilege  = privileges?.filter((val) => val.name === "Sites")[0];
     const privilege  = {add:true,};
     return (
         <>
@@ -72,11 +70,6 @@ export default function SiteFrame({children, alasanPendingList}) {
                     />
                 </div>
                 <div className="max-w-xs mr-2 w-80">
-                {/* <ActionSelect
-                    id={"active"}
-                    name={"active"}
-                    required={false}
-                /> */}
                     <select 
                     value={alasanPending}
                     onChange={(e)=>{
@@ -86,7 +79,7 @@ export default function SiteFrame({children, alasanPendingList}) {
                         setAlasanPending(e.target.value)
                     }}
                     className="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-2 sm:text-sm" id="grid-state">
-                        <option value="">Pilih Alasan</option>
+                        <option value="" selected>Pilih Alasan</option>
                         {alasanPendingList.map((e)=>{
                             return (
                                 <option key={e.name} value={e.id}>{e.name}</option>
