@@ -112,8 +112,6 @@ export default function PageFrame(){
                 <br />
                 
 
-                {/* <div dangerouslySetInnerHTML={{ __html: desc }} /> */}
-
                 <button
                     id="button"
                     type="submit"
