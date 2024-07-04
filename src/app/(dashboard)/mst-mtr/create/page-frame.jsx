@@ -26,6 +26,7 @@ export default function PageFrame({merkMobil, merkMotor}){
         if (values.jenis_kendaraan == 0 ) {
             return Swal.fire("Failed!", "Belum pilih jenis kendaraan", "error");
         }
+        values.jenis_kendaraan = parseInt(values.jenis_kendaraan)
         Swal.fire({
         title: "Do you want to save the record?",
         icon: "question",
