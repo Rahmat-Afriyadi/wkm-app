@@ -5,16 +5,28 @@ import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export default function PageFrame({otr}){
+export default function PageFrame({otr, merkMobil, merkMotor}){
 
     const {
         register,
         handleSubmit,
+        watch,
+        setValue,
         formState: { errors },
     } = useForm({ defaultValues: otr });
 
     const router = useRouter()
+    const jnsKendaraan = watch("jenis_kendaraan", otr.jenis_kendaraan)
+
+    useEffect( ()=>{
+        if (jnsKendaraan != otr.jenis_kendaraan) {
+            setValue("merk", "")
+        }else {
+            setValue("merk", otr.merk)
+        }
+    },[jnsKendaraan]) // eslint-disable-line react-hooks/exhaustive-deps
 
     const onSubmit = async (values) => {
         values.jenis_kendaraan = parseInt(values.jenis_kendaraan)
@@ -91,19 +103,14 @@ export default function PageFrame({otr}){
                             Merk
                         </label>
                         <div className="relative col-span-8 ">
-                            <select {...register("merk", {
+                            <select disabled={jnsKendaraan==0} {...register("merk", {
                                     required: "This field is required",
                                 })}
                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="merk">
-                                <option value="" disabled={true} selected>Pilih Merk</option>
-                                <option value="Honda">Honda</option>
-                                <option value="Yamaha">Yamaha</option>
+                                <option value="" disabled={true}>Pilih Merk</option>
+                                { jnsKendaraan == 1 &&  merkMotor.map((e)=><option key={e.id} value={e.merk}>{e.merk}</option>)}
+                                { jnsKendaraan == 2 &&  merkMobil.map((e)=><option key={e.id} value={e.merk}>{e.merk}</option>)}
                             </select>
-                            {errors["sts_beli"] && (
-                                <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}
-                                    
-                                </p>
-                            )}
                         </div>
                     </div>
 

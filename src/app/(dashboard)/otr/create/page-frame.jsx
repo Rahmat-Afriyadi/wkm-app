@@ -35,7 +35,7 @@ export default function PageFrame(){
         formState: { errors },
     } = useForm({ defaultValues: {create_from:"otrna"} });
 
-    const createFrom = watch("create_from", "form")
+    const createFrom = watch("create_from", "otrna")
 
     useEffect(()=>{
         const today = new Date()
@@ -74,7 +74,7 @@ export default function PageFrame(){
                 })
                 if(res.status ==200){
                     const message = await res.json()
-                    Swal.fire("Info", message.message, "info");
+                    await Swal.fire("Info", message.message, "info");
                     router.push("/otr")
                 }
 
@@ -102,8 +102,8 @@ export default function PageFrame(){
                                     required: "This field is required",
                                 })}
                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                <option value="otrna">OTR NA</option>
-                                <option value="motorprice">Motorprice</option>
+                                <option value="otrna">OTR NA Wanda</option>
+                                <option value="motorprice">Jenis Kendaraan</option>
                             </select>
                         </div>
                     </div>
@@ -114,7 +114,7 @@ export default function PageFrame(){
                         <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor={"pilihan"}>
                             Pilihan
                         </label>
-                        <input placeholder={createFrom == "otrna" ? "Pilih OTR NA" : createFrom == "motorprice" ? "Pilih Motorprice" : ""}  id={"pilihan"} disabled={createFrom == "form" ? true : false} onClick={()=>setIsModalOpen(true)} className={classNames(createFrom == "form" ? "cursor-not-allowed bg-gray-200": "border-gray-500 border-2","appearance-none block w-ful text-gray-700 border border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500")} type={"text"} />
+                        <input placeholder={createFrom == "otrna" ? "Pilih OTR NA" : createFrom == "motorprice" ? "Pilih Model" : ""}  id={"pilihan"} disabled={createFrom == "form" ? true : false} onClick={()=>setIsModalOpen(true)} className={classNames(createFrom == "form" ? "cursor-not-allowed bg-gray-200": "border-gray-500 border-2","appearance-none block w-ful text-gray-700 border border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500")} type={"text"} />
                     
                     </div>
 

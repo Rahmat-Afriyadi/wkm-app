@@ -11,17 +11,16 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-export default function PageFrame(){
+export default function PageFrame({merkMobil, merkMotor}){
 
     const {
         register,
         handleSubmit,
-        setValue,
         watch,
-        reset,
         formState: { errors },
-    } = useForm({defaultValues:{jenis_kendaraan:0}});
+    } = useForm({defaultValues:{jenis_kendaraan:0, merk:""}});
 
+    const jnsKendaraan = watch("jenis_kendaraan")
 
     const onSubmit = async (values) => {
         if (values.jenis_kendaraan == 0 ) {
@@ -77,7 +76,7 @@ export default function PageFrame(){
                                         required: "This field is required",
                                     })}
                                      className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value={0} disabled={true}> Jenis_kendaraan</option>
+                                    <option value={0} disabled={true}> Jenis kendaraan</option>
                                     <option value={1}>Motor</option>
                                     <option value={2}>Mobil</option>
                                 </select>
@@ -87,6 +86,22 @@ export default function PageFrame(){
                                     </p>
                                 )}
                             </div>
+                    </div>
+
+                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                        <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="merk">
+                            Merk
+                        </label>
+                        <div className="relative col-span-8 ">
+                            <select disabled={jnsKendaraan==0} {...register("merk", {
+                                    required: "This field is required",
+                                })}
+                                    className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="merk">
+                                <option value="" disabled={true}>Pilih Merk</option>
+                                { jnsKendaraan == 1 &&  merkMotor.map((e)=><option key={e.id} value={e.merk}>{e.merk}</option>)}
+                                { jnsKendaraan == 2 &&  merkMobil.map((e)=><option key={e.id} value={e.merk}>{e.merk}</option>)}
+                            </select>
+                        </div>
                     </div>
 
                 </div>

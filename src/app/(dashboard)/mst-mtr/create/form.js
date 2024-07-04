@@ -13,13 +13,6 @@ const form = [
     disabled: false,
     type: "text",
   },
-  {
-    title: "Merek",
-    name: "merk",
-    id: "merk",
-    disabled: false,
-    type: "text",
-  },
 ];
 
 export { form };

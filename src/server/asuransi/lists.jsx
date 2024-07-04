@@ -38,11 +38,11 @@ export async function readManyOtr(query){
         search,
         limit,
         pageParams
-    }))
+    }),"otr")
 
     const resultLength = await AuthGetApi("/otr/master-data-count?" + new URLSearchParams({
         search,
-    }))
+    }),"otr")
 
 
     return {data:response, page: {

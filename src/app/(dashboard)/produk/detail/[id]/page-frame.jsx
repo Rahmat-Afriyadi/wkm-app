@@ -26,7 +26,7 @@ export default function PageFrame({item}){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                const res = await fetch("/api/mst-mtr/update",{
+                const res = await fetch("/api/produk/update",{
                   method: "POST",
                   headers: {
                       Accept: "application/json",
@@ -59,14 +59,14 @@ export default function PageFrame({item}){
                     })}
 
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="grid-state">
-                                Jenis Kendaraan
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="jenis_asuransi">
+                                Jenis Asuransi
                             </label>
                             <div className="relative col-span-8 ">
                                 <select {...register("jns_asuransi", {
                                         required: "This field is required",
                                     })}
-                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="jenis_asuransi">
                                     <option value="" disabled={true}> Jenis asuransi</option>
                                     <option value="1">Kendaraan</option>
                                     <option value="2">Jiwa</option>

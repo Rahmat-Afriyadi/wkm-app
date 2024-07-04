@@ -52,14 +52,13 @@ export default function PageFrame({children}){
                         <select 
                         value={statusBayar}
                         onChange={(e)=>{
-                            console.log("iini asb ", e.target.value)
                             const params = new URLSearchParams(searchParams);
                             params.set("sb", e.target.value);
                             replace(`${pathname}?${params}`);
                             setStatusBayar(e.target.value)
                         }}
                         className="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-2 sm:text-sm" id="grid-state">
-                            <option value="" selected>All</option>
+                            <option value={0}>All</option>
                             {statusBayarList.map((e)=>{
                                 return (
                                     <option key={e.name} value={e.id}>{e.name}</option>

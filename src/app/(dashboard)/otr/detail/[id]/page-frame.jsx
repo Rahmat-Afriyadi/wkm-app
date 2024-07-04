@@ -5,6 +5,8 @@ import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 import { useRouter } from "next/navigation";
+import { revalidateTag } from "next/cache";
+
 
 export default function PageFrame({otr}){
 
@@ -41,8 +43,14 @@ export default function PageFrame({otr}){
                 })
                 if(res.status ==200){
                     const message = await res.json()
-                    Swal.fire("Info", message.message, "info");
-                    router.push("/otr")
+                     Swal.fire({
+                        title: "Info",
+                        text: message.message,
+                        icon: "info",
+                        preConfirm: () => {
+                            router.back()
+                        },
+                    });
                 }
 
             } catch (error) {

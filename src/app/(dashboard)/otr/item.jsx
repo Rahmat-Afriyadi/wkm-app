@@ -21,7 +21,7 @@ const Asuransi = ({ site, id }) => {
             {site.motorprice_kode}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.product_nama}
+            {site.mst_mtr?.nm_mtr}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.otr.toLocaleString()}

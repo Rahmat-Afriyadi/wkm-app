@@ -2,7 +2,7 @@
 
 import { Disclosure } from "@headlessui/react";
 import { navigation, secondaryNavigation } from "./item"
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useRouter, useSelectedLayoutSegment } from "next/navigation";
 import { ArrowLeftStartOnRectangleIcon,Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
@@ -15,6 +15,7 @@ export default function SidebarDesktop({open, setOpen
 }) {
   const segment = useSelectedLayoutSegment()
   const {data:session} = useSession()
+  const router = useRouter()
 
 
   return (
@@ -25,7 +26,7 @@ export default function SidebarDesktop({open, setOpen
           <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-cyan-600 px-6 pb-4 shadow-lg">
             <strong style={
                 {transition: "transform 0.5s ease-in-out"}
-              } className={`absolute left-60 top-4 text-2xl cursor-pointer ${!open? "-translate-x-[220px]" : ""}`} onClick={()=>{setOpen(!open)}}>{"<-"}</strong>
+              } className={`absolute left-60 top-4 text-2xl cursor-pointer ${!open? "-translate-x-[220px]" : ""}`} onClick={()=>{router.back()}}>{"<-"}</strong>
               
             <div className="flex h-16 shrink-0 overflow-hidden items-center justify-between">
               <strong style={

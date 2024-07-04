@@ -1,11 +1,9 @@
-import { AuthGetApi } from "@/lib/fetchApi";
 import { NextResponse } from "next/server";
-export const GET = async (_req) => {
-  const response = await AuthGetApi(
-    "/produk/master-data?" +
-      new URLSearchParams({
-        jenis_asuransi: _req.nextUrl.searchParams.get("jenis_asuransi"),
-      })
-  );
-  return NextResponse.json({ response });
+import { PostApi } from "@/lib/fetchApi";
+import { revalidatePath, revalidateTag } from "next/cache";
+export const POST = async (_req) => {
+  const body = await _req.json();
+  let response = await PostApi(body, "/produk/update-update");
+  revalidateTag("otr");
+  return NextResponse.json({ revalidated: true, message: response.message });
 };
