@@ -9,7 +9,7 @@ export default async function Page({params, searchParams}){
 
     return (
         <>
-            <p className="text-2xl font-bold mb-9">Detail Kendaraan</p>
+            <p className="text-2xl font-bold mb-9">Detail Produk</p>
             <PageFrame item={item} vendorList={vendorList}/>
         </>
     )

@@ -98,6 +98,29 @@ export async function readManyProduk(query){
 
 }
 
+export async function readManyVendor(query){
+
+    const {search, jenis_asuransi, limit, pageParams} = query
+
+    const response = await AuthGetApi("/vendor/master-data?" + new URLSearchParams({
+        search,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/vendor/master-data-count?" + new URLSearchParams({
+        search,
+        jenis_asuransi,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
 export async function readManyApproval(query){
 
     const {search, limit, pageParams, tgl1, tgl2, sb} = query
