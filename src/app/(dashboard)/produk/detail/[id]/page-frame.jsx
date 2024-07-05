@@ -23,6 +23,14 @@ export default function PageFrame({item, vendorList}){
 
     const onSubmit = async (values) => {
         values.deskripsi = desc
+        values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
+        values.premi = parseInt(values.premi)
+        values.admin = parseInt(values.admin)
+
+        const formData = new FormData()
+        formData.append("files", values.logo[0])
+        delete values.logo
+
 
         Swal.fire({
         title: "Do you want to save the record?",
@@ -34,7 +42,7 @@ export default function PageFrame({item, vendorList}){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                const res = await fetch("/api/produk/update",{
+                const resUpdate = await fetch("/api/produk/update",{
                   method: "POST",
                   headers: {
                       Accept: "application/json",
@@ -42,8 +50,14 @@ export default function PageFrame({item, vendorList}){
                   },
                   body: JSON.stringify(values)
                 })
-                if(res.status ==200){
-                    const message = await res.json()
+
+                const resLogo = await fetch("/api/produk/upload-logo",{
+                  method: "POST",
+                  body: formData
+                })
+
+                if(resUpdate.status ==200){
+                    const message = await resUpdate.json()
                     Swal.fire("Info", message.message, "info");
                 }
 
@@ -53,6 +67,7 @@ export default function PageFrame({item, vendorList}){
         },
         allowOutsideClick: () => !Swal.isLoading(),
         });
+   
     };
 
     return (
@@ -62,10 +77,6 @@ export default function PageFrame({item, vendorList}){
                 
                 <div className="-mx-3 mb-6 w-full grid grid-cols-12">
                     
-                    {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
-                    })}
-
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
                             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="jenis_asuransi">
                                 Jenis Asuransi
@@ -97,10 +108,14 @@ export default function PageFrame({item, vendorList}){
                                 })}
                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="merk">
                                 <option value="" disabled={true}>Pilih Vendor</option>
-                                { vendorList.map((e)=><option key={e.id} value={e.id}>{e.nm_vendor}</option>)}
+                                { vendorList.map((e)=><option key={e.kd_vendor} value={e.kd_vendor}>{e.nm_vendor}</option>)}
                             </select>
                         </div>
                     </div>
+
+                    {form.map((e)=>{
+                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                    })}
 
                 </div>
 

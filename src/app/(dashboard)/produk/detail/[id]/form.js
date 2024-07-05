@@ -34,6 +34,25 @@ const form = [
     disabled: false,
     type: "number",
   },
+  {
+    title: "Logo",
+    name: "logo",
+    id: "logo",
+    disabled: false,
+    type: "file",
+  },
+  {
+    title: "Is Wanda",
+    name: "is_wanda",
+    id: "is_wanda",
+    type: "checkbox",
+  },
+  {
+    title: "Is Active",
+    name: "is_active",
+    id: "is_active",
+    type: "checkbox",
+  },
 ];
 
 export { form };
