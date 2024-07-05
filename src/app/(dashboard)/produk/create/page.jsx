@@ -3,11 +3,12 @@ import PageFrame from "./page-frame"
 
 export default async function Page(){
 
+    const vendorList = await AuthGetApi("/vendor/master-data")
 
     return (
         <>
             <p className="text-2xl font-bold mb-9">Create Produk</p>
-            <PageFrame/>
+            <PageFrame vendorList={vendorList}/>
         </>
     )
 }

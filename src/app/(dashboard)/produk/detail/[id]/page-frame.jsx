@@ -11,6 +11,8 @@ const MyFroalaEditor = dynamic(
     { ssr: false }
 );
 
+import {jsonToFormData} from "@/lib/utils/json-to-formdata"
+
 export default function PageFrame({item, vendorList}){
 
     const {
@@ -27,9 +29,11 @@ export default function PageFrame({item, vendorList}){
         values.premi = parseInt(values.premi)
         values.admin = parseInt(values.admin)
 
-        const formData = new FormData()
-        formData.append("files", values.logo[0])
+        const fileLogo = values.logo[0]
         delete values.logo
+        delete values.vendor
+        const formData = jsonToFormData(values)
+        formData.append("files", fileLogo)
 
 
         Swal.fire({
@@ -43,15 +47,6 @@ export default function PageFrame({item, vendorList}){
         preConfirm: async () => {
             try {
                 const resUpdate = await fetch("/api/produk/update",{
-                  method: "POST",
-                  headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values)
-                })
-
-                const resLogo = await fetch("/api/produk/upload-logo",{
                   method: "POST",
                   body: formData
                 })
@@ -114,7 +109,7 @@ export default function PageFrame({item, vendorList}){
                     </div>
 
                     {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                        return <InputForm disabled={e.disabled} step={e.step} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
                     })}
 
                 </div>

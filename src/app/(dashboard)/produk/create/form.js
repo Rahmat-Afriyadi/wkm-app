@@ -21,11 +21,45 @@ const form = [
     type: "number",
   },
   {
+    title: "Pertanggungan",
+    name: "nilai_pertanggungan",
+    id: "nilai_pertanggungan",
+    disabled: false,
+    type: "number",
+  },
+  {
     title: "Admin",
     name: "admin",
     id: "admin",
     disabled: false,
     type: "number",
+  },
+  {
+    title: "Rate",
+    name: "rate",
+    id: "rate",
+    disabled: false,
+    step: "0.01",
+    type: "number",
+  },
+  {
+    title: "Logo",
+    name: "logo",
+    id: "logo",
+    disabled: false,
+    type: "file",
+  },
+  {
+    title: "Is Wanda",
+    name: "is_wanda",
+    id: "is_wanda",
+    type: "checkbox",
+  },
+  {
+    title: "Is Active",
+    name: "is_active",
+    id: "is_active",
+    type: "checkbox",
   },
 ];
 

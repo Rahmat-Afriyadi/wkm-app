@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import { PostApi } from "@/lib/fetchApi";
+import { PostFileApi } from "@/lib/fetchApi";
 export const POST = async (_req) => {
-  const body = await _req.json();
-  let response = await PostApi(body, "/otr/create-otr");
-
-  return NextResponse.json({ message: "Berhasil guys" });
+  const body = await _req.formData();
+  let response = await PostFileApi(body, "/produk/create-produk");
+  return NextResponse.json({ revalidated: true, message: response.message });
 };

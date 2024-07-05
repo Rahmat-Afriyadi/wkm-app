@@ -10,7 +10,14 @@ const form = [
     title: "Nama Produk",
     name: "nm_produk",
     id: "nm_produk",
-    disabled: true,
+    disabled: false,
+    type: "text",
+  },
+  {
+    title: "Nomor Kontak",
+    name: "no_kontak",
+    id: "no_kontak",
+    disabled: false,
     type: "text",
   },
   {
@@ -32,6 +39,14 @@ const form = [
     name: "admin",
     id: "admin",
     disabled: false,
+    type: "number",
+  },
+  {
+    title: "Rate",
+    name: "rate",
+    id: "rate",
+    disabled: false,
+    step: "0.01",
     type: "number",
   },
   {

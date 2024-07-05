@@ -11,29 +11,41 @@ const MyFroalaEditor = dynamic(
     { ssr: false }
 );
 
-
-
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
 }
 
+import {jsonToFormData} from "@/lib/utils/json-to-formdata"
 
-export default function PageFrame(){
+export default function PageFrame({vendorList}){
 
 
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = useForm({defaultValues:{jenis_kendaraan:0}});
+    } = useForm({defaultValues:{vendor_id:"",jns_asuransi:0}});
 
     const [desc, setDesc] = useState("")
 
 
     const onSubmit = async (values) => {
+        values.deskripsi = desc
+        values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
+        values.premi = parseInt(values.premi)
+        values.admin = parseInt(values.admin)
+
+        const fileLogo = values.logo[0]
+        delete values.logo
+        delete values.vendor
+        const formData = jsonToFormData(values)
+        formData.append("files", fileLogo)
+
         if (values.jenis_kendaraan == 0 ) {
             return Swal.fire("Failed!", "Belum pilih jenis kendaraan", "error");
         }
+
+
         Swal.fire({
         title: "Do you want to save the record?",
         icon: "question",
@@ -44,14 +56,11 @@ export default function PageFrame(){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                const res = await fetch("/api/mst-mtr/create",{
+                const res = await fetch("/api/produk/create",{
                   method: "POST",
-                  headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values)
+                  body: formData
                 })
+
                 if(res.status ==200){
                     const message = await res.json()
                     Swal.fire("Info", message.message, "info");
@@ -71,23 +80,18 @@ export default function PageFrame(){
 
                 <div className="-mx-3 mb-6 w-full grid grid-cols-12">
                     
-                    {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
-                    })}
-
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="grid-state">
+                            <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="jenis_asuransi">
                                 Jenis Asuransi
                             </label>
                             <div className="relative col-span-8 ">
-                                <select {...register("jenis_asuransi", {
+                                <select {...register("jns_asuransi", {
                                         required: "This field is required",
                                     })}
-                                    
-                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                                    <option value={0} disabled={true} selected> Jenis Asuransi</option>
-                                    <option value={1}>Asuransi Kendaraan</option>
-                                    <option value={2}>Asuransi Jiwa</option>
+                                     className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="jenis_asuransi">
+                                    <option value={0} disabled={true}> Jenis asuransi</option>
+                                    <option value={1}>Kendaraan</option>
+                                    <option value={2}>Jiwa</option>
                                 </select>
                                 {errors["sts_beli"] && (
                                     <p className="text-red mt-1 ml-1"> {errors["sts_beli"]["message"]}
@@ -96,6 +100,25 @@ export default function PageFrame(){
                                 )}
                             </div>
                     </div>
+
+                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                        <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3" htmlFor="merk">
+                            Pilih Vendor
+                        </label>
+                        <div className="relative col-span-8 ">
+                            <select {...register("vendor_id", {
+                                    required: "This field is required",
+                                })}
+                                    className="border-gray-500 block appearance-none w-full bg-white border-2 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="merk">
+                                <option value="" disabled={true}>Pilih Vendor</option>
+                                { vendorList.map((e)=><option key={e.kd_vendor} value={e.kd_vendor}>{e.nm_vendor}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    {form.map((e)=>{
+                        return <InputForm step={e.step} disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                    })}
 
                 </div>
                         
@@ -110,8 +133,18 @@ export default function PageFrame(){
 
 
                 <br />
-                
+                <br />
 
+                <div className="-mx-3 w-full grid grid-cols-12">
+                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                            <p className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-6">
+                                Tampilan Deskripsi Produk
+                            </p>
+                    </div>
+                </div>
+                <div dangerouslySetInnerHTML={{ __html: desc }} className= "py-5 rounded-lg px-5 border-2 border-black" />
+                
+                <br />
                 <button
                     id="button"
                     type="submit"
