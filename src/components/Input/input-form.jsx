@@ -10,8 +10,7 @@ export default function InputForm({disabled, title, id, name, register, type, st
             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 mr-4 flex items-center col-span-3"  style={{whiteSpace: "nowrap"}} htmlFor={id}>
                 {title}
             </label>
-            <input disabled={disabled} id={id} {...register(name)} step={step}  className={classNames(disabled ? "cursor-not-allowed bg-gray-200": "border-gray-500 border-2","appearance-none block w-ful text-gray-700 border border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500")} type={type} />
-        
+            <input disabled={disabled} id={id} {...register(name)} step={step}  className={classNames(disabled ? "cursor-not-allowed bg-gray-200": "border-gray-500 border-2","appearance-none block w-ful text-gray-700 border border-gray-500 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500")} type={type} />
         </div>
     )
 }

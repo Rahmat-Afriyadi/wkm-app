@@ -1,11 +1,11 @@
 "use client"
 
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm, Controller } from "react-hook-form";
 import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 const MyFroalaEditor = dynamic(
     () => import('@/components/froala/index'),
     { ssr: false }
@@ -17,13 +17,27 @@ export default function PageFrame({item, vendorList}){
 
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm({ defaultValues: item });
 
+    const {fields, append, remove} = useFieldArray({
+        control,
+        name:"manfaat"
+    })
+
+    useEffect(()=>{
+        append({manfaat:"Hallo", id:"id_001"})
+        console.log("ini fields yaa ", fields)
+    },[]) // eslint-disable-line react-hooks/exhaustive-deps
+
     const [desc, setDesc] = useState(item.deskripsi)
 
     const onSubmit = async (values) => {
+
+        console.log("ini values yaa ", values)
+
         values.deskripsi = desc
         values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
         values.premi = parseInt(values.premi)
@@ -36,32 +50,32 @@ export default function PageFrame({item, vendorList}){
         formData.append("files", fileLogo)
 
 
-        Swal.fire({
-        title: "Do you want to save the record?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#0891B2",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Save",
-        showLoaderOnConfirm: true,
-        preConfirm: async () => {
-            try {
-                const resUpdate = await fetch("/api/produk/update",{
-                  method: "POST",
-                  body: formData
-                })
+        // Swal.fire({
+        // title: "Do you want to save the record?",
+        // icon: "question",
+        // showCancelButton: true,
+        // confirmButtonColor: "#0891B2",
+        // cancelButtonColor: "#d33",
+        // confirmButtonText: "Save",
+        // showLoaderOnConfirm: true,
+        // preConfirm: async () => {
+        //     try {
+        //         const resUpdate = await fetch("/api/produk/update",{
+        //           method: "POST",
+        //           body: formData
+        //         })
 
-                if(resUpdate.status ==200){
-                    const message = await resUpdate.json()
-                    Swal.fire("Info", message.message, "info");
-                }
+        //         if(resUpdate.status ==200){
+        //             const message = await resUpdate.json()
+        //             Swal.fire("Info", message.message, "info");
+        //         }
 
-            } catch (error) {
-            Swal.fire("Failed!", error.message, "error");
-            }
-        },
-        allowOutsideClick: () => !Swal.isLoading(),
-        });
+        //     } catch (error) {
+        //     Swal.fire("Failed!", error.message, "error");
+        //     }
+        // },
+        // allowOutsideClick: () => !Swal.isLoading(),
+        // });
    
     };
 
@@ -114,27 +128,49 @@ export default function PageFrame({item, vendorList}){
 
                 </div>
 
+
                 <div className="-mx-3 w-full grid grid-cols-12">
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
                             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-3">
                                 Deskripsi Produk
                             </label>
+                            <textarea id={"deskripsi"}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                     </div>
                 </div>
-                <MyFroalaEditor model={desc} setDesc={setDesc} />
 
-                <br />
-                <br />
+                <button
+                    type="button"
+                    onClick={() =>{ 
+                        append({ manfaat: "", id_manfaat: "" }) 
+                        console.log("ini fields ", fields)
+                    }}
+                >
+                    append
+                </button>
 
-                <div className="-mx-3 w-full grid grid-cols-12">
-                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <p className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-6">
-                                Tampilan Deskripsi Produk
-                            </p>
+                {fields.map((item, index) => (
+                    <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
+                        <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                                <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-3">
+                                    Deskripsi Produk
+                                </label>
+                                <textarea id={"deskripsi"} {...register(`manfaat.${index}.manfaat`)}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                        </div>
+                        <div className="w-full px-3 mb-5 align-middle col-span-5 grid grid-cols-12">
+                                <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-3">
+                                    Deskripsi Produk
+                                </label>
+                                <textarea id={"deskripsi"} {...register(`manfaat.${index}.manfaat`)}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                                <button type="button" onClick={() => remove(index)}>Delete</button>
+                        </div>
                     </div>
-                </div>
-                <div dangerouslySetInnerHTML={{ __html: desc }} className= "py-5 rounded-lg px-5 border-2 border-black" />
+                ))}
+                        
+
                 
+                <br />
+                <br />
+
                 <br />
                 <button
                     id="button"
