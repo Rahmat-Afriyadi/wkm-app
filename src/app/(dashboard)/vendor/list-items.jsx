@@ -39,11 +39,6 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Deskripsi
-                </th>
-                <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                         Admin
                 </th>
                 <th

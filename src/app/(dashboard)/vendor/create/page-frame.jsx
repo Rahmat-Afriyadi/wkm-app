@@ -6,10 +6,6 @@ import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-const MyFroalaEditor = dynamic(
-    () => import('@/components/froala/index'),
-    { ssr: false }
-);
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -24,11 +20,9 @@ export default function PageFrame(){
         formState: { errors },
     } = useForm({defaultValues:{vendor_id:"",jns_asuransi:0}});
 
-    const [desc, setDesc] = useState("")
 
 
     const onSubmit = async (values) => {
-        values.deskripsi = desc
         values.admin = parseInt(values.admin)
         values.wkm = parseFloat(values.wkm)
         values.dealer = parseFloat(values.dealer)
@@ -84,21 +78,7 @@ export default function PageFrame(){
                             </label>
                     </div>
                 </div>
-                <MyFroalaEditor model={desc} setDesc={setDesc} />
 
-
-                <br />
-                <br />
-
-                <div className="-mx-3 w-full grid grid-cols-12">
-                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <p className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-6">
-                                Tampilan Deskripsi Produk
-                            </p>
-                    </div>
-                </div>
-                <div dangerouslySetInnerHTML={{ __html: desc }} className= "py-5 rounded-lg px-5 border-2 border-black" />
-                
                 <br />
                 <button
                     id="button"

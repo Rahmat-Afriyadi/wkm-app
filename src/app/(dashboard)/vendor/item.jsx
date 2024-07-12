@@ -19,8 +19,6 @@ const Asuransi = ({ site, id }) => {
           <td className="px-3 py-4 text-sm whitespace-nowrap font-bold">
             {site.nm_vendor}
           </td>
-          <td dangerouslySetInnerHTML={{ __html: site.deskripsi }} className="px-3 py-4 text-sm whitespace-nowrap font-bold">
-          </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.admin.toLocaleString()}
           </td>
