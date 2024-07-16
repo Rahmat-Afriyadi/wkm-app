@@ -188,7 +188,17 @@ export default function PageFrame({item, vendorList}){
                                     <textarea rows={4} id={"deskripsi"} {...register(`manfaat.${index}.manfaat`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                                 </div>
                                 <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                                    <button onClick={()=>removeManfaat(index)} className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                    <button onClick={()=>{
+                                        
+                                        fetch("/api/produk/delete/manfaat", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_manfaat}),
+                                        }).then()
+                                        removeManfaat(index)
+                                    }} className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
                                         Delete
                                     </button>
                                 </div>
@@ -212,7 +222,16 @@ export default function PageFrame({item, vendorList}){
                                     </label>
                                     <textarea id={"deskripsi"} {...register(`syarat.${index}.syarat`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                                 </div>
-                                <button onClick={()=>removeSyarat(index)}>Delete</button>
+                                <button onClick={()=>{
+                                    fetch("/api/produk/delete/syarat", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_syarat}),
+                                        }).then()
+                                        removeSyarat(index)
+                                }}>Delete</button>
                             </div>
                         ))}
                     </div>
@@ -233,7 +252,16 @@ export default function PageFrame({item, vendorList}){
                                     </label>
                                     <textarea id={"deskripsi"} {...register(`paket.${index}.paket`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                                 </div>
-                                <button onClick={()=>removePaket(index)}>Delete</button>
+                                <button onClick={()=>{
+                                    fetch("/api/produk/delete/paket", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_paket}),
+                                        }).then()
+                                        removePaket(index)
+                                }}>Delete</button>
                             </div>
                         ))}
                     </div>

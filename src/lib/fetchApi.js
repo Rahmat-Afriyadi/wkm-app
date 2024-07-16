@@ -102,6 +102,29 @@ export async function PostApi(data, url) {
   return await res.json();
 }
 
+export async function DeleteApi(id, url) {
+  const session = await getServerSession(authOptions);
+  let res = await fetch(BASE_URL + url + "/" + id, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${session?.user.accessToken}`,
+    },
+  });
+  if (res.status == 403) {
+    const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
+    if (session) session.user.accessToken = access_token;
+    if (session) session.user.refreshToken = refresh_token;
+    res = await fetch(BASE_URL + url + "/" + id, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${session?.user.accessToken}`,
+      },
+    });
+    return await res.json();
+  }
+  return await res.json();
+}
+
 export async function PostMokita(data, url, token) {
   let res = await fetch(BASE_URL_MOKITA + url, {
     method: "POST",
