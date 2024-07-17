@@ -44,21 +44,20 @@ export default function PageFrame({item, vendorList}){
         name:"paket"
     })
 
-    const [desc, setDesc] = useState(item.deskripsi)
-
     const onSubmit = async (values) => {
-        console.log("ini values ya ", values)
-        values.deskripsi = desc
         values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
         values.premi = parseInt(values.premi)
         values.admin = parseInt(values.admin)
+
+        values.paket.forEach(e=>{
+            e.harga_paket = parseInt(e.harga_paket)
+        })
 
         const fileLogo = values.logo[0]
         delete values.logo
         delete values.vendor
         const formData = jsonToFormData(values)
         formData.append("files", fileLogo)
-
 
         Swal.fire({
         title: "Do you want to save the record?",
@@ -70,11 +69,12 @@ export default function PageFrame({item, vendorList}){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                // const resUpload = await fetch("/api/produk/upload-logo",{
-                //   method: "POST",
-                //   body: formData
-                // })
 
+                const resUpload = await fetch("/api/produk/upload-logo",{
+                  method: "POST",
+                  body: formData
+                })
+                
                 const resUpdate = await fetch("/api/produk/update",{
                     method: "POST",
                     headers: {
@@ -151,7 +151,7 @@ export default function PageFrame({item, vendorList}){
                             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-3">
                                 Deskripsi Produk
                             </label>
-                            <textarea id={"deskripsi"}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                            <textarea id={"deskripsi"} {...register("deskripsi")}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                     </div>
                 </div>
                     
@@ -252,7 +252,16 @@ export default function PageFrame({item, vendorList}){
                                     </label>
                                     <textarea id={"deskripsi"} {...register(`paket.${index}.paket`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                                 </div>
-                                <button onClick={()=>{
+                                <div className="w-full px-3 mb-5 align-middle col-span-5 grid grid-cols-12">
+                                    <label className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Harga
+                                    </label>
+                                    <input id={"harga"} {...register(`paket.${index}.harga_paket`)}  className={"border-gray-500 border appearance-none block w-ful text-gray-700 col-span-8 rounded py-1 px-4  focus:outline-none focus:bg-white focus:border-gray-500"} type={"number"} />
+
+                                    
+                                </div>
+                                <div className="w-full px-3 mb-5 align-middle col-span-1 grid grid-cols-12">
+                                    <button onClick={()=>{
                                     fetch("/api/produk/delete/paket", {
                                             method: "POST",
                                             headers: {
@@ -262,6 +271,8 @@ export default function PageFrame({item, vendorList}){
                                         }).then()
                                         removePaket(index)
                                 }}>Delete</button>
+                                </div>
+                                
                             </div>
                         ))}
                     </div>
