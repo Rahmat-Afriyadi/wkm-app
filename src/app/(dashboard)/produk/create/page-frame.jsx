@@ -1,6 +1,6 @@
 "use client"
 
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
@@ -10,6 +10,9 @@ const MyFroalaEditor = dynamic(
     () => import('@/components/froala/index'),
     { ssr: false }
 );
+import {
+  FolderPlusIcon
+} from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -19,31 +22,50 @@ import {jsonToFormData} from "@/lib/utils/json-to-formdata"
 
 export default function PageFrame({vendorList}){
 
+    const [tab, setTab] = useState(1)
+    // 1=manfaat
+    // 2=syarat
+    // 3=paket
 
     const {
         register,
+        control,
         handleSubmit,
         formState: { errors },
     } = useForm({defaultValues:{vendor_id:"",jns_asuransi:0}});
 
-    const [desc, setDesc] = useState("")
+    const {fields:manfaatForm, append:appendManfaat, remove:removeManfaat} = useFieldArray({
+        control,
+        name:"manfaat"
+    })
+
+    const {fields:syaratForm, append:appendSyarat, remove:removeSyarat} = useFieldArray({
+        control,
+        name:"syarat"
+    })
+
+    const {fields:paketForm, append:appendPaket, remove:removePaket} = useFieldArray({
+        control,
+        name:"paket"
+    })
 
 
     const onSubmit = async (values) => {
-        values.deskripsi = desc
         values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
         values.premi = parseInt(values.premi)
         values.admin = parseInt(values.admin)
+        values.rate = parseFloat(values.rate)
+
+        values.paket.forEach(e=>{
+            e.harga_paket = parseInt(e.harga_paket)
+        })
 
         const fileLogo = values.logo[0]
         delete values.logo
         delete values.vendor
-        const formData = jsonToFormData(values)
-        formData.append("files", fileLogo)
 
-        if (values.jenis_kendaraan == 0 ) {
-            return Swal.fire("Failed!", "Belum pilih jenis kendaraan", "error");
-        }
+        const formData = new FormData()
+        formData.append("files", fileLogo)
 
 
         Swal.fire({
@@ -56,13 +78,21 @@ export default function PageFrame({vendorList}){
         showLoaderOnConfirm: true,
         preConfirm: async () => {
             try {
-                const res = await fetch("/api/produk/create",{
-                  method: "POST",
-                  body: formData
+                const resCreate = await fetch("/api/produk/create",{
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(values),
                 })
 
-                if(res.status ==200){
-                    const message = await res.json()
+                if(resCreate.status ==200){
+                    const message = await resCreate.json()
+                    formData.append("kd_produk", message.id_produk)
+                    const resUpload = await fetch("/api/produk/upload-logo",{
+                        method: "POST",
+                        body: formData
+                    })
                     Swal.fire("Info", message.message, "info");
                 }
 
@@ -121,29 +151,141 @@ export default function PageFrame({vendorList}){
                     })}
 
                 </div>
-                        
+
                 <div className="-mx-3 w-full grid grid-cols-12">
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
                             <label className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-3">
                                 Deskripsi Produk
                             </label>
+                            <textarea id={"deskripsi"} {...register("deskripsi")}  className={" appearance-none block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
                     </div>
                 </div>
-                <MyFroalaEditor model={desc} setDesc={setDesc} />
 
+                <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+                    <ul className="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-styled-tab" data-tabs-toggle="#default-styled-tab-content" data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500" data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300" role="tablist">
+                        <li className="me-2" role="presentation">
+                            <button onClick={()=>setTab(1)} className={`${tab == 1 ? "text-yellow bg-black" :""} inline-block p-4 border-b-2 rounded-t-lg hover:bg-yellow hover:text-black`} id="profile-styled-tab" data-tabs-target="#styled-profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Manfaat</button>
+                        </li>
+                        <li className="me-2" role="presentation">
+                            <button onClick={()=>setTab(2)} className={`${tab == 2 ? "text-yellow bg-black" :""} inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`} id="dashboard-styled-tab" data-tabs-target="#styled-dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Syarat</button>
+                        </li>
+                        <li className="me-2" role="presentation">
+                            <button onClick={()=>setTab(3)} className={`${tab == 3 ? "text-yellow bg-black" :""} inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`} id="settings-styled-tab" data-tabs-target="#styled-settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Paket</button>
+                        </li>
+                    </ul>
+                </div>
+                <div id="default-styled-tab-content">
+                    <div className={`${tab==1 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <button
+                            type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
+                            onClick={() =>{ 
+                                appendManfaat({ manfaat: "", id_manfaat: "" }) 
+                            }}
+                        >
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
+                        </button>
+                        {manfaatForm.map((item, index) => (
+                            <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
+                                <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                                    <label className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Manfaat
+                                    </label>
+                                    <textarea rows={4} id={"deskripsi"} {...register(`manfaat.${index}.manfaat`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                                </div>
+                                <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                                    <button onClick={()=>{
+                                        
+                                        fetch("/api/produk/delete/manfaat", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_manfaat}),
+                                        }).then()
+                                        removeManfaat(index)
+                                    }} className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={`${tab==2 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <button
+                            type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
+                            onClick={() =>{ 
+                                appendSyarat({ syarat: "", id_syarat: "" }) 
+                            }}
+                        >
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
+                        </button>
+                        {syaratForm.map((item, index) => (
+                            <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
+                                <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                                    <label className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Syarat
+                                    </label>
+                                    <textarea id={"deskripsi"} {...register(`syarat.${index}.syarat`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                                </div>
+                                <button onClick={()=>{
+                                    fetch("/api/produk/delete/syarat", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_syarat}),
+                                        }).then()
+                                        removeSyarat(index)
+                                }}>Delete</button>
+                            </div>
+                        ))}
+                    </div>
+                    <div className={`${tab==3 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <button
+                            type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
+                            onClick={() =>{ 
+                                appendPaket({ paket: "", id_paket: "" }) 
+                            }}
+                        >
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
+                        </button>
+                        {paketForm.map((item, index) => (
+                            <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
+                                <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
+                                    <label className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Paket
+                                    </label>
+                                    <textarea id={"deskripsi"} {...register(`paket.${index}.paket`)}  className={" appearance-none -ml-3 block w-ful text-gray-700 border-2 border-gray-200 col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"} />
+                                </div>
+                                <div className="w-full px-3 mb-5 align-middle col-span-5 grid grid-cols-12">
+                                    <label className="uppercase tracking-wide text-gray-700 text-xs font-bold flex items-center col-span-3">
+                                        Harga
+                                    </label>
+                                    <input id={"harga"} {...register(`paket.${index}.harga_paket`)}  className={"border-gray-500 border appearance-none block w-ful text-gray-700 col-span-8 rounded py-1 px-4  focus:outline-none focus:bg-white focus:border-gray-500"} type={"number"} />
 
-                <br />
-                <br />
-
-                <div className="-mx-3 w-full grid grid-cols-12">
-                    <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
-                            <p className="uppercase tracking-wide text-gray-700 text-xs font-bold mr-4 flex items-center col-span-6">
-                                Tampilan Deskripsi Produk
-                            </p>
+                                    
+                                </div>
+                                <div className="w-full px-3 mb-5 align-middle col-span-1 grid grid-cols-12">
+                                    <button onClick={()=>{
+                                    fetch("/api/produk/delete/paket", {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                            },
+                                            body: JSON.stringify({id:item.id_paket}),
+                                        }).then()
+                                        removePaket(index)
+                                }}>Delete</button>
+                                </div>
+                                
+                            </div>
+                        ))}
                     </div>
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: desc }} className= "py-5 rounded-lg px-5 border-2 border-black" />
-                
+                        
                 <br />
                 <button
                     id="button"

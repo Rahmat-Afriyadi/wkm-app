@@ -6,6 +6,10 @@ import InputForm from "@/components/Input/input-form"
 import { form } from "./form"
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import {
+  FolderPlusIcon
+} from "@heroicons/react/24/solid";
+
 const MyFroalaEditor = dynamic(
     () => import('@/components/froala/index'),
     { ssr: false }
@@ -48,6 +52,7 @@ export default function PageFrame({item, vendorList}){
         values.nilai_pertanggungan = parseInt(values.nilai_pertanggungan)
         values.premi = parseInt(values.premi)
         values.admin = parseInt(values.admin)
+        values.rate = parseFloat(values.rate)
 
         values.paket.forEach(e=>{
             e.harga_paket = parseInt(e.harga_paket)
@@ -173,11 +178,12 @@ export default function PageFrame({item, vendorList}){
                     <div className={`${tab==1 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                         <button
                             type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
                             onClick={() =>{ 
                                 appendManfaat({ manfaat: "", id_manfaat: "" }) 
                             }}
                         >
-                            append
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
                         </button>
                         {manfaatForm.map((item, index) => (
                             <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
@@ -208,11 +214,12 @@ export default function PageFrame({item, vendorList}){
                     <div className={`${tab==2 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                         <button
                             type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
                             onClick={() =>{ 
                                 appendSyarat({ syarat: "", id_syarat: "" }) 
                             }}
                         >
-                            append
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
                         </button>
                         {syaratForm.map((item, index) => (
                             <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
@@ -238,11 +245,12 @@ export default function PageFrame({item, vendorList}){
                     <div className={`${tab==3 ? "" : "hidden"} p-4 rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-profile" role="tabpanel" aria-labelledby="profile-tab">
                         <button
                             type="button"
+                            className="px-2 py-2 rounded-lg hover:bg-yellow hover:text-black"
                             onClick={() =>{ 
                                 appendPaket({ paket: "", id_paket: "" }) 
                             }}
                         >
-                            append
+                            <FolderPlusIcon className="w-8 h-8 " aria-hidden="true"/>
                         </button>
                         {paketForm.map((item, index) => (
                             <div key={item.id} className="-mx-3 w-full grid grid-cols-12 align-middle">
