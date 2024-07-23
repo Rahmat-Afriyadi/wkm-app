@@ -64,6 +64,21 @@ const navigation = [
     to: "/mst-mtr",
     icon: FolderIcon,
   },
+  {
+    name: "Produk",
+    to: "/produk",
+    icon: FolderIcon,
+  },
+  {
+    name: "Vendor",
+    to: "/vendor",
+    icon: FolderIcon,
+  },
+  {
+    name: "Transaksi",
+    to: "/transaksi",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];
