@@ -91,13 +91,9 @@ const formKonsumen = [
     disabled: false,
     type: "text",
   },
-  {
-    title: "Kodepos",
-    name: "kodepos",
-    id: "kodepos",
-    disabled: false,
-    type: "text",
-  },
+];
+
+const formKodepos = [
   {
     title: "Kelurahan",
     name: "kelurahan",
@@ -121,4 +117,4 @@ const formKonsumen = [
   },
 ];
 
-export { formProduk, formMotor, formKonsumen };
+export { formProduk, formMotor, formKonsumen, formKodepos };

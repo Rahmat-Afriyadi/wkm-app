@@ -10,7 +10,7 @@ export default function InputFormGroup({disabled, title, id, name, register, typ
             <div className="col-span-3 flex items-center">
                 <label
                   className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
-                  htmlFor="grid-state"
+                  htmlFor={id}
                 >
                   {title}
                 </label>
