@@ -14,7 +14,6 @@ const Produk = ({ produk, id, setIsModalOpen, setDetail }) => {
       <>
         <tr 
         onClick={()=>{
-          console.log("ini produk yaa ", produk)
           setDetail({
             id_produk:produk.kd_produk,
             vendor_id:produk.vendor_id,

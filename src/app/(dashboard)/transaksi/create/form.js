@@ -47,21 +47,21 @@ const formMotor = [
     type: "number",
   },
   {
-    title: "Nomor Mesin",
+    title: "No Mesin",
     name: "no_msn",
     id: "no_msn",
     disabled: false,
     type: "text",
   },
   {
-    title: "Nomor Rangka",
+    title: "No Rangka",
     name: "no_rgk",
     id: "no_rgk",
     disabled: false,
     type: "text",
   },
   {
-    title: "Nomor Polisi",
+    title: "No Polisi",
     name: "no_plat",
     id: "no_plat",
     disabled: false,
@@ -79,6 +79,20 @@ const formKonsumen = [
   },
   {
     title: "Nama STNK",
+    name: "nm_konsumen",
+    id: "nm_konsumen",
+    disabled: false,
+    type: "text",
+  },
+  {
+    title: "Email",
+    name: "email",
+    id: "email",
+    disabled: false,
+    type: "email",
+  },
+  {
+    title: "No HP",
     name: "no_hp",
     id: "no_hp",
     disabled: false,
@@ -90,6 +104,13 @@ const formKonsumen = [
     id: "alamat",
     disabled: false,
     type: "text",
+  },
+  {
+    title: "Tanggal Lahir",
+    name: "tgl_lahir",
+    id: "tgl_lahir",
+    disabled: false,
+    type: "date",
   },
 ];
 

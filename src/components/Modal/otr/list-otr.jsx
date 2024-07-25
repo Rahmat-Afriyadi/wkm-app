@@ -16,7 +16,6 @@ export default function ListOtr({setIsModalOpen, setDetailOtr}) {
       const response = await fetch("/api/otr/otr?" + new URLSearchParams({ search: searchParams.get("search_query_otr_na") === null ? "" : searchParams.get("search_query_otr_na") }))
       if (response.status == 200) {
         const data = await response.json()
-        console.log("ini data satu yaa ", data?.response[0])
         setOtrList(data?.response)
       }
     })()

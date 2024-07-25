@@ -54,9 +54,9 @@ export default function PageFrame({ vendorList }) {
     formState: { errors },
   } = useForm({ defaultValues: { vendor_id: 0 } });
 
-  const watchRate = watch("rate")
-  const watchAdmin = watch("admin")
-  const watchOtr = watch("otr")
+  const watchRate = watch("rate");
+  const watchAdmin = watch("admin");
+  const watchOtr = watch("otr");
 
   useEffect(() => {
     setValue("id_produk", detailProduk.id_produk);
@@ -80,41 +80,56 @@ export default function PageFrame({ vendorList }) {
     setValue("kota", detailKodepos.kota);
   }, [detailKodepos]); // eslint-disable-line react-hooks/exhaustive-deps
 
-
   const onSubmit = async (values) => {
-    console.log("ini values yaa ", values)
+    if (values.amount === undefined) {
+      Swal.fire("Info", "Silahkan Hitung Amount Terlebih Dahulu", "info");
+    }
     values.otr = parseInt(values.otr);
-    values.tahun = parseInt(values.tahun);
+    values.tahun = String(values.tahun);
 
-    // Swal.fire({
-    //   title: "Do you want to save the record?",
-    //   icon: "question",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#0891B2",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Save",
-    //   showLoaderOnConfirm: true,
-    //   preConfirm: async () => {
-    //     try {
-    //       const res = await fetch("/api/otr/create", {
-    //         method: "POST",
-    //         headers: {
-    //           Accept: "application/json",
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(values),
-    //       });
-    //       if (res.status == 200) {
-    //         const message = await res.json();
-    //         await Swal.fire("Info", message.message, "info");
-    //         router.push("/transaksi");
-    //       }
-    //     } catch (error) {
-    //       Swal.fire("Failed!", error.message, "error");
-    //     }
-    //   },
-    //   allowOutsideClick: () => !Swal.isLoading(),
-    // });
+    const fotoKtp = values.ktp[0]
+    const fotoStnk = values.stnk[0]
+    delete values.ktp
+    delete values.stnk
+    const formData = new FormData()
+    formData.append("ktp", fotoKtp)
+    formData.append("stnk", fotoStnk)
+
+    Swal.fire({
+      title: "Do you want to save the record?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0891B2",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save",
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        
+        try {
+          const resCreate = await fetch("/api/transaksi/create", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          });
+
+          if (resCreate.status == 200) {
+            const message = await resCreate.json();
+            formData.append("id", message.id);
+            const resUpload = await fetch("/api/transaksi/upload-dokumen", {
+              method: "POST",
+              body: formData,
+            });
+            Swal.fire("Info", message.message, "info");
+          }
+        } catch (error) {
+          Swal.fire("Failed!", error.message, "error");
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+
   };
 
   return (
@@ -129,7 +144,7 @@ export default function PageFrame({ vendorList }) {
               <div className="col-span-3 flex items-center">
                 <label
                   className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
-                  htmlFor="grid-state"
+                  htmlFor="id_produk"
                 >
                   Id Produk
                 </label>
@@ -150,7 +165,7 @@ export default function PageFrame({ vendorList }) {
               <div className="col-span-3 flex items-center">
                 <label
                   className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
-                  htmlFor="merk"
+                  htmlFor="vendor"
                 >
                   Vendor
                 </label>
@@ -162,7 +177,7 @@ export default function PageFrame({ vendorList }) {
                     required: "This field is required",
                   })}
                   className="cursor-not-allowed bg-gray-200 block appearance-none w-full text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                  id="merk"
+                  id="vendor"
                 >
                   <option value={0} disabled={true}>
                     Pilih Vendor
@@ -212,7 +227,9 @@ export default function PageFrame({ vendorList }) {
               </div>
               <div className="col-span-2">
                 <button
-                  onClick={()=>{setValue("amount", parseFloat(watchOtr * (watchRate/100) - watchAdmin).toFixed(2))}}
+                  onClick={() => {
+                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) - watchAdmin).toFixed(2));
+                  }}
                   className="w-[90%] ml-2 py-1 text-black transition-all duration-150 ease-linear rounded-md h-full shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
                   type="button"
                 >
@@ -237,7 +254,7 @@ export default function PageFrame({ vendorList }) {
               </div>
               <div className="col-span-9">
                 <input
-                  id={"id_produk"}
+                  id={"kd_mdl"}
                   {...register("kd_mdl")}
                   className={
                     "border-gray-500 border-2 appearance-none block w-full text-gray-700 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
@@ -273,7 +290,6 @@ export default function PageFrame({ vendorList }) {
               {formKonsumen.map((e) => {
                 return (
                   <InputFormGroup
-                    
                     step={e.step}
                     disabled={e.disabled}
                     key={e.id}
@@ -325,67 +341,69 @@ export default function PageFrame({ vendorList }) {
             <h2 className="text-lg font-bold mb-5">Detail Dokumen</h2>
             <hr /> <br />
             <div className="grid grid-cols-12 gap-y-5 gap-x-5">
-              <div className="col-span-6 flex items-center justify-center">
-                <label
-                  className="uppercase tracking-wide cursor-pointer bg-yellow w-full py-4 rounded-lg text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center justify-center hover:bg-white hover:shadow-lg transition-all duration-150 ease-linear border-2 border-yellow"
-                  htmlFor="ktp"
-                >
-                  File KTP
-                </label>
-                <input
-                  id={"ktp"}
-                  {...register("ktp")}
-                  className={
-                    "hidden"
+              <input
+                id={"ktp"}
+                {...register("ktp")}
+                className={"opacity-0"}
+                accept="image/*"
+                type="file"
+                onChange={(e) => {
+                  if (e?.target?.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedKtp(reader.result);
+                    };
+                    reader.readAsDataURL(file);
                   }
-                  accept="image/*"
-                  type="file"
-                  onChange={(e)=>{
-                    if (e?.target?.files[0]) {
-                      const file = e.target.files[0]
-                      const reader = new FileReader()
-                      reader.onloadend = ()=>{
-                        setSelectedKtp(reader.result)
-                      }
-                      reader.readAsDataURL(file)
-                    }
-                  }}
-                />
-              </div>
-              <div className="col-span-6 flex items-center justify-center">
-                <label
-                  className="uppercase tracking-wide cursor-pointer bg-yellow w-full py-4 rounded-lg text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center justify-center hover:bg-white hover:shadow-lg transition-all duration-150 ease-linear border-2 border-yellow"
-                  htmlFor="stnk"
-                >
-                  File STNK
-                </label>
-                <input
-                  id={"stnk"}
-                  {...register("stnk")}
-                  className={
-                    "hidden"
+                }}
+              />
+              <input
+                id={"stnk"}
+                {...register("stnk")}
+                className={"opacity-0"}
+                accept="image/*"
+                type="file"
+                onChange={(e) => {
+                  if (e?.target?.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedStnk(reader.result);
+                    };
+                    reader.readAsDataURL(file);
                   }
-                  accept="image/*"
-                  type="file"
-                  onChange={(e)=>{
-                    if (e?.target?.files[0]) {
-                      const file = e.target.files[0]
-                      const reader = new FileReader()
-                      reader.onloadend = ()=>{
-                        setSelectedStnk(reader.result)
-                      }
-                      reader.readAsDataURL(file)
-                    }
-                  }}
-                />
+                }}
+              />
+              <div className="col-span-12 flex items-center justify-center">
+                {!selectedKtp && (
+                  <label
+                    htmlFor="ktp"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center  cursor-pointer"
+                  >
+                    KTP
+                  </label>
+                )}
+                {selectedKtp && (
+                  <label htmlFor="ktp" className="cursor-pointer">
+                    <Image src={selectedKtp} className="rounded-lg" alt="preview-ktp" width={480} height={270} />
+                  </label>
+                )}
               </div>
               <div className="col-span-12 flex items-center justify-center">
-                { !selectedKtp && <label htmlFor="ktp" className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center">KTP</label> }
-                { selectedKtp && <Image src={selectedKtp} className="rounded-lg" alt="preview-ktp" width={480} height={270} /> }
-              </div>
-              <div className="col-span-12 flex items-center justify-center">
-                { !selectedStnk && <label htmlFor="ktp" className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center">STNK</label> }
-                { selectedStnk && <Image src={selectedStnk} className="rounded-lg" alt="preview-stnk" width={480} height={270} /> }
+                {!selectedStnk && (
+                  <label
+                    htmlFor="stnk"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center cursor-pointer"
+                  >
+                    STNK
+                  </label>
+                )}
+                {selectedStnk && (
+                  <label htmlFor="stnk" className="cursor-pointer">
+                    <Image src={selectedStnk} className="rounded-lg" alt="preview-stnk" width={480} height={270} />
+                  </label>
+                )}
               </div>
             </div>
           </div>
