@@ -104,14 +104,12 @@ export default function PageFrame({ item, vendorList }) {
       const compressedKtp = await imageCompression(fotoKtp, options); 
       const ktpFile = new File([compressedKtp], fotoKtp.name, {type:compressedKtp.type})
       formData.append("ktp", ktpFile)
-      
     }
     if (typeof values.stnk == "object") {
       const fotoStnk = values.stnk[0]
       const compressedStnk = await imageCompression(fotoStnk, options); 
       const stnkFile = new File([compressedStnk], fotoStnk.name, {type:compressedStnk.type})
       formData.append("stnk", stnkFile)
-      
     }
     delete values.ktp
     delete values.stnk
