@@ -19,7 +19,6 @@ export const POST = async (_req) => {
     mode: "no-cors",
   });
   if (response.status == 403) {
-    console.log("masuk refresh ", session?.user?.accessToken);
     const { access_token, refresh_token } = await refreshToken(session?.user.refreshToken ?? "");
     if (session) session.user.accessToken = access_token;
     if (session) session.user.refreshToken = refresh_token;

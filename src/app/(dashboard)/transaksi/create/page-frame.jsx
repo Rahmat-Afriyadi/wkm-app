@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation";
 import InputFormGroup from "@/components/Input/input-form-group";
 import ModalKodePos from "@/components/Modal/kodepos/modal-kodepos";
 import Image from "next/image";
+import imageCompression from 'browser-image-compression';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -82,8 +83,9 @@ export default function PageFrame({ vendorList }) {
 
   const onSubmit = async (values) => {
     if (values.amount === undefined) {
-      Swal.fire("Info", "Silahkan Hitung Amount Terlebih Dahulu", "info");
+      return Swal.fire("Info", "Silahkan Hitung Amount Terlebih Dahulu", "info");
     }
+    values.amount = parseFloat(values.amount)
     values.otr = parseInt(values.otr);
     values.tahun = String(values.tahun);
 
@@ -92,8 +94,16 @@ export default function PageFrame({ vendorList }) {
     delete values.ktp
     delete values.stnk
     const formData = new FormData()
-    formData.append("ktp", fotoKtp)
-    formData.append("stnk", fotoStnk)
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    }
+    const compressedKtp = await imageCompression(fotoKtp, options); 
+    const compressedStnk = await imageCompression(fotoStnk, options); 
+    console.log("ini size compress dan awal ", compressedKtp.size, fotoKtp.size)
+    formData.append("ktp", compressedKtp)
+    formData.append("stnk", compressedStnk)
 
     Swal.fire({
       title: "Do you want to save the record?",
@@ -279,6 +289,42 @@ export default function PageFrame({ vendorList }) {
                   />
                 );
               })}
+
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="warna"
+                >
+                  Warna
+                </label>
+              </div>
+              <div className="col-span-9">
+                <select
+                  {...register("warna", {
+                    required: "This field is required",
+                  })}
+                  className="border-2 cursor-pointer block appearance-none w-full text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="warna"
+                >
+                  <option value={0} disabled={true}>
+                    Pilih Warna
+                  </option>
+                  <option value="Merah">
+                    Merah
+                  </option>
+                  <option value="Kuning">
+                    Kuning
+                  </option>
+                  <option value="Hijau">
+                    Hijau
+                  </option>
+                  <option value="Biru">
+                    Biru
+                  </option>
+                </select>
+              </div>
+
+
             </div>
           </div>
 
@@ -341,6 +387,36 @@ export default function PageFrame({ vendorList }) {
             <h2 className="text-lg font-bold mb-5">Detail Dokumen</h2>
             <hr /> <br />
             <div className="grid grid-cols-12 gap-y-5 gap-x-5">
+              <div className="col-span-12 flex items-center justify-center">
+                {!selectedKtp && (
+                  <label
+                    htmlFor="ktp"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center  cursor-pointer"
+                  >
+                    KTP
+                  </label>
+                )}
+                {selectedKtp && (
+                  <label htmlFor="ktp" className="cursor-pointer">
+                    <Image src={selectedKtp} className="rounded-lg" alt="preview-ktp" width={480} height={270} />
+                  </label>
+                )}
+              </div>
+              <div className="col-span-12 flex items-center justify-center">
+                {!selectedStnk && (
+                  <label
+                    htmlFor="stnk"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center cursor-pointer"
+                  >
+                    STNK
+                  </label>
+                )}
+                {selectedStnk && (
+                  <label htmlFor="stnk" className="cursor-pointer">
+                    <Image src={selectedStnk} className="rounded-lg" alt="preview-stnk" width={480} height={270} />
+                  </label>
+                )}
+              </div>
               <input
                 id={"ktp"}
                 {...register("ktp")}
@@ -375,36 +451,6 @@ export default function PageFrame({ vendorList }) {
                   }
                 }}
               />
-              <div className="col-span-12 flex items-center justify-center">
-                {!selectedKtp && (
-                  <label
-                    htmlFor="ktp"
-                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center  cursor-pointer"
-                  >
-                    KTP
-                  </label>
-                )}
-                {selectedKtp && (
-                  <label htmlFor="ktp" className="cursor-pointer">
-                    <Image src={selectedKtp} className="rounded-lg" alt="preview-ktp" width={480} height={270} />
-                  </label>
-                )}
-              </div>
-              <div className="col-span-12 flex items-center justify-center">
-                {!selectedStnk && (
-                  <label
-                    htmlFor="stnk"
-                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center cursor-pointer"
-                  >
-                    STNK
-                  </label>
-                )}
-                {selectedStnk && (
-                  <label htmlFor="stnk" className="cursor-pointer">
-                    <Image src={selectedStnk} className="rounded-lg" alt="preview-stnk" width={480} height={270} />
-                  </label>
-                )}
-              </div>
             </div>
           </div>
         </div>

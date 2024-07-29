@@ -52,6 +52,28 @@ export async function readManyOtr(query){
 
 }
 
+export async function readManyTransaksi(query){
+
+    const {search, limit, pageParams} = query
+
+    const response = await AuthGetApi("/transaksi/master-data?" + new URLSearchParams({
+        search,
+        limit,
+        pageParams
+    }))
+
+    const resultLength = await AuthGetApi("/transaksi/master-data-count?" + new URLSearchParams({
+        search,
+    }))
+
+
+    return {data:response, page: {
+        total_rows: resultLength, // Total data
+        total_pages: Math.ceil(resultLength  / limit), // Total page
+    }}
+
+}
+
 export async function readManyMstMtr(query){
 
     const {search, limit, pageParams} = query

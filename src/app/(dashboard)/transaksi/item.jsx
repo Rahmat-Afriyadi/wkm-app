@@ -10,7 +10,6 @@ function classNames(...classes) {
 
 
 const Asuransi = ({ site, id }) => {
-
   const router = useRouter()
 
   if (site) {
@@ -18,18 +17,25 @@ const Asuransi = ({ site, id }) => {
       <>
         <tr key={site.nama} className={classNames("hover:text-yellow hover:bg-black",id % 2 === 0 ? " " : "bg-gray-50")} >
           <td className="px-3 py-4 text-sm whitespace-nowrap font-bold">
-            {site.motorprice_kode}
+            {site.id}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.mst_mtr?.nm_mtr}
+            {site.konsumen?.nm_konsumen}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.otr.toLocaleString()}
+            {site.no_msn}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {site.tahun}
+            {site.produk.nm_produk}
           </td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/otr/detail/" + site.id)}>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
+            {site.sts_pembelian == 1 && <p className="shadow-md bg-gray-200 text-center rounded-lg p-1 font-bold text-md">Apply</p>}
+            {site.sts_pembelian == 2 && <p className="shadow-md bg-orange-400 text-center rounded-lg p-1 font-bold text-white">Process</p>}
+            {site.sts_pembelian == 3 && <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">Done</p>}
+            {site.sts_pembelian == 4 && <p className="shadow-md bg-red text-center rounded-lg p-1 font-bold text-md text-white">Decline</p>}
+          
+          </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap cursor-pointer" onClick={()=>router.push("/transaksi/detail/" + site.id)}>
             <span className="text-blue-600 ">
               <PencilIcon className="w-6 h-5" aria-hidden="true" />
             </span>

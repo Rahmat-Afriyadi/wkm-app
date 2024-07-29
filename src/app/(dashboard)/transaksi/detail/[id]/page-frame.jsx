@@ -1,89 +1,476 @@
-"use client"
+"use client";
 
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import InputForm from "@/components/Input/input-form"
-import { form } from "./form"
+import InputForm from "@/components/Input/input-form";
+import { formProduk, formMotor, formKonsumen, formKodepos } from "./form";
+import ModalProduk from "@/components/Modal/asuransi/modal-produk";
+import Otr from "@/components/Modal/otr/modal-otr";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { revalidateTag } from "next/cache";
+import InputFormGroup from "@/components/Input/input-form-group";
+import ModalKodePos from "@/components/Modal/kodepos/modal-kodepos";
+import Image from "next/image";
+import imageCompression from 'browser-image-compression';
 
+function classNames(...classes) {
+  return classes.filter(Boolean).join(" ");
+}
 
-export default function PageFrame({otr}){
+export default function PageFrame({ item, vendorList }) {
+  const {konsumen, produk, mst_mtr, ...transaksi} = item
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModaProduk, setIsModalProduk] = useState(false);
+  const [isModaKodepos, setIsModalKodepos] = useState(false);
+  const [selectedKtp, setSelectedKtp] = useState();
+  const [selectedStnk, setSelectedStnk] = useState();
+  const [detailOtr, setDetailOtr] = useState({
+    kd_mdl: transaksi.motorprice_kode,
+    nm_mtr: mst_mtr.nm_mtr,
+    tahun: transaksi.thn_mtr,
+    otr: transaksi.otr,
+  });
+  const [detailProduk, setDetailProduk] = useState({
+    id_produk:item.produk.kd_produk,
+    vendor_id:item.produk.vendor_id,
+    nm_produk:item.produk.nm_produk,
+    rate:item.produk.rate,
+    admin:item.produk.admin,
+  });
+  const [detailKodepos, setDetailKodepos] = useState({
+    kodepos: item.konsumen.kodepos,
+    kelurahan: item.konsumen.kelurahan,
+    kecamatan: item.konsumen.kecamatan,
+    kota: item.konsumen.kota,
+  });
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm({ defaultValues: otr });
+  const router = useRouter();
 
-    const router = useRouter()
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: {...konsumen, ...produk, ...transaksi} });
 
-    const onSubmit = async (values) => {
-        values.id = otr.id
-        values.otr = parseInt(values.otr)
-        values.tahun = parseInt(values.tahun)
+  const watchRate = watch("rate");
+  const watchAdmin = watch("admin");
+  const watchOtr = watch("otr");
 
-        Swal.fire({
-        title: "Do you want to save the record?",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#0891B2",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Save",
-        showLoaderOnConfirm: true,
-        preConfirm: async () => {
-            try {
-                const res = await fetch("/api/otr/update",{
-                  method: "POST",
-                  headers: {
-                      Accept: "application/json",
-                      "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(values)
-                })
-                if(res.status ==200){
-                    const message = await res.json()
-                     Swal.fire({
-                        title: "Info",
-                        text: message.message,
-                        icon: "info",
-                        preConfirm: () => {
-                            router.back()
-                        },
-                    });
-                }
+  useEffect(() => {
+    setValue("id_produk", detailProduk.id_produk);
+    setValue("vendor_id", detailProduk.vendor_id);
+    setValue("product_nama", detailProduk.nm_produk);
+    setValue("rate", detailProduk.rate);
+    setValue("admin", detailProduk.admin);
+  }, [detailProduk]); // eslint-disable-line react-hooks/exhaustive-deps
 
-            } catch (error) {
-            Swal.fire("Failed!", error.message, "error");
-            }
-        },
-        allowOutsideClick: () => !Swal.isLoading(),
-        });
-    };
+  useEffect(() => {
+    setValue("kd_mdl", detailOtr.kd_mdl);
+    setValue("nm_mtr", detailOtr.nm_mtr);
+    setValue("tahun", detailOtr.tahun);
+    setValue("otr", detailOtr.otr);
+  }, [detailOtr]); // eslint-disable-line react-hooks/exhaustive-deps
 
-    return (
-        <>
-            <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+  useEffect(() => {
+    setValue("kodepos", detailKodepos.kodepos);
+    setValue("kelurahan", detailKodepos.kelurahan);
+    setValue("kecamatan", detailKodepos.kecamatan);
+    setValue("kota", detailKodepos.kota);
+  }, [detailKodepos]); // eslint-disable-line react-hooks/exhaustive-deps
 
-                
-                <div className="-mx-3 mb-6 w-full grid grid-cols-12">
-                    
-                    {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
-                    })}
-                </div>
+  useEffect(()=>{
+    setValue("tgl_lahir",konsumen.tgl_lahir.Valid ? new Date(konsumen.tgl_lahir.String).toISOString().split('T')[0] : null)
+  },[]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const onSubmit = async (values) => {
+    if (values.amount === undefined) {
+      return Swal.fire("Info", "Silahkan Hitung Amount Terlebih Dahulu", "info");
+    }
+    values.amount = parseFloat(values.amount)
+    values.otr = parseInt(values.otr);
+    values.tahun = String(values.tahun);
 
-                <br />
-                
-                <button
-                    id="button"
-                    type="submit"
-                    className="w-full mb-14 px-6 py-1 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+    const fotoKtp = values.ktp[0]
+    const fotoStnk = values.stnk[0]
+    delete values.ktp
+    delete values.stnk
+
+    const formData = new FormData()
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1920,
+      useWebWorker: true
+    }
+    const compressedKtp = await imageCompression(fotoKtp, options); 
+    const compressedStnk = await imageCompression(fotoStnk, options); 
+    console.log("ini size compress dan awal ", compressedKtp.size, fotoKtp.size)
+    formData.append("ktp", compressedKtp)
+    formData.append("stnk", compressedStnk)
+
+    Swal.fire({
+      title: "Do you want to save the record?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0891B2",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save",
+      showLoaderOnConfirm: true,
+      preConfirm: async () => {
+        
+        try {
+          formData.append("id", transaksi.id);
+          const resUpload = await fetch("/api/transaksi/upload-dokumen", {
+            method: "POST",
+            body: formData,
+          });
+          const resUpdate = await fetch("/api/transaksi/update", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(values),
+          });
+
+          if (resUpdate.status == 200) {
+            const message = await resUpdate.json();
+            
+            Swal.fire("Info", message.message, "info");
+          }
+        } catch (error) {
+          Swal.fire("Failed!", error.message, "error");
+        }
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
+
+  };
+
+  return (
+    <>
+      <form className="w-full" onSubmit={handleSubmit(onSubmit)}>
+        <div className="-mx-3 mb-6 w-full grid grid-cols-12 gap-x-2">
+          <div className="w-full px-3 mb-5 col-span-6">
+            <ModalProduk setDetail={setDetailProduk} isModalOpen={isModaProduk} setIsModalOpen={setIsModalProduk} />
+            <h2 className="text-lg font-bold mb-5 col-span-12">Detail Produk</h2>
+            <hr /> <br />
+            <div className="grid grid-cols-12 gap-y-5">
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="id_produk"
                 >
-                    Save
+                  Id Produk
+                </label>
+              </div>
+              <div className="col-span-9">
+                <input
+                  id={"id_produk"}
+                  {...register("id_produk")}
+                  className={
+                    "border-gray-500 border-2 appearance-none block w-full text-gray-700 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  }
+                  type={"text"}
+                  placeholder="Id Produk"
+                  onClick={() => setIsModalProduk(true)}
+                />
+              </div>
+
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="vendor"
+                >
+                  Vendor
+                </label>
+              </div>
+              <div className="col-span-9">
+                <select
+                  disabled={true}
+                  {...register("vendor_id", {
+                    required: "This field is required",
+                  })}
+                  className="cursor-not-allowed bg-gray-200 block appearance-none w-full text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="vendor"
+                >
+                  <option value={0} disabled={true}>
+                    Pilih Vendor
+                  </option>
+                  {vendorList.map((e) => (
+                    <option key={e.kd_vendor} value={e.kd_vendor}>
+                      {e.nm_vendor}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {formProduk.map((e) => {
+                return (
+                  <InputFormGroup
+                    step={e.step}
+                    disabled={e.disabled}
+                    key={e.id}
+                    name={e.name}
+                    title={e.title}
+                    type={e.type}
+                    id={e.id}
+                    register={register}
+                  />
+                );
+              })}
+
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="amount"
+                >
+                  Amount
+                </label>
+              </div>
+              <div className="col-span-7">
+                <input
+                  disabled={true}
+                  id={"amount"}
+                  {...register("amount")}
+                  className={
+                    "cursor-not-allowed bg-gray-200 appearance-none block w-full text-gray-700 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  }
+                  type={"number"}
+                  placeholder="Amount"
+                />
+              </div>
+              <div className="col-span-2">
+                <button
+                  onClick={() => {
+                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) - watchAdmin).toFixed(2));
+                  }}
+                  className="w-[90%] ml-2 py-1 text-black transition-all duration-150 ease-linear rounded-md h-full shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+                  type="button"
+                >
+                  Hitung
                 </button>
-            </form>
-        </>
-    )
+              </div>
+            </div>
+          </div>
+
+          <div className="w-full px-3 mb-5 col-span-6">
+            <Otr setDetailOtr={setDetailOtr} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+            <h2 className="text-lg font-bold mb-5">Detail Motor</h2>
+            <hr /> <br />
+            <div className="grid grid-cols-12 gap-y-5">
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="grid-state"
+                >
+                  Kode Motor
+                </label>
+              </div>
+              <div className="col-span-9">
+                <input
+                  id={"kd_mdl"}
+                  {...register("kd_mdl")}
+                  className={
+                    "border-gray-500 border-2 appearance-none block w-full text-gray-700 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  }
+                  type={"text"}
+                  placeholder="Kode Motor"
+                  onClick={() => setIsModalOpen(true)}
+                />
+              </div>
+
+              {formMotor.map((e) => {
+                return (
+                  <InputFormGroup
+                    step={e.step}
+                    disabled={e.disabled}
+                    key={e.id}
+                    name={e.name}
+                    title={e.title}
+                    type={e.type}
+                    id={e.id}
+                    register={register}
+                  />
+                );
+              })}
+
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="warna"
+                >
+                  Warna
+                </label>
+              </div>
+              <div className="col-span-9">
+                <select
+                  {...register("warna", {
+                    required: "This field is required",
+                  })}
+                  className="border-2 cursor-pointer block appearance-none w-full text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  id="warna"
+                >
+                  <option value={0} disabled={true}>
+                    Pilih Warna
+                  </option>
+                  <option value="Merah">
+                    Merah
+                  </option>
+                  <option value="Kuning">
+                    Kuning
+                  </option>
+                  <option value="Hijau">
+                    Hijau
+                  </option>
+                  <option value="Biru">
+                    Biru
+                  </option>
+                </select>
+              </div>
+
+
+            </div>
+          </div>
+
+          <div className="w-full px-3 mb-5 col-span-6">
+            <ModalKodePos setDetail={setDetailKodepos} isModalOpen={isModaKodepos} setIsModalOpen={setIsModalKodepos} />
+            <h2 className="text-lg font-bold mb-5">Detail Konsumen</h2>
+            <hr /> <br />
+            <div className="grid grid-cols-12 gap-y-5">
+              {formKonsumen.map((e) => {
+                return (
+                  <InputFormGroup
+                    step={e.step}
+                    disabled={e.disabled}
+                    key={e.id}
+                    name={e.name}
+                    title={e.title}
+                    type={e.type}
+                    id={e.id}
+                    register={register}
+                  />
+                );
+              })}
+              <div className="col-span-3 flex items-center">
+                <label
+                  className="uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 col-span-3 flex items-center"
+                  htmlFor="kodepos"
+                >
+                  Kodepos
+                </label>
+              </div>
+              <div className="col-span-9">
+                <input
+                  id={"kodepos"}
+                  {...register("kodepos")}
+                  className={
+                    "border-gray-500 border-2 appearance-none block w-full text-gray-700 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                  }
+                  type={"text"}
+                  placeholder="Kodepos"
+                  onClick={() => setIsModalKodepos(true)}
+                />
+              </div>
+              {formKodepos.map((e) => {
+                return (
+                  <InputFormGroup
+                    step={e.step}
+                    disabled={e.disabled}
+                    key={e.id}
+                    name={e.name}
+                    title={e.title}
+                    type={e.type}
+                    id={e.id}
+                    register={register}
+                  />
+                );
+              })}
+            </div>
+          </div>
+          <div className="w-full px-3 mb-5 col-span-6">
+            <h2 className="text-lg font-bold mb-5">Detail Dokumen</h2>
+            <hr /> <br />
+            <div className="grid grid-cols-12 gap-y-5 gap-x-5">
+              <div className="col-span-12 flex items-center justify-center">
+                {!selectedKtp && (
+                  <label
+                    htmlFor="ktp"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center  cursor-pointer"
+                  >
+                    KTP
+                  </label>
+                )}
+                {selectedKtp && (
+                  <label htmlFor="ktp" className="cursor-pointer">
+                    <Image src={selectedKtp} className="rounded-lg" alt="preview-ktp" width={480} height={270} />
+                  </label>
+                )}
+              </div>
+              <div className="col-span-12 flex items-center justify-center">
+                {!selectedStnk && (
+                  <label
+                    htmlFor="stnk"
+                    className="w-[480px] h-[270px] border-4 border-dashed rounded-lg justify-center text-2xl font-bold text-gray-400 flex items-center cursor-pointer"
+                  >
+                    STNK
+                  </label>
+                )}
+                {selectedStnk && (
+                  <label htmlFor="stnk" className="cursor-pointer">
+                    <Image src={selectedStnk} className="rounded-lg" alt="preview-stnk" width={480} height={270} />
+                  </label>
+                )}
+              </div>
+              <input
+                id={"ktp"}
+                {...register("ktp")}
+                className={"opacity-0"}
+                accept="image/*"
+                type="file"
+                onChange={(e) => {
+                  if (e?.target?.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedKtp(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+              <input
+                id={"stnk"}
+                {...register("stnk")}
+                className={"opacity-0"}
+                accept="image/*"
+                type="file"
+                onChange={(e) => {
+                  if (e?.target?.files[0]) {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                      setSelectedStnk(reader.result);
+                    };
+                    reader.readAsDataURL(file);
+                  }
+                }}
+              />
+            </div>
+          </div>
+        </div>
+
+        <br />
+
+        <button
+          id="button"
+          type="submit"
+          className="w-full mb-14 px-6 py-1 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+        >
+          Save
+        </button>
+      </form>
+    </>
+  );
 }

@@ -1,7 +1,7 @@
 "use server"
 
 import Pagination from "@/components/Pagination/index";
-import { readManyOtr } from "@/server/asuransi/lists";
+import { readManyTransaksi } from "@/server/asuransi/lists";
 import Site from "./item"
 
 export default async function ListAsuransi({searchParams}) {
@@ -9,7 +9,7 @@ export default async function ListAsuransi({searchParams}) {
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query
 
-  const {data, page} = await readManyOtr({
+  const {data, page} = await readManyTransaksi({
     search,
     limit,
     pageParams
@@ -34,7 +34,17 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Motor Price Code
+                        Id Transaksi
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Nama Konsumen
+                </th>
+                <th
+                    scope="col"
+                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+                        Nomor Mesin
                 </th>
                 <th
                     scope="col"
@@ -44,12 +54,7 @@ export default async function ListAsuransi({searchParams}) {
                 <th
                     scope="col"
                     className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        OTR
-                </th>
-                <th
-                    scope="col"
-                    className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                        Tahun
+                        Status
                 </th>
                 <th
                     scope="col"
