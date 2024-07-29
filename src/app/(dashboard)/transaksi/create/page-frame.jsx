@@ -89,21 +89,27 @@ export default function PageFrame({ vendorList }) {
     values.otr = parseInt(values.otr);
     values.tahun = String(values.tahun);
 
-    const fotoKtp = values.ktp[0]
-    const fotoStnk = values.stnk[0]
-    delete values.ktp
-    delete values.stnk
-    const formData = new FormData()
     const options = {
       maxSizeMB: 1,
       maxWidthOrHeight: 1920,
       useWebWorker: true
     }
-    const compressedKtp = await imageCompression(fotoKtp, options); 
-    const compressedStnk = await imageCompression(fotoStnk, options); 
-    console.log("ini size compress dan awal ", compressedKtp.size, fotoKtp.size)
-    formData.append("ktp", compressedKtp)
-    formData.append("stnk", compressedStnk)
+    const formData = new FormData()
+    if (typeof values.ktp == "object") {
+      const fotoKtp = values.ktp[0]
+      const compressedKtp = await imageCompression(fotoKtp, options); 
+      const ktpFile = new File([compressedKtp], fotoKtp.name, {type:compressedKtp.type})
+      formData.append("ktp", ktpFile)
+      
+    }
+    if (typeof values.stnk == "object") {
+      const fotoStnk = values.stnk[0]
+      const compressedStnk = await imageCompression(fotoStnk, options); 
+      const stnkFile = new File([compressedStnk], fotoStnk.name, {type:compressedStnk.type})
+      formData.append("stnk", stnkFile)
+    }
+    delete values.ktp
+    delete values.stnk
 
     Swal.fire({
       title: "Do you want to save the record?",
