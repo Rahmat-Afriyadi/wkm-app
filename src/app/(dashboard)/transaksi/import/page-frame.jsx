@@ -3,7 +3,6 @@
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import InputForm from "@/components/Input/input-form"
-import { form } from "./form"
 import { useRouter } from "next/navigation";
 import { revalidateTag } from "next/cache";
 
@@ -68,9 +67,6 @@ export default function PageFrame({otr}){
                 
                 <div className="-mx-3 mb-6 w-full grid grid-cols-12">
                     
-                    {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
-                    })}
                 </div>
 
 
