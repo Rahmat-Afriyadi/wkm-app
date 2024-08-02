@@ -26,7 +26,7 @@ export const authOptions = {
       },
 
       async authorize(credentials) {
-        const res = await fetch("http://localhost:3001/auth/login", {
+        const res = await fetch(process.env.NEXT_PUBLIC_BASE_API + "/auth/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
