@@ -3,6 +3,7 @@
 import Pagination from "@/components/Pagination/index";
 import { readManyApproval } from "@/server/asuransi/lists";
 import Site from "./item"
+import moment from "moment";
 
 export default async function ListAsuransi({searchParams}) {
   const pageParams = searchParams?.page || 1;
@@ -18,7 +19,6 @@ export default async function ListAsuransi({searchParams}) {
     limit,
     pageParams
   })
-
 
   const tableContent = data.map((item, i) => {
 

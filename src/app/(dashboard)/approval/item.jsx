@@ -3,6 +3,7 @@
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 import React, { memo } from "react";
+import moment from "moment";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -10,7 +11,6 @@ function classNames(...classes) {
 
 
 const Asuransi = ({ site, id }) => {
-
   const router = useRouter()
 
   if (site) {
@@ -27,7 +27,7 @@ const Asuransi = ({ site, id }) => {
             {site.no_hp}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {new Date(site.tgl_beli).toISOString().split('T')[0]}
+            {moment(site.tgl_beli).format('YYYY-MM-DD')}
           </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">
             {site.sts_pembelian == 1 && <p className="shadow-md bg-gray-200 text-center rounded-lg p-1 font-bold text-md">Apply</p>}

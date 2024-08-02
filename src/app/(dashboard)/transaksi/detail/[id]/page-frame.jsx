@@ -22,8 +22,8 @@ export default function PageFrame({ item, vendorList }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModaProduk, setIsModalProduk] = useState(false);
   const [isModaKodepos, setIsModalKodepos] = useState(false);
-  const [selectedKtp, setSelectedKtp] = useState();
-  const [selectedStnk, setSelectedStnk] = useState();
+  const [selectedKtp, setSelectedKtp] = useState(process.env.NEXT_PUBLIC_BASE_API + item.ktp);
+  const [selectedStnk, setSelectedStnk] = useState(process.env.NEXT_PUBLIC_BASE_API + item.stnk);
   const [detailOtr, setDetailOtr] = useState({
     kd_mdl: transaksi.motorprice_kode,
     nm_mtr: mst_mtr.nm_mtr,
