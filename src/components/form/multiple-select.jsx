@@ -83,7 +83,6 @@ export default function MultipleSelect({selected, setSelected, dataKerja}){
             onBlur={() => setMenuOpen(false)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !isDisable) {
-                
                 setSelected((prev) => [...prev, query]);
                 setQuery("");
                 setMenuOpen(true);

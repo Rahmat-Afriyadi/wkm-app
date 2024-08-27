@@ -11,14 +11,14 @@ import { useRouter } from "next/navigation";
 import InputFormGroup from "@/components/Input/input-form-group";
 import ModalKodePos from "@/components/Modal/kodepos/modal-kodepos";
 import Image from "next/image";
-import imageCompression from 'browser-image-compression';
+import imageCompression from "browser-image-compression";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
 export default function PageFrame({ item, vendorList }) {
-  const {konsumen, produk, mst_mtr, ...transaksi} = item
+  const { konsumen, produk, mst_mtr, ...transaksi } = item;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModaProduk, setIsModalProduk] = useState(false);
   const [isModaKodepos, setIsModalKodepos] = useState(false);
@@ -31,11 +31,11 @@ export default function PageFrame({ item, vendorList }) {
     otr: transaksi.otr,
   });
   const [detailProduk, setDetailProduk] = useState({
-    id_produk:item.produk.kd_produk,
-    vendor_id:item.produk.vendor_id,
-    nm_produk:item.produk.nm_produk,
-    rate:item.produk.rate,
-    admin:item.produk.admin,
+    id_produk: item.produk.kd_produk,
+    vendor_id: item.produk.vendor_id,
+    nm_produk: item.produk.nm_produk,
+    rate: item.produk.rate,
+    admin: item.produk.admin,
   });
   const [detailKodepos, setDetailKodepos] = useState({
     kodepos: item.konsumen.kodepos,
@@ -53,7 +53,7 @@ export default function PageFrame({ item, vendorList }) {
     watch,
     reset,
     formState: { errors },
-  } = useForm({ defaultValues: {...konsumen, ...produk, ...transaksi} });
+  } = useForm({ defaultValues: { ...konsumen, ...produk, ...transaksi } });
 
   const watchRate = watch("rate");
   const watchAdmin = watch("admin");
@@ -81,38 +81,62 @@ export default function PageFrame({ item, vendorList }) {
     setValue("kota", detailKodepos.kota);
   }, [detailKodepos]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  useEffect(()=>{
-    setValue("tgl_lahir",konsumen.tgl_lahir.Valid ? new Date(konsumen.tgl_lahir.String).toISOString().split('T')[0] : null)
-  },[]) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    (async () => {
+      const data = new FormData();
+      data.append("target", "082124744961");
+      data.append("message", "kirim dari js");
+      data.append("schedule", "0");
+      data.append("delay", "2");
+      data.append("countryCode", "62");
+
+      const response = await fetch("https://api.fonnte.com/send", {
+        method: "POST",
+        mode: "cors",
+        headers: new Headers({
+          Authorization: "k!ph_r+apphR8kJY@+gS",
+        }),
+        body: data,
+      });
+
+      const res = await response.json();
+      document.write(JSON.stringify(res));
+    })();
+
+    setValue(
+      "tgl_lahir",
+      konsumen.tgl_lahir.Valid ? new Date(konsumen.tgl_lahir.String).toISOString().split("T")[0] : null
+    );
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSubmit = async (values) => {
     if (values.amount === undefined) {
       return Swal.fire("Info", "Silahkan Hitung Amount Terlebih Dahulu", "info");
     }
-    values.amount = parseFloat(values.amount)
+    values.amount = parseFloat(values.amount);
     values.otr = parseInt(values.otr);
     values.tahun = String(values.tahun);
 
     const options = {
       maxSizeMB: 1,
       maxWidthOrHeight: 1920,
-      useWebWorker: true
-    }
-    const formData = new FormData()
+      useWebWorker: true,
+    };
+    const formData = new FormData();
     if (typeof values.ktp == "object") {
-      const fotoKtp = values.ktp[0]
-      const compressedKtp = await imageCompression(fotoKtp, options); 
-      const ktpFile = new File([compressedKtp], fotoKtp.name, {type:compressedKtp.type})
-      formData.append("ktp", ktpFile)
+      const fotoKtp = values.ktp[0];
+      const compressedKtp = await imageCompression(fotoKtp, options);
+      const ktpFile = new File([compressedKtp], fotoKtp.name, { type: compressedKtp.type });
+      formData.append("ktp", ktpFile);
     }
     if (typeof values.stnk == "object") {
-      const fotoStnk = values.stnk[0]
-      const compressedStnk = await imageCompression(fotoStnk, options); 
-      const stnkFile = new File([compressedStnk], fotoStnk.name, {type:compressedStnk.type})
-      formData.append("stnk", stnkFile)
+      const fotoStnk = values.stnk[0];
+      const compressedStnk = await imageCompression(fotoStnk, options);
+      const stnkFile = new File([compressedStnk], fotoStnk.name, { type: compressedStnk.type });
+      formData.append("stnk", stnkFile);
     }
-    delete values.ktp
-    delete values.stnk
+    delete values.ktp;
+    delete values.stnk;
 
     Swal.fire({
       title: "Do you want to save the record?",
@@ -123,7 +147,6 @@ export default function PageFrame({ item, vendorList }) {
       confirmButtonText: "Save",
       showLoaderOnConfirm: true,
       preConfirm: async () => {
-        
         try {
           formData.append("id", transaksi.id);
           const resUpload = await fetch("/api/transaksi/upload-dokumen", {
@@ -140,7 +163,7 @@ export default function PageFrame({ item, vendorList }) {
 
           if (resUpdate.status == 200) {
             const message = await resUpdate.json();
-            
+
             Swal.fire("Info", message.message, "info");
           }
         } catch (error) {
@@ -149,7 +172,6 @@ export default function PageFrame({ item, vendorList }) {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-
   };
 
   return (
@@ -248,7 +270,7 @@ export default function PageFrame({ item, vendorList }) {
               <div className="col-span-2">
                 <button
                   onClick={() => {
-                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) - watchAdmin).toFixed(2));
+                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) + watchAdmin).toFixed(2));
                   }}
                   className="w-[90%] ml-2 py-1 text-black transition-all duration-150 ease-linear rounded-md h-full shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
                   type="button"
@@ -319,22 +341,12 @@ export default function PageFrame({ item, vendorList }) {
                   <option value={0} disabled={true}>
                     Pilih Warna
                   </option>
-                  <option value="Merah">
-                    Merah
-                  </option>
-                  <option value="Kuning">
-                    Kuning
-                  </option>
-                  <option value="Hijau">
-                    Hijau
-                  </option>
-                  <option value="Biru">
-                    Biru
-                  </option>
+                  <option value="Merah">Merah</option>
+                  <option value="Kuning">Kuning</option>
+                  <option value="Hijau">Hijau</option>
+                  <option value="Biru">Biru</option>
                 </select>
               </div>
-
-
             </div>
           </div>
 

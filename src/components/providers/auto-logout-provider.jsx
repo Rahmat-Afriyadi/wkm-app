@@ -6,29 +6,37 @@ import { useEffect } from "react";
 export default function AutoLogoutProvider() {
     const { data: session, status } = useSession();
     useEffect(()=>{
-      if(session?.user.refreshToken){
-        fetch("http://127.0.0.1:3001/auth/refresh-token",{
-          method:"POST",
-          body:JSON.stringify({
-            refresh_token:session?.user.refreshToken
+      if(status=="authenticated" || status == "loading"){
+        console.log("ini session ", session?.user.refreshToken)
+        if (session?.user.refreshToken != undefined) {
+          fetch("http://127.0.0.1:3001/auth/refresh-token",{
+            headers: {
+              "Access-Control-Allow-Origin":"*"
+            },
+            method:"POST",
+            body:JSON.stringify({
+              refresh_token:session?.user.refreshToken
+            })
           })
-        })
-        .then(data=>{
-            if(data.status == 403){
-              signOut({ redirect: false })
-              .then(() => {
-                void signIn();
-              });
-            }
-          })
-        .catch(error=>{
-          console.log("ini error ", error)
-        })
+          .then(data=>{
+            console.log("ini data ", data)
+              // if(data.status == 403){
+              //   signOut({ redirect: false })
+              //   .then(() => {
+              //     void signIn();
+              //   });
+              // }
+            })
+          .catch(error=>{
+            console.log("ini error ", error)
+          })          
+        }
       }else{
-        signOut({ redirect: false })
-        .then(() => {
-          void signIn();
-        });
+        console.log("masuk sini ", session)
+        // signOut({ redirect: false })
+        // .then(() => {
+        //   void signIn();
+        // });
       }
-    },[session])
+    },[status]) // eslint-disable-line react-hooks/exhaustive-deps
 }

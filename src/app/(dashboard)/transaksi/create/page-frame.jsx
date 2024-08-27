@@ -243,7 +243,7 @@ export default function PageFrame({ vendorList }) {
               <div className="col-span-2">
                 <button
                   onClick={() => {
-                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) - watchAdmin).toFixed(2));
+                    setValue("amount", parseFloat(watchOtr * (watchRate / 100) + watchAdmin).toFixed(2));
                   }}
                   className="w-[90%] ml-2 py-1 text-black transition-all duration-150 ease-linear rounded-md h-full shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
                   type="button"

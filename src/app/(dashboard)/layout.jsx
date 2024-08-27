@@ -5,6 +5,7 @@ import Header from "../../components/organisms/header/header";
 import { signIn, useSession } from "next-auth/react";
 import {  useSelectedLayoutSegment } from "next/navigation";
 import SidebarMobile from "@/components/organisms/sidebar/sidebar-mobile";
+import AutoLogoutProvider from "@/components/providers/auto-logout-provider"
 
 
 
@@ -20,9 +21,10 @@ export default function RootLayout({ children }) {
       void signIn(segment?segment:"");
     }
   }, [status, segment]);
-
+// 0103 0724 1054 3062
   return (
           <>
+            <AutoLogoutProvider/>
             <SidebarDesktop open={open} setOpen={setOpen}/>
             <Header setSidebarOpen={setOpen} />
             <div className={`lg:pl-72 ${!open? "-translate-x-[220px] " : ""} duration-700 ease-in-out`}>

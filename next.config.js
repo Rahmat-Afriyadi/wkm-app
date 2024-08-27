@@ -6,7 +6,6 @@ module.exports = {
     // limit of 25 imageSizes values
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     // limit of 50 domains values (deprecated)
-    domains: ["localhost", "192.168.70.17"],
     // path prefix for Image Optimization API, useful with `loader`
     path: "/_next/image",
     // loader can be 'default', 'imgix', 'cloudinary', 'akamai', or 'custom'
@@ -26,7 +25,13 @@ module.exports = {
     // sets the Content-Disposition header (inline or attachment)
     contentDispositionType: "inline",
     // limit of 50 objects
-    remotePatterns: [],
+    remotePatterns: [
+      {
+        protocol: "http",
+        hostname: "localhost",
+        pathname: "**",
+      },
+    ],
     // when true, every image will be unoptimized
     unoptimized: false,
   },
