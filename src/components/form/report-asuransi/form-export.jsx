@@ -3,13 +3,14 @@
 import { useRef, useState } from "react";
 
 export default function ButttonExportReportAsuransi({params}){
-    const {awal_tgl, akhir_tgl} = params
+    const {awal_tgl, akhir_tgl, role} = params
     const aBlobUrl = useRef(null);
     const [submitted, setSubmit] = useState(false)
 
     const handleSubmit = async() =>{
         setSubmit(false)
-        const response = await fetch("/api/export-report-asuransi",{
+        const url = role == "telesales" ? "/api/export-report-asuransi-telesales" : "/api/export-report-asuransi";
+        const response = await fetch(url,{
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "no-cors", // no-cors, *cors, same-origin
             headers: {

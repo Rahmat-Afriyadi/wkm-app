@@ -13,10 +13,10 @@ import ModalKodePos from "@/components/Modal/kodepos/modal-kodepos";
 import Image from "next/image";
 import imageCompression from "browser-image-compression";
 
+
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
-
 export default function PageFrame({ item, vendorList }) {
   const { konsumen, produk, mst_mtr, ...transaksi } = item;
   const [isModalOpen, setIsModalOpen] = useState(false);

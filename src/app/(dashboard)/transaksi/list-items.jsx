@@ -15,7 +15,6 @@ export default async function ListAsuransi({searchParams}) {
     pageParams
   })
 
-  console.log("ini data yaa ", data[0])
 
 
   const tableContent = data.map((item, i) => {

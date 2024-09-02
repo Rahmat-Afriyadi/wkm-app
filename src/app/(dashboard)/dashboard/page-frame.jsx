@@ -77,7 +77,7 @@ export default function PageFrame({children, data}) {
                 onChange={handleValueChange}/>
             </div>
             
-            <ButttonExportReportAsuransi params={{awal_tgl:value.startDate,  akhir_tgl:value.endDate}}/>
+            <ButttonExportReportAsuransi params={{awal_tgl:value.startDate,  akhir_tgl:value.endDate, role:session?.user.role == 1 ? "telesales":""}}/>
         </div>
 
       <div className="grid grid-cols-1 gap-5 mt-5 sm:grid-cols-3">
