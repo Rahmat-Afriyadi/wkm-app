@@ -61,7 +61,7 @@ export default function Page() {
               Nomor Telepon
             </label>
             <div className="mt-2 relative">
-              <p className="absolute left-2 top-1">+628</p>
+              
               <input
                 id="no_hp"
                 name="no_hp"
@@ -77,6 +77,7 @@ export default function Page() {
                 required
                 className="block w-full pl-[55px] appearance-none rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
+              <div className="absolute left-2 top-0 bottom-0 my-auto p-0 flex items-center">+628</div>
             </div>
           </div>
 
