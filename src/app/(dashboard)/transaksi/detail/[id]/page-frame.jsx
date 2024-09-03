@@ -82,27 +82,6 @@ export default function PageFrame({ item, vendorList }) {
   }, [detailKodepos]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
-    (async () => {
-      const data = new FormData();
-      data.append("target", "082124744961");
-      data.append("message", "kirim dari js");
-      data.append("schedule", "0");
-      data.append("delay", "2");
-      data.append("countryCode", "62");
-
-      const response = await fetch("https://api.fonnte.com/send", {
-        method: "POST",
-        mode: "cors",
-        headers: new Headers({
-          Authorization: "k!ph_r+apphR8kJY@+gS",
-        }),
-        body: data,
-      });
-
-      const res = await response.json();
-      document.write(JSON.stringify(res));
-    })();
-
     setValue(
       "tgl_lahir",
       konsumen.tgl_lahir.Valid ? new Date(konsumen.tgl_lahir.String).toISOString().split("T")[0] : null
