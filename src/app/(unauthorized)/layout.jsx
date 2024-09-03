@@ -18,7 +18,7 @@ export default function LayoutAuth({ children }) {
           </h2>
         </div>
 
-        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-sm">{children}</div>
+        <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md">{children}</div>
       </div>
     </>
   );
