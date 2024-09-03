@@ -18,6 +18,7 @@ export default function Page() {
   
 
   const onSubmit = async (values) => {
+    values.no_hp = noHp
     setloading(true);
     try {
       const res = await fetch("/api/transaksi/search-cus", {
