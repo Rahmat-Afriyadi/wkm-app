@@ -4,6 +4,7 @@ const form = [
     name: "kd_mdl",
     id: "kd_mdl",
     disabled: false,
+    required: true,
     type: "text",
   },
   {
@@ -11,6 +12,7 @@ const form = [
     name: "nm_mtr",
     id: "nm_mtr",
     disabled: false,
+    required: true,
     type: "text",
   },
 ];

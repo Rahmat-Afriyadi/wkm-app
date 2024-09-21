@@ -95,8 +95,10 @@ export default function AsuransiDetailPage({asuransi}){
       const response = await fetch("/api/produk?" + new URLSearchParams({
         jenis_asuransi:asuransi.jenis_asuransi
     }))
+    console.log("ini response yang dari fetch ", response)
       if (response.status == 200) {
         const data = await response.json()
+        console.log("ini data yaa ", data.response)
         setProduks(data.response)
       }
     })()

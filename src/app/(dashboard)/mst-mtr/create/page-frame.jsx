@@ -65,7 +65,7 @@ export default function PageFrame({merkMobil, merkMotor}){
                 <div className="-mx-3 mb-6 w-full grid grid-cols-12">
                     
                     {form.map((e)=>{
-                        return <InputForm disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
+                        return <InputForm required={e.required} disabled={e.disabled} key={e.id} name={e.name} title={e.title} type={e.type} id={e.id} register={register}/> 
                     })}
 
                     <div className="w-full px-3 mb-5 align-middle col-span-6 grid grid-cols-12">
