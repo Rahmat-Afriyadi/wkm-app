@@ -8,12 +8,26 @@ export default function UploadFileForm(){
     const [error, setError] = useState("")
     const [message, setMessage] = useState("")
     const [files, setFiles] = useState([])
+    const [type, setType] = useState("T")
 
     return (
         <div className='mt-6'>
             {message != '' && <div className='bg-green-500 rounded-lg mb-4 text-white flex justify-center text-lg p-4'>
                 {message}
             </div>}
+            <div className='w-6/12'>
+                <label
+                    htmlFor={"payment_type"}
+                    className="block text-sm font-medium leading-6 text-gray-900"
+                    >
+                    Jenis Bayar
+                    </label>
+                <select id="payment_type" onChange={(e)=>setType(e.target.value)} className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6'>
+                    <option value="T">Cash to Transfer</option>
+                    <option value="C">Transfer to Cash</option>
+                </select>
+            </div>
+            <br />
             <Files
             onChange={(files)=>{
                 setError('')
@@ -48,6 +62,7 @@ export default function UploadFileForm(){
         onClick={async()=>{
             const data = new FormData();
 
+            data.append("payment_type",type)
             for (const file of files) {
                 data.append("files[]", file, file.name);
             }

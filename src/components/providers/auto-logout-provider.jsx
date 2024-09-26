@@ -7,7 +7,6 @@ export default function AutoLogoutProvider() {
     const { data: session, status } = useSession();
     useEffect(()=>{
       if(status=="authenticated" || status == "loading"){
-        console.log("ini session ", session?.user.refreshToken)
         if (session?.user.refreshToken != undefined) {
           fetch("http://127.0.0.1:3001/auth/refresh-token",{
             headers: {
