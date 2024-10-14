@@ -82,9 +82,7 @@ export default function Navbar({ heroHeight, notHome = false }) {
         )}
       >
         <div className="w-10/12 md:w-5/12 lg:w-3/12">
-          <div className="uppercase text-xl sm:text-2xl font-semibold tracking-widest text-white">
-            Logo
-        </div>
+          <div className="uppercase text-xl sm:text-2xl font-semibold tracking-widest text-white">Logo</div>
         </div>
         <motion.div
           initial={{ y: 470 }}
@@ -104,15 +102,11 @@ export default function Navbar({ heroHeight, notHome = false }) {
             contact
           </Button>
         </div>
-        {/* <div className="w-9/12 md:hidden text-right"> */}
         <motion.img
-          // alt="menu button"
           src="/images/stack/menu.svg"
-          // layout="fill"
           className="w-1/12 md:hidden text-right"
           onClick={() => setOffcanvas(true)}
         />
-        {/* </div> */}
       </div>
 
       <div

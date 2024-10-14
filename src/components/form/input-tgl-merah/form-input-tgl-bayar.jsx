@@ -3,19 +3,27 @@
 import { InputBase } from "@/components/Input/input-base";
 import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
-import { DatepickerInputBayar } from "./datepicker-input-bayar";
+import { DatepickerInputTglMerah } from "./datepicker-tgl-merah";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
 import { TextareaBase } from "@/components/Input/text-area";
 
-export default function FormInputBayar() {
+export function FormInputTglMerah() {
   const { register, handleSubmit } = useForm();
+  const [valueTglMrh, setValueTglMrh] = useState({
+    startDate: null,
+    endDate: null,
+  });
+
   const queryCLient = useQueryClient();
   const mutInputBayar = useMutation({
     mutationFn: updateInputBayar,
   });
   const onSubmit = (values) => {
+    values.tgl_awal = valueTglMrh.startDate;
+    values.tgl_akhir = valueTglMrh.endDate;
+
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
       icon: "question",
@@ -38,27 +46,14 @@ export default function FormInputBayar() {
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
-    console.log("ini values yaa ", values);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-12 gap-x-4">
       <div className="col-span-6">
-        <DatepickerInputBayar />
+        <DatepickerInputTglMerah valueTglMrh={valueTglMrh} setValueTglMrh={setValueTglMrh} />
       </div>
       <div className="col-span-6">
-        <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={false} />
-      </div>
-      <div className="col-span-6 mt-7">
-        <InputBase
-          name={"nm_customer"}
-          lable={"Nama Customer"}
-          id={"nm_customer"}
-          register={register}
-          disabled={false}
-        />
-      </div>
-      <div className="col-span-6 mt-7">
         <TextareaBase
           label={"Deskripsi"}
           rows={4}
@@ -67,6 +62,15 @@ export default function FormInputBayar() {
           name={"deskripsi"}
           id={"deskripsi"}
         />
+      </div>
+      <div className="col-span-12">
+        <button
+          id="button"
+          type="submit"
+          className="w-full px-6 py-1 mt-12 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+        >
+          Save
+        </button>
       </div>
     </form>
   );

@@ -79,6 +79,27 @@ const navigation = [
     to: "/transaksi",
     icon: FolderIcon,
   },
+  // finance
+  {
+    name: "Input Bayar",
+    to: "/input-bayar",
+    icon: FolderIcon,
+  },
+  {
+    name: "Input Tanggal Merah",
+    to: "/input-tanggal-merah",
+    icon: FolderIcon,
+  },
+  {
+    name: "Pengajuan Extend Bayar",
+    to: "/pengajuan-extend-bayar",
+    icon: FolderIcon,
+  },
+  {
+    name: "Approval Extend Bayar ",
+    to: "/approval-extend-bayar",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];

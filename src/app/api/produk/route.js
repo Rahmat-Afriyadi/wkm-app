@@ -9,6 +9,5 @@ export const GET = async (_req) => {
         pageParams: 1,
       })
   );
-  console.log("ini response 1 yaa ", response);
   return NextResponse.json({ response });
 };
