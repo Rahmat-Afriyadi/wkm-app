@@ -1,14 +1,14 @@
 import { AuthGetApi } from "@/lib/fetchApi";
-import PageFrame from "./page-frame";
+import { FormInputTglMerah } from "@/components/form/input-tgl-merah/form-input-tgl-bayar";
 
-export default async function Page({ params, searchParams }) {
+export default async function Page({ params }) {
   const { id } = params;
-  const otr = await AuthGetApi("/tgl-merah/detail-tgl-merah/" + id);
+  const tglMerah = await AuthGetApi("/tgl-merah/detail-tgl-merah/" + id);
 
   return (
     <>
       <p className="text-2xl font-bold mb-9">Detail OTR</p>
-      <PageFrame otr={otr} />
+      <FormInputTglMerah isEditing={true} defaultValues={tglMerah} />
     </>
   );
 }

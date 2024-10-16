@@ -5,7 +5,7 @@ import { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { UploadTransaksiExcel } from "@/server/transaksi/upload-image-profile";
+import { UploadTransaksiExcel } from "@/server/transaksi/upload-data-excel";
 
 export default function PageFrame({ children }) {
   const [file, setFile] = useState(null);
@@ -30,13 +30,12 @@ export default function PageFrame({ children }) {
         return;
       }
       setError("");
-      //   setFile(selectedFile);
       const data = new FormData();
       data.append("files[]", selectedFile, selectedFile.name);
 
       importTransaksiMut.mutate(data, {
         onSuccess: (data) => {
-          queryCLient.invalidateQueries({ queryKey: ["profile-me"] });
+          queryCLient.invalidateQueries({ queryKey: ["transaksi"] });
           console.log("berhasil kok ", data.data.data);
         },
         onError: (e) => {
@@ -68,7 +67,7 @@ export default function PageFrame({ children }) {
             type="file"
             className="hidden"
             id="import-transaksi"
-            accept="application/vnd.ms-excel, .xlsx" // Specify accepted file types
+            accept="application/vnd.ms-excel, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // Specify accepted file types
             onChange={handleFileChange}
           />
           <Search id="search-query" name="search_query" placeholder={"Transaksi..."} />

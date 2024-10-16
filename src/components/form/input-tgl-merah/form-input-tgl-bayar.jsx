@@ -5,25 +5,27 @@ import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
 import { DatepickerInputTglMerah } from "./datepicker-tgl-merah";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
 import { TextareaBase } from "@/components/Input/text-area";
+import { inputTanggalMerah } from "@/server/tanggal-merah/create-tanggal-merah";
+import { updateTanggalMerah } from "@/server/tanggal-merah/update-tanggal-merah";
+import { useRouter } from "next/navigation";
 
-export function FormInputTglMerah() {
-  const { register, handleSubmit } = useForm();
+export function FormInputTglMerah({ defaultValues, isEditing }) {
+  const { register, handleSubmit } = useForm({ defaultValues: defaultValues });
   const [valueTglMrh, setValueTglMrh] = useState({
-    startDate: null,
-    endDate: null,
+    startDate: isEditing ? defaultValues.tgl_awal : null,
+    endDate: isEditing ? defaultValues.tgl_akhir : null,
   });
+  const router = useRouter();
 
   const queryCLient = useQueryClient();
-  const mutInputBayar = useMutation({
-    mutationFn: updateInputBayar,
+  const mutTanggalMerah = useMutation({
+    mutationFn: isEditing ? updateTanggalMerah : inputTanggalMerah,
   });
   const onSubmit = (values) => {
-    values.tgl_awal = valueTglMrh.startDate;
-    values.tgl_akhir = valueTglMrh.endDate;
-
+    values.tgl_awal = new Date(valueTglMrh.startDate);
+    values.tgl_akhir = new Date(valueTglMrh.endDate);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
       icon: "question",
@@ -33,10 +35,12 @@ export function FormInputTglMerah() {
       confirmButtonText: "Save",
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        mutInputBayar.mutate(values, {
+        mutTanggalMerah.mutate(values, {
           onSuccess: (data) => {
-            queryCLient.invalidateQueries({ queryKey: ["member-cards"] });
-            Swal.fire("Success!", "Kartu berhasil ditambahkan", "info");
+            queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
+            Swal.fire("Success!", "Tanggal Merah berhasil ditambahkan", "info").then(() => {
+              router.push("/input-tanggal-merah");
+            });
           },
           onError: (e) => {
             console.log("ini error ", e);
