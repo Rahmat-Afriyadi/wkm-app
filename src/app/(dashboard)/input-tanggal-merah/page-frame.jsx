@@ -6,6 +6,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
 import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
 import { useMutation } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
   const [file, setFile] = useState(null);
@@ -38,7 +39,7 @@ export default function PageFrame({ children }) {
           router.refresh();
         },
         onError: (e) => {
-          console.log("ini error ", e);
+          Swal.fire("Warning!", e.response?.data?.message, "info");
         },
       });
       console.log("File selected:", selectedFile);

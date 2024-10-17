@@ -39,7 +39,7 @@ export function FormInputTglMerah({ defaultValues, isEditing }) {
           onSuccess: (data) => {
             queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
             Swal.fire("Success!", "Tanggal Merah berhasil ditambahkan", "info").then(() => {
-              router.push("/input-tanggal-merah");
+              router.replace("/input-tanggal-merah");
             });
           },
           onError: (e) => {

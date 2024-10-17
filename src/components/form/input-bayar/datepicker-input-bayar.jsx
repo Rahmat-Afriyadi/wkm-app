@@ -1,14 +1,20 @@
 import React, { useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import { addDays, min } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
+import { minInputBayar } from "@/server/tanggal-merah/min-input-bayar";
 
-export function DatepickerInputBayar() {
+export function DatepickerInputBayar({ valueTglLhr, setValueTglLhr }) {
   const today = new Date();
   const minDate = addDays(today, -2);
-  const [valueTglLhr, setValueTglLhr] = useState({
-    startDate: null,
-    endDate: null,
+
+  const { data, isLoading } = useQuery({
+    queryFn: async () => await minInputBayar("mapping_status"),
   });
+
+  if (isLoading) {
+    return "Loading....";
+  }
 
   return (
     <>
@@ -23,7 +29,7 @@ export function DatepickerInputBayar() {
         popoverDirection="down"
         primaryColor={"emerald"}
         displayFormat="DD/MM/YYYY"
-        minDate={minDate}
+        minDate={data.min}
         maxDate={today}
         placeholder="_ _ /_ _ /_ _ _ _"
         inputClassName="pl-12 appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"

@@ -1,5 +1,5 @@
 import { AuthGetApi } from "@/lib/fetchApi";
-import { FormInputTglMerah } from "@/components/form/input-tgl-merah/form-input-tgl-bayar";
+import { FormInputTglMerah } from "@/components/form/input-tgl-merah/form-input-tgl-merah";
 
 export default async function Page({ params }) {
   const { id } = params;

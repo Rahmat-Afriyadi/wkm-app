@@ -12,20 +12,27 @@ import { searchFaktur } from "@/server/faktur/search-faktur";
 export default function Page() {
   const { register, reset, handleSubmit } = useForm();
   const [faktur, setFaktur] = useState(null);
+  const [message, setMessage] = useState(null);
   const searchMut = useMutation({
     mutationFn: searchFaktur,
   });
 
   const onSubmit = (values) => {
+    setFaktur(null);
     searchMut.mutate(values, {
       onSuccess: (data) => {
-        setFaktur(data);
+        if (data.hasOwnProperty("message")) {
+          setFaktur(null);
+          setMessage(data.message);
+        } else {
+          setMessage(null);
+          setFaktur(data);
+        }
       },
       onError: (e) => {
         console.log("ini error ", e);
       },
     });
-    console.log("ini values yaa ", values);
     reset();
   };
   return (
@@ -41,7 +48,13 @@ export default function Page() {
       <br />
       <hr />
       <br />
-      {faktur && <FormInputBayar defaultValues={faktur} />}
+      {faktur?.kartu.sts_kartu == "2" && <FormInputBayar defaultValues={faktur} />}
+      {message && (
+        <div className="h-screen w-full pt-12 text-center">
+          <p className="text-[90px]">{message}</p>
+          <div className="text-[90px] text-center">🐵</div>
+        </div>
+      )}
     </>
   );
 }

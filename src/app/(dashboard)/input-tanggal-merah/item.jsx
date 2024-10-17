@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { memo } from "react";
 import { deleteTanggalMerah } from "@/server/tanggal-merah/delete-tanggal-merah";
 import Swal from "sweetalert2";
+import { formatDate } from "@/lib/utils/format-date";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -24,10 +25,8 @@ const Asuransi = ({ site, id }) => {
     return (
       <>
         <tr key={site.id} className={classNames("hover:text-yellow hover:bg-black", id % 2 === 0 ? " " : "bg-gray-50")}>
-          <td className="px-3 py-4 text-sm whitespace-nowrap">{new Date(site.tgl_awal).toISOString().split("T")[0]}</td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap">
-            {new Date(site.tgl_akhir).toISOString().split("T")[0]}
-          </td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">{formatDate(new Date(site.tgl_awal))}</td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">{formatDate(new Date(site.tgl_akhir))}</td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">{site.deskripsi}</td>
           <td className="px-2 py-4 text-sm whitespace-nowrap cursor-pointer">
             <span className="text-blue-600 flex">
