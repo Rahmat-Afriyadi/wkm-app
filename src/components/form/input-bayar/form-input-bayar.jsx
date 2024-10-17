@@ -1,14 +1,13 @@
 "use client";
 
 import { InputBase } from "@/components/Input/input-base";
+import { SelectBase } from "@/components/Input/select-base";
 import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
 import { DatepickerInputBayar } from "./datepicker-input-bayar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
-import { TextareaBase } from "@/components/Input/text-area";
-import { FolderPlusIcon } from "@heroicons/react/24/solid";
 
 export default function FormInputBayar({ defaultValues }) {
   const { register, handleSubmit } = useForm({ defaultValues });
@@ -23,7 +22,7 @@ export default function FormInputBayar({ defaultValues }) {
     mutationFn: updateInputBayar,
   });
   const onSubmit = (values) => {
-    values.tgl_bayar = valueTglLhr.startDate;
+    values.tgl_bayar = new Date(valueTglLhr.startDate);
     console.log("ini values ", values);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
@@ -36,8 +35,7 @@ export default function FormInputBayar({ defaultValues }) {
       preConfirm: () => {
         mutInputBayar.mutate(values, {
           onSuccess: (data) => {
-            queryCLient.invalidateQueries({ queryKey: ["member-cards"] });
-            Swal.fire("Success!", "Kartu berhasil ditambahkan", "info");
+            Swal.fire("Success!", "Input Pembayaran Berhasil", "info");
           },
           onError: (e) => {
             console.log("ini error ", e);
@@ -119,6 +117,22 @@ export default function FormInputBayar({ defaultValues }) {
                 register={register}
                 disabled={true}
               />
+            </div>
+            <div className="col-span-6 mt-5">
+              <SelectBase
+                name={"sts_jenis_bayar"}
+                lable={"Jenis Bayar"}
+                id={"sts_jenis_bayar"}
+                register={register}
+                disabled={true}
+                options={[
+                  { name: "Cash", value: "C" },
+                  { name: "Transfer", value: "T" },
+                ]}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputBase name={"no_kartu"} lable={"Nomor Kartu"} id={"no_kartu"} register={register} disabled={true} />
             </div>
           </div>
         </div>
