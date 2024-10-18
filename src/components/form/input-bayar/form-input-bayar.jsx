@@ -2,6 +2,7 @@
 
 import { InputBase } from "@/components/Input/input-base";
 import { SelectBase } from "@/components/Input/select-base";
+import { DatepickerBase } from "@/components/Input/date-picker";
 import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
 import { DatepickerInputBayar } from "./datepicker-input-bayar";
@@ -51,7 +52,7 @@ export default function FormInputBayar({ defaultValues }) {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-12 gap-x-7">
         <div className="col-span-6">
-          <div className="grid grid-cols-12 gap-x-7">
+          <div className="grid grid-cols-12 gap-x-5 md:gap-x-7">
             <div className="col-span-6">
               <DatepickerInputBayar valueTglLhr={valueTglLhr} setValueTglLhr={setValueTglLhr} />
             </div>
@@ -74,6 +75,21 @@ export default function FormInputBayar({ defaultValues }) {
                 id={"no_tanda_terima"}
                 register={register}
                 disabled={true}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputBase name={"no_kartu"} lable={"Nomor Kartu"} id={"no_kartu"} register={register} disabled={true} />
+            </div>
+            <div className="col-span-6 mt-5">
+              <DatepickerBase
+                label={"Tanggal Expired"}
+                id={"tgl_expired"}
+                valueTglLhr={{
+                  startDate: new Date(defaultValues.kartu.tgl_expired),
+                  endDate: new Date(defaultValues.kartu.tgl_expired),
+                }}
+                disabled={true}
+                setValueTglLhr={setValueTglLhr}
               />
             </div>
             <div className="col-span-12 mt-5">
@@ -130,9 +146,6 @@ export default function FormInputBayar({ defaultValues }) {
                   { name: "Transfer", value: "T" },
                 ]}
               />
-            </div>
-            <div className="col-span-6 mt-5">
-              <InputBase name={"no_kartu"} lable={"Nomor Kartu"} id={"no_kartu"} register={register} disabled={true} />
             </div>
           </div>
         </div>
@@ -228,7 +241,7 @@ export default function FormInputBayar({ defaultValues }) {
             </div>
 
             <div
-              className={`${tab == 2 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-4`}
+              className={`${tab == 2 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-2 md:gap-x-4`}
               id="styled-profile"
               role="tabpanel"
               aria-labelledby="profile-tab"

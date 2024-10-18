@@ -27,7 +27,7 @@ export default function Search({ id, name, placeholder }) {
       <label htmlFor={id} className="sr-only">
         Search
       </label>
-      <div className="relative mt-1 rounded-md shadow-sm">
+      <div className="relative mt-1 rounded-md shadow-sm bg-red">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" aria-hidden="true">
           <MagnifyingGlassIcon className="w-4 h-4 mr-3 text-gray-400" aria-hidden="true" />
         </div>
