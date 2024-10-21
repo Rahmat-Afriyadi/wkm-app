@@ -32,21 +32,21 @@ export async function readManyExtendBayar(query) {
   const { search, limit, pageParams } = query;
 
   const response = await AuthGetApi(
-    "/otr/master-data?" +
+    "/extend-bayar/master-data?" +
       new URLSearchParams({
         search,
         limit,
         pageParams,
       }),
-    "otr"
+    "extend-bayar"
   );
 
   const resultLength = await AuthGetApi(
-    "/otr/master-data-count?" +
+    "/extend-bayar/master-data-count?" +
       new URLSearchParams({
         search,
       }),
-    "otr"
+    "extend-bayar"
   );
 
   return {

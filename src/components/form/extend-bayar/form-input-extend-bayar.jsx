@@ -2,28 +2,29 @@
 
 import { InputBase } from "@/components/Input/input-base";
 import { SelectBase } from "@/components/Input/select-base";
-import { DatepickerBase } from "@/components/Input/date-picker";
+import { DatepickerBase } from "../../Input/date-picker";
 import { useState, useRef } from "react";
-import { Form, useForm } from "react-hook-form";
-import { DatepickerInputBayar } from "./datepicker-input-bayar";
+import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
+import { inputExtendBayar } from "@/server/extend-bayar/create-extend-bayar";
+import { updateFa } from "@/server/extend-bayar/update-extend-bayar";
+import { useRouter } from "next/navigation";
 
-export default function FormInputBayar({ defaultValues }) {
+export function FormInputExtendBayar({ defaultValues, isEditing }) {
   const { register, handleSubmit } = useForm({ defaultValues });
   const [tab, setTab] = useState(1);
-  const [valueTglLhr, setValueTglLhr] = useState({
+  const [valueTglExtendBayar, setValueTglExtendBayar] = useState({
     startDate: null,
     endDate: null,
   });
 
   const queryCLient = useQueryClient();
-  const mutInputBayar = useMutation({
-    mutationFn: updateInputBayar,
+  const mutExtendBayar = useMutation({
+    mutationFn: isEditing ? updateFa : inputExtendBayar,
   });
   const onSubmit = (values) => {
-    values.tgl_bayar = new Date(valueTglLhr.startDate);
+    values.tgl_actual_bayar = new Date(valueTglExtendBayar.startDate);
     console.log("ini values ", values);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
@@ -34,9 +35,9 @@ export default function FormInputBayar({ defaultValues }) {
       confirmButtonText: "Save",
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        mutInputBayar.mutate(values, {
+        mutExtendBayar.mutate(values, {
           onSuccess: (data) => {
-            Swal.fire("Success!", "Input Pembayaran Berhasil", "info");
+            Swal.fire("Success!", "Pengajuan Extend Bayar Berhasil", "info");
           },
           onError: (e) => {
             console.log("ini error ", e);
@@ -54,7 +55,12 @@ export default function FormInputBayar({ defaultValues }) {
         <div className="col-span-6">
           <div className="grid grid-cols-12 gap-x-5 md:gap-x-7">
             <div className="col-span-6">
-              <DatepickerInputBayar valueTglLhr={valueTglLhr} setValueTglLhr={setValueTglLhr} />
+              <DatepickerBase
+                value={valueTglExtendBayar}
+                setValue={setValueTglExtendBayar}
+                id={"tgl_actual_bayar"}
+                label={"Tanggal Actual Bayar"}
+              />
             </div>
             <div className="col-span-6  flex items-end">
               <button
@@ -89,7 +95,7 @@ export default function FormInputBayar({ defaultValues }) {
                   endDate: new Date(defaultValues.kartu.tgl_expired),
                 }}
                 disabled={true}
-                setValue={setValueTglLhr}
+                setValue={setValueTglExtendBayar}
               />
             </div>
             <div className="col-span-12 mt-5">

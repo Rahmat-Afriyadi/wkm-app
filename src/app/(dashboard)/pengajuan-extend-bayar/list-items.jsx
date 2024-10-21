@@ -1,7 +1,7 @@
 "use server";
 
 import Pagination from "@/components/Pagination/index";
-import { readManyTglMerah } from "@/server/faktur/lists";
+import { readManyExtendBayar } from "@/server/faktur/lists";
 import Site from "./item";
 
 export default async function ListAsuransi({ searchParams }) {
@@ -9,7 +9,7 @@ export default async function ListAsuransi({ searchParams }) {
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
 
-  const { data, page } = await readManyTglMerah({
+  const { data, page } = await readManyExtendBayar({
     search,
     limit,
     pageParams,
@@ -24,9 +24,6 @@ export default async function ListAsuransi({ searchParams }) {
       <thead className="bg-gray-50">
         <tr>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-            Nomor Kartu
-          </th>
-          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             Nomor Mesin
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
@@ -34,6 +31,9 @@ export default async function ListAsuransi({ searchParams }) {
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             Status Approval
+          </th>
+          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+            Deskripsi
           </th>
           <th scope="col" className="px-2 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             Aksi

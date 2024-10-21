@@ -25,15 +25,26 @@ const Asuransi = ({ site, id }) => {
     return (
       <>
         <tr key={site.id} className={classNames("hover:text-yellow hover:bg-black", id % 2 === 0 ? " " : "bg-gray-50")}>
-          <td className="px-3 py-4 text-sm whitespace-nowrap">{formatDate(new Date(site.tgl_awal))}</td>
-          <td className="px-3 py-4 text-sm whitespace-nowrap">{formatDate(new Date(site.tgl_akhir))}</td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">{site.no_msn}</td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">{site.faktur.nm_customer11}</td>
+          <td className="px-3 py-4 text-sm whitespace-nowrap">
+            {site.sts_approval == "P" && (
+              <p className="shadow-md bg-orange-400 text-center rounded-lg p-1 font-bold text-white">Pending</p>
+            )}
+            {site.sts_approval == "O" && (
+              <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">Approved</p>
+            )}
+            {site.sts_approval == "R" && (
+              <p className="shadow-md bg-red text-center rounded-lg p-1 font-bold text-md text-white">Rejected</p>
+            )}
+          </td>
           <td className="px-3 py-4 text-sm whitespace-nowrap">{site.deskripsi}</td>
           <td className="px-2 py-4 text-sm whitespace-nowrap cursor-pointer">
             <span className="text-blue-600 flex">
               <PencilIcon
                 className="w-7 h-6 hover:bg-slate-300 rounded-sm"
                 aria-hidden="true"
-                onClick={() => router.push("/input-tanggal-merah/detail/" + site.id)}
+                onClick={() => router.push("/pengajuan-extend-bayar/detail/" + site.id)}
               />
               <TrashIcon
                 className="w-7 h-6 hover:bg-slate-300 rounded-sm text-red"
