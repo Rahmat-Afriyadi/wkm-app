@@ -52,7 +52,7 @@ const Asuransi = ({ site, id }) => {
                         { id: site.id },
                         {
                           onSuccess: (data) => {
-                            Swal.fire("Success!", "Tanggal Merah berhasil ditambahkan", "info").then(() => {
+                            Swal.fire("Success!", "Pengajuan Extend Bayar berhasil dihapus", "info").then(() => {
                               router.refresh();
                             });
                           },

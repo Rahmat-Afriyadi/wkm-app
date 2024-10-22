@@ -65,8 +65,9 @@ export default function FormInputBayar({ defaultValues }) {
                 Save
               </button>
             </div>
+
             <div className="col-span-6 mt-5">
-              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={false} />
+              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={true} />
             </div>
             <div className="col-span-6 mt-5">
               <InputBase

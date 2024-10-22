@@ -10,16 +10,17 @@ import Swal from "sweetalert2";
 import { inputExtendBayar } from "@/server/extend-bayar/create-extend-bayar";
 import { updateFa } from "@/server/extend-bayar/update-extend-bayar";
 import { useRouter } from "next/navigation";
+import { TextareaBase } from "@/components/Input/text-area";
 
 export function FormInputExtendBayar({ defaultValues, isEditing }) {
   const { register, handleSubmit } = useForm({ defaultValues });
+  const router = useRouter();
   const [tab, setTab] = useState(1);
   const [valueTglExtendBayar, setValueTglExtendBayar] = useState({
     startDate: null,
     endDate: null,
   });
 
-  const queryCLient = useQueryClient();
   const mutExtendBayar = useMutation({
     mutationFn: isEditing ? updateFa : inputExtendBayar,
   });
@@ -37,7 +38,13 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       preConfirm: () => {
         mutExtendBayar.mutate(values, {
           onSuccess: (data) => {
-            Swal.fire("Success!", "Pengajuan Extend Bayar Berhasil", "info");
+            if (data.status == "fail") {
+              Swal.fire("Failed!", data.message, "info");
+            } else if (data.status == "success") {
+              Swal.fire("Success!", data.message, "success").then(() => {
+                router.replace("/pengajuan-extend-bayar");
+              });
+            }
           },
           onError: (e) => {
             console.log("ini error ", e);
@@ -54,7 +61,17 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-12 gap-x-7">
         <div className="col-span-6">
           <div className="grid grid-cols-12 gap-x-5 md:gap-x-7">
-            <div className="col-span-6">
+            <div className="col-span-12">
+              <TextareaBase
+                placeholder={"Alasan telat input"}
+                rows={3}
+                register={register}
+                label={"Alasan telat input"}
+                id={"deskripsi"}
+                name={"deskripsi"}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
               <DatepickerBase
                 value={valueTglExtendBayar}
                 setValue={setValueTglExtendBayar}
@@ -62,7 +79,7 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
                 label={"Tanggal Actual Bayar"}
               />
             </div>
-            <div className="col-span-6  flex items-end">
+            <div className="col-span-6 mt-5 flex items-end">
               <button
                 id="button"
                 type="submit"
@@ -72,7 +89,7 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
               </button>
             </div>
             <div className="col-span-6 mt-5">
-              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={false} />
+              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={true} />
             </div>
             <div className="col-span-6 mt-5">
               <InputBase

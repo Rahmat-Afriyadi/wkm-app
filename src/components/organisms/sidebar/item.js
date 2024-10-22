@@ -96,7 +96,7 @@ const navigation = [
     icon: FolderIcon,
   },
   {
-    name: "Approval Extend Bayar ",
+    name: "Approval Extend Bayar",
     to: "/approval-extend-bayar",
     icon: FolderIcon,
   },

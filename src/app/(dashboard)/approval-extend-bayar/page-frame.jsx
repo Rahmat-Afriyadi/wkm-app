@@ -6,6 +6,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
 import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
 import { useMutation } from "@tanstack/react-query";
+import Datatable from "@/components/table/data-table";
 import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
@@ -43,63 +44,65 @@ export default function PageFrame({ children }) {
     setValue(newValue);
   };
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      console.log("ini type ", selectedFile.type);
-      const validTypes = [
-        "application/vnd.ms-excel",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      ]; // Specify valid types
-      if (!validTypes.includes(selectedFile.type)) {
-        setError("Invalid file type. Please upload a Xlsx file.");
-        setFile(null);
-        return;
-      }
-      setError("");
-      const data = new FormData();
-      data.append("files[]", selectedFile, selectedFile.name);
+  const columns = [
+    {
+      id: "select",
+      header: ({ table }) => {
+        return (
+          <input
+            className="cursor-pointer rounder-lg"
+            type="checkbox"
+            checked={table.getIsAllPageRowsSelected()}
+            onChange={(value) => {
+              table.toggleAllPageRowsSelected(!!value.target.checked);
+            }}
+          />
+        );
+      },
+      cell: ({ row }) => {
+        return (
+          <input
+            className="cursor-pointer rounder-lg"
+            type="checkbox"
+            checked={row.getIsSelected()}
+            onChange={(value) => {
+              row.toggleSelected(!!value.target.checked);
+            }}
+          />
+        );
+      },
+    },
+    {
+      header: "Full Name",
+      accessorKey: "full_name",
+    },
+    {
+      header: "Title",
+      accessorKey: "title",
+    },
+  ];
 
-      importTransaksiMut.mutate(data, {
-        onSuccess: (data) => {
-          Swal.fire("Success!", "Berhasil import", "success").then(() => {
-            router.refresh();
-            event.target.value = null;
-          });
-        },
-        onError: (e) => {
-          Swal.fire("Warning!", e.response?.data?.message, "info").then(() => {
-            event.target.value = null;
-          });
-        },
-      });
-      console.log("File selected:", selectedFile);
-    }
-  };
+  const data = [
+    {
+      full_name: "Rahmat Afriyadi",
+      title: "Ini judul",
+    },
+    {
+      full_name: "Rahmat Afriyadi",
+      title: "Ini judul",
+    },
+  ];
+
   return (
     <>
       <div className="grid mb-6 md:grid-cols-12">
         <div className="w-full col-span-8 mr-2 mt-2 flex justify-start items-end ">
           <a
-            href="/input-tanggal-merah/create"
+            href="/pengajuan-extend-bayar/create"
             className="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >
             Create
           </a>
-          <label
-            htmlFor="import-transaksi"
-            className="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer"
-          >
-            Import
-          </label>
-          <input
-            type="file"
-            className="hidden"
-            id="import-transaksi"
-            accept="application/vnd.ms-excel, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // Specify accepted file types
-            onChange={handleFileChange}
-          />
-
           <Search id="search-query" name="search_query" placeholder={"Search..."} />
           <div className="w-3"></div>
           <div className="w-64">
@@ -119,7 +122,9 @@ export default function PageFrame({ children }) {
       <div className="flex flex-col mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">{children}</div>
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+              <Datatable columns={columns} data={data} />
+            </div>
           </div>
         </div>
       </div>

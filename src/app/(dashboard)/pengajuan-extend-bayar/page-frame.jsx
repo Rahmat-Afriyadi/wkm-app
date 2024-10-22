@@ -43,34 +43,6 @@ export default function PageFrame({ children }) {
     setValue(newValue);
   };
 
-  const handleFileChange = (event) => {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      console.log("ini type ", selectedFile.type);
-      const validTypes = [
-        "application/vnd.ms-excel",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      ]; // Specify valid types
-      if (!validTypes.includes(selectedFile.type)) {
-        setError("Invalid file type. Please upload a Xlsx file.");
-        setFile(null);
-        return;
-      }
-      setError("");
-      const data = new FormData();
-      data.append("files[]", selectedFile, selectedFile.name);
-
-      importTransaksiMut.mutate(data, {
-        onSuccess: (data) => {
-          router.refresh();
-        },
-        onError: (e) => {
-          Swal.fire("Warning!", e.response?.data?.message, "info");
-        },
-      });
-      console.log("File selected:", selectedFile);
-    }
-  };
   return (
     <>
       <div className="grid mb-6 md:grid-cols-12">
