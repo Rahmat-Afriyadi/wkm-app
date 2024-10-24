@@ -1,13 +1,15 @@
-"use server"
+"use server";
 
-import ListItem from "./list-items"
-import PageFrame from "./page-frame"
+import PageFrame from "./page-frame";
+import TableFrame from "./table-frame";
+import { Suspense } from "react";
 
-export default async function Page({params, searchParams}){
-
-    return (
-        <PageFrame>
-            <ListItem searchParams={searchParams}/>
-        </PageFrame>
-    )
+export default async function Page({ searchParams }) {
+  return (
+    <PageFrame>
+      <Suspense key={searchParams}>
+        <TableFrame searchParams={searchParams} />
+      </Suspense>
+    </PageFrame>
+  );
 }

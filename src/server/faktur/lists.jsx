@@ -30,7 +30,6 @@ export async function readManyTglMerah(query) {
 
 export async function readManyExtendBayar(query) {
   const { search, limit, pageParams } = query;
-
   const response = await AuthGetApi(
     "/extend-bayar/master-data?" +
       new URLSearchParams({
@@ -48,7 +47,6 @@ export async function readManyExtendBayar(query) {
       }),
     "extend-bayar"
   );
-
   return {
     data: response,
     page: {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,35 +18,41 @@ import {
   ArrowDownIcon,
 } from "@heroicons/react/20/solid";
 import { useDebounce } from "@/lib/hooks/useDebounce";
+import Pagination from "../Pagination";
 
-const DataTable = ({ columns, data }) => {
-  const [globalFilter, setGlobalFilter] = useState("");
-  const [sorting, setSorting] = useState([]);
+const DataTable = ({ columns, data, setRowSelection, currentPage, totalRows, totalPages }) => {
+  const [selected, setSelected] = useState([]);
 
   // Debounced search function
-  const debouncedGlobalFilter = useDebounce(globalFilter, 300); // 300ms debounce
+  // const debouncedGlobalFilter = useDebounce(globalFilter, 300); // 300ms debounce
 
   // Konfigurasi tabel
   const table = useReactTable({
     columns,
     data: data,
     state: {
-      sorting,
-      globalFilter: debouncedGlobalFilter,
+      rowSelection: selected,
+      // sorting,
+      // globalFilter: debouncedGlobalFilter,
     },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
+    // onSortingChange: setSorting,
+    // onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedRowModel: getFacetedRowModel(),
+    // getPaginationRowModel: getPaginationRowModel(),
+    // getSortedRowModel: getSortedRowModel(),
+    // getFilteredRowModel: getFilteredRowModel(),
+    // getFacetedUniqueValues: getFacetedUniqueValues(),
+    // getFacetedRowModel: getFacetedRowModel(),
+    onRowSelectionChange: setSelected,
     initialState: {
       pagination: { pageSize: 10 },
       columnVisibility: { id: false },
     },
   });
+
+  useEffect(() => {
+    setRowSelection(table.getSelectedRowModel());
+  }, [selected]); // eslint-disable-line
 
   const visibleRows = table.getRowModel().rows;
 
@@ -55,7 +61,7 @@ const DataTable = ({ columns, data }) => {
       {/* <Search value={globalFilter} onChange={(e) => setGlobalFilter(e.target.value)} /> */}
       <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
         <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-          <div className="mt-4 overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+          <div className=" overflow-hidden shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 {table.getHeaderGroups().map((headerGroup) => (
@@ -112,11 +118,22 @@ const DataTable = ({ columns, data }) => {
                     </td>
                   </tr>
                 )}
+                <tr>
+                  <td colSpan={7}>
+                    <Pagination
+                      rows={data.length}
+                      postsPerPage={10}
+                      currentPage={currentPage}
+                      totalRows={totalRows}
+                      totalPages={totalPages}
+                    />
+                  </td>
+                </tr>
               </tbody>
             </table>
 
             {/* Pagination Controls */}
-            <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
+            {/* <div className="flex items-center justify-between px-4 py-3 bg-white border-t border-gray-200 sm:px-6">
               <div className="flex justify-between flex-1 sm:hidden">
                 <button
                   onClick={() => table.previousPage()}
@@ -141,7 +158,6 @@ const DataTable = ({ columns, data }) => {
                   </p>
                 </div>
 
-                {/* Page size selector */}
                 <div className="space-x-2 ">
                   <span className="text-sm text-gray-700">Show</span>
                   <select
@@ -197,7 +213,7 @@ const DataTable = ({ columns, data }) => {
                   </nav>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

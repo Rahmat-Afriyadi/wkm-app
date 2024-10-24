@@ -4,22 +4,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
-import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
-import { useMutation } from "@tanstack/react-query";
-import Datatable from "@/components/table/data-table";
-import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
-
-  const importTransaksiMut = useMutation({
-    mutationFn: UploadTanggalMerahExcel,
-  });
 
   const [value, setValue] = useState({ startDate: "", endDate: "" });
 
@@ -43,55 +32,6 @@ export default function PageFrame({ children }) {
     }
     setValue(newValue);
   };
-
-  const columns = [
-    {
-      id: "select",
-      header: ({ table }) => {
-        return (
-          <input
-            className="cursor-pointer rounder-lg"
-            type="checkbox"
-            checked={table.getIsAllPageRowsSelected()}
-            onChange={(value) => {
-              table.toggleAllPageRowsSelected(!!value.target.checked);
-            }}
-          />
-        );
-      },
-      cell: ({ row }) => {
-        return (
-          <input
-            className="cursor-pointer rounder-lg"
-            type="checkbox"
-            checked={row.getIsSelected()}
-            onChange={(value) => {
-              row.toggleSelected(!!value.target.checked);
-            }}
-          />
-        );
-      },
-    },
-    {
-      header: "Full Name",
-      accessorKey: "full_name",
-    },
-    {
-      header: "Title",
-      accessorKey: "title",
-    },
-  ];
-
-  const data = [
-    {
-      full_name: "Rahmat Afriyadi",
-      title: "Ini judul",
-    },
-    {
-      full_name: "Rahmat Afriyadi",
-      title: "Ini judul",
-    },
-  ];
 
   return (
     <>
@@ -122,9 +62,7 @@ export default function PageFrame({ children }) {
       <div className="flex flex-col mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <Datatable columns={columns} data={data} />
-            </div>
+            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">{children}</div>
           </div>
         </div>
       </div>
