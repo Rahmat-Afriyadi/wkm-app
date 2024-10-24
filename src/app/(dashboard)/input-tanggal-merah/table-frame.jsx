@@ -77,7 +77,7 @@ export default function TableFrame({ searchParams }) {
                     {
                       onSuccess: (data) => {
                         queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
-                        Swal.fire("Success!", "Pengajuan Extend Bayar berhasil dihapus", "info").then(() => {
+                        Swal.fire("Success!", "Tanggal Merah berhasil dihapus", "info").then(() => {
                           router.refresh();
                         });
                       },

@@ -7,6 +7,8 @@ export async function readManyTglMerah(query) {
     "/tgl-merah/master-data?" +
       new URLSearchParams({
         search,
+        tgl1,
+        tgl2,
         limit,
         pageParams,
       })
@@ -16,6 +18,8 @@ export async function readManyTglMerah(query) {
     "/tgl-merah/master-data-count?" +
       new URLSearchParams({
         search,
+        tgl1,
+        tgl2,
       })
   );
 

@@ -12,7 +12,7 @@ export default function Page() {
   const { register, handleSubmit } = useForm();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [message, setMessage] = useState("")
+  const [message, setMessage] = useState("");
 
   const onSubmit = async (data) => {
     const result = await signIn("credentials", {
@@ -22,14 +22,10 @@ export default function Page() {
     });
     if (!result?.ok) {
       console.log("Login error", result?.error);
-      setMessage(result?.error)
+      setMessage(result?.error);
       return;
     }
-    router.push(
-        searchParams.get("callbackUrl")
-          ? searchParams?.get("callbackUrl")
-          : "/beranda"
-      );
+    router.push("/beranda");
   };
 
   // const navigation = useRouter();
@@ -38,23 +34,17 @@ export default function Page() {
 
   useEffect(() => {
     if (status === "authenticated") {
-      router.push(
-        searchParams.get("callbackUrl")
-          ? searchParams?.get("callbackUrl")
-          : "/beranda"
-      );
+      router.push("/beranda");
     }
   }, [status, router, searchParams]);
-  
+
   return (
     <>
-    {message != "" && <div className="text-center bg-red rounded-lg text-white py-1 ">{message}</div>}
-    <br/>
+      {message != "" && <div className="text-center bg-red rounded-lg text-white py-1 ">{message}</div>}
+      <br />
       <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium leading-6 text-gray-900">
+          <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
             Username
           </label>
           <div className="mt-2">
@@ -74,9 +64,7 @@ export default function Page() {
 
         <div>
           <div className="flex items-center justify-between">
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium leading-6 text-gray-900">
+            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
               Password
             </label>
           </div>
@@ -98,7 +86,8 @@ export default function Page() {
         <div>
           <button
             type="submit"
-            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
             Sign in
           </button>
         </div>
