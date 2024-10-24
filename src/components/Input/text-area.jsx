@@ -1,4 +1,4 @@
-export function TextareaBase({ label, id, name, rows, placeholder, value, register, onChange }) {
+export function TextareaBase({ label, id, name, rows, placeholder, value, register, onChange, disabled = false }) {
   return (
     <>
       {label && (
@@ -12,6 +12,7 @@ export function TextareaBase({ label, id, name, rows, placeholder, value, regist
       <div className="mt-2">
         <textarea
           id={id}
+          disabled={disabled}
           rows={rows}
           name={name}
           value={value}

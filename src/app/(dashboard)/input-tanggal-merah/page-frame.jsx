@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
 import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
@@ -16,6 +16,7 @@ export default function PageFrame({ children }) {
   const { replace } = useRouter();
   const pathname = usePathname();
 
+  const queryCLient = useQueryClient();
   const importTransaksiMut = useMutation({
     mutationFn: UploadTanggalMerahExcel,
   });
@@ -62,6 +63,7 @@ export default function PageFrame({ children }) {
 
       importTransaksiMut.mutate(data, {
         onSuccess: (data) => {
+          queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
           Swal.fire("Success!", "Berhasil import", "success").then(() => {
             router.refresh();
             event.target.value = null;
