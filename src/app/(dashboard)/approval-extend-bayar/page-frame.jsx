@@ -13,8 +13,9 @@ import Swal from "sweetalert2";
 export default function PageFrame({ searchParams }) {
   const { replace } = useRouter();
   const pathname = usePathname();
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, watch } = useForm();
   const [selected, setSelected] = useState({});
+  const stsApprovalSelected = watch("sts_approval", "");
 
   const [value, setValue] = useState({ startDate: "", endDate: "" });
 
@@ -110,13 +111,13 @@ export default function PageFrame({ searchParams }) {
                   "block w-full border-gray-300 rounded-md cursor-pointer disabled:cursor-not-allowed focus:ring-cyan-500 focus:border-cyan-500 pl-4 sm:text-sm"
                 }
               >
-                <option value={""} className="py-1">
+                <option value={""} className="py-1 cursor-pointer">
                   Update all selected data
                 </option>
-                <option value={"R"} className="py-1">
+                <option value={"R"} className="py-1 cursor-pointer">
                   Reject all selected data
                 </option>
-                <option value={"O"} className="py-1">
+                <option value={"O"} className="py-1 cursor-pointer">
                   Approved all selected data
                 </option>
               </select>
@@ -124,7 +125,7 @@ export default function PageFrame({ searchParams }) {
             <div className="col-span-6 flex items-end">
               <button
                 id="button"
-                disabled={selected?.rows?.length < 1}
+                disabled={selected?.rows?.length < 1 || stsApprovalSelected == ""}
                 type="submit"
                 className="mr-2 w-full bg-yellow disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed border-yellow focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >

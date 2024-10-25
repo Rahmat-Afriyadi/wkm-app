@@ -47,7 +47,7 @@ export async function AuthGetApi(url) {
         Authorization: `Bearer ${session?.user.accessToken}`,
       },
     });
-    return await res.json();
+    // return await res.json();
   }
   return await res.json();
 }

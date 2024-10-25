@@ -42,7 +42,7 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       preConfirm: () => {
         mutExtendBayar.mutate(
           session?.user?.role == 6
-            ? { sts_approval: values.sts_approval, datas: [{ id: values.extend_bayar.id }] }
+            ? { sts_approval: values.extend_bayar.sts_approval, datas: [{ id: values.extend_bayar.id }] }
             : values,
           {
             onSuccess: (data) => {

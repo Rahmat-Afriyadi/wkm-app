@@ -20,7 +20,7 @@ export function SelectBase({ id, lable, register, name, disabled, options }) {
       >
         {options.map((e) => {
           return (
-            <option value={e.value} key={e.value} className="py-1">
+            <option value={e.value} key={e.value} className="py-1 cursor-pointer">
               {e.name}
             </option>
           );
