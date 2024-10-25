@@ -27,14 +27,16 @@ export default function AutoLogoutProvider() {
           })
           .catch((error) => {
             console.log("ini error ", error);
+            signOut({ redirect: false }).then(() => {
+              void signIn();
+            });
           });
       }
     } else {
       console.log("masuk sini ", session);
-      // signOut({ redirect: false })
-      // .then(() => {
-      //   void signIn();
-      // });
+      signOut({ redirect: false }).then(() => {
+        void signIn();
+      });
     }
   }, [status]); // eslint-disable-line react-hooks/exhaustive-deps
 }

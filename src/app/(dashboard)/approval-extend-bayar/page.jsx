@@ -6,10 +6,10 @@ import { Suspense } from "react";
 
 export default async function Page({ searchParams }) {
   return (
-    <PageFrame>
-      <Suspense key={searchParams}>
+    <PageFrame searchParams={searchParams}>
+      {/* <Suspense key={searchParams}>
         <TableFrame searchParams={searchParams} />
-      </Suspense>
+      </Suspense> */}
     </PageFrame>
   );
 }

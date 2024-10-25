@@ -9,24 +9,24 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { inputExtendBayar } from "@/server/extend-bayar/create-extend-bayar";
 import { updateFa } from "@/server/extend-bayar/update-extend-bayar";
+import { updateApprovalLf } from "@/server/extend-bayar/update-lf-approval-extend-bayar";
 import { useRouter } from "next/navigation";
 import { TextareaBase } from "@/components/Input/text-area";
 import { useSession } from "next-auth/react";
-import { flattenBy } from "@tanstack/react-table";
 
 export function FormInputExtendBayar({ defaultValues, isEditing }) {
   const { register, handleSubmit } = useForm({ defaultValues });
   const router = useRouter();
   const [tab, setTab] = useState(1);
   const [valueTglExtendBayar, setValueTglExtendBayar] = useState({
-    startDate: new Date(defaultValues.tgl_actual_bayar),
-    endDate: new Date(defaultValues.tgl_actual_bayar),
+    startDate: isEditing ? new Date(defaultValues.extend_bayar.tgl_actual_bayar) : null,
+    endDate: isEditing ? new Date(defaultValues.extend_bayar.tgl_actual_bayar) : null,
   });
   const { data: session } = useSession();
 
   const queryClient = useQueryClient();
   const mutExtendBayar = useMutation({
-    mutationFn: isEditing ? updateFa : inputExtendBayar,
+    mutationFn: isEditing ? (session?.user?.role == 6 ? updateApprovalLf : updateFa) : inputExtendBayar,
   });
   const onSubmit = (values) => {
     values.tgl_actual_bayar = new Date(valueTglExtendBayar.startDate);
@@ -40,22 +40,27 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       confirmButtonText: "Save",
       showLoaderOnConfirm: true,
       preConfirm: () => {
-        mutExtendBayar.mutate(values, {
-          onSuccess: (data) => {
-            queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
-            if (data.status == "fail") {
-              Swal.fire("Failed!", data.message, "info");
-            } else if (data.status == "success") {
-              Swal.fire("Success!", data.message, "success").then(() => {
-                router.replace("/pengajuan-extend-bayar");
-              });
-            }
-          },
-          onError: (e) => {
-            console.log("ini error ", e);
-            Swal.fire("Failed!", e.response.data.message, "error");
-          },
-        });
+        mutExtendBayar.mutate(
+          session?.user?.role == 6
+            ? { sts_approval: values.sts_approval, datas: [{ id: values.extend_bayar.id }] }
+            : values,
+          {
+            onSuccess: (data) => {
+              queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
+              if (data.status == "fail") {
+                Swal.fire("Failed!", data.message, "info");
+              } else if (data.status == "success") {
+                Swal.fire("Success!", data.message, "success").then(() => {
+                  router.replace("/pengajuan-extend-bayar");
+                });
+              }
+            },
+            onError: (e) => {
+              console.log("ini error ", e);
+              Swal.fire("Failed!", e.response.data.message, "error");
+            },
+          }
+        );
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
@@ -66,27 +71,16 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-12 gap-x-7">
         <div className="col-span-6">
           <div className="grid grid-cols-12 gap-x-5 md:gap-x-7">
-            <div className="col-span-12">
-              <TextareaBase
-                disabled={session?.user.role == 6 ? true : false}
-                placeholder={"Alasan telat input"}
-                rows={3}
-                register={register}
-                label={"Alasan telat input"}
-                id={"deskripsi"}
-                name={"deskripsi"}
-              />
-            </div>
-            <div className="col-span-6 mt-5">
+            <div className="col-span-6">
               <DatepickerBase
                 disabled={session?.user.role == 6 ? true : false}
                 value={valueTglExtendBayar}
                 setValue={setValueTglExtendBayar}
-                id={"tgl_actual_bayar"}
+                id={"extend_bayar.tgl_actual_bayar"}
                 label={"Tanggal Actual Bayar"}
               />
             </div>
-            <div className="col-span-6 mt-5 flex items-end">
+            <div className="col-span-6 flex items-end">
               <button
                 id="button"
                 type="submit"
@@ -95,6 +89,32 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
                 Save
               </button>
             </div>
+            <div className="col-span-12 mt-5">
+              <SelectBase
+                name={"extend_bayar.sts_approval"}
+                lable={"Status Pengajuan"}
+                id={"sts_approval"}
+                register={register}
+                disabled={false}
+                options={[
+                  { name: "Rejected", value: "R" },
+                  { name: "Pending", value: "P" },
+                  { name: "Approved", value: "O" },
+                ]}
+              />
+            </div>
+            <div className="col-span-12 mt-5">
+              <TextareaBase
+                disabled={session?.user.role == 6 ? true : false}
+                placeholder={"Alasan telat input"}
+                rows={3}
+                register={register}
+                label={"Alasan telat input"}
+                id={"deskripsi"}
+                name={"extend_bayar.deskripsi"}
+              />
+            </div>
+
             <div className="col-span-6 mt-5">
               <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={true} />
             </div>
@@ -268,6 +288,17 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
               <div className="col-span-6 mt-5">
                 <InputBase name={"kodepos2"} lable={"Kodepos"} id={"kodepos2"} register={register} disabled={true} />
               </div>
+              <div className="col-span-12 mt-5">
+                <TextareaBase
+                  disabled={true}
+                  placeholder={"Alamat Bantuan"}
+                  rows={3}
+                  register={register}
+                  label={"Alamat Bantuan"}
+                  id={"alamat_bantuan"}
+                  name={"alamat_bantuan"}
+                />
+              </div>
             </div>
 
             <div
@@ -281,9 +312,9 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
               </div>
               <div className="col-span-12 mt-5">
                 <InputBase
-                  name={"Alamat Kantor"}
-                  lable={"alamat_ktr"}
-                  id={"Alamat Kantor"}
+                  name={"alamat_ktr"}
+                  lable={"Alamat Kantor"}
+                  id={"alamat_ktr"}
                   register={register}
                   disabled={true}
                 />
@@ -310,6 +341,17 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
                   id={"kodepos_ktr"}
                   register={register}
                   disabled={true}
+                />
+              </div>
+              <div className="col-span-12 mt-5">
+                <TextareaBase
+                  disabled={true}
+                  placeholder={"Alamat Bantuan"}
+                  rows={3}
+                  register={register}
+                  label={"Alamat Bantuan"}
+                  id={"alamat_bantuan"}
+                  name={"alamat_bantuan"}
                 />
               </div>
             </div>
@@ -353,6 +395,17 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
                   id={"kodepos_srt1"}
                   register={register}
                   disabled={true}
+                />
+              </div>
+              <div className="col-span-12 mt-5">
+                <TextareaBase
+                  disabled={true}
+                  placeholder={"Alamat Bantuan"}
+                  rows={3}
+                  register={register}
+                  label={"Alamat Bantuan"}
+                  id={"alamat_bantuan"}
+                  name={"alamat_bantuan"}
                 />
               </div>
             </div>

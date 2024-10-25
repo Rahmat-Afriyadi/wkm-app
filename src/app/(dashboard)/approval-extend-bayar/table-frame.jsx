@@ -10,13 +10,12 @@ import { TrashIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-export default function TableFrame({ searchParams }) {
+export default function TableFrame({ searchParams, setSelected }) {
   const pageParams = searchParams?.page || 1;
   const router = useRouter();
-  const [selected, setSelected] = useState([]);
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ["approval-extend-bayar", searchParams],
+    queryKey: ["pengajuan-extend-bayar", searchParams],
     queryFn: async () =>
       await readManyExtendBayar({
         ...searchParams,

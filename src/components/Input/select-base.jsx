@@ -14,11 +14,13 @@ export function SelectBase({ id, lable, register, name, disabled, options }) {
         disabled={disabled}
         {...register(name)}
         id={id}
-        className="appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        className={
+          "appearance-none block w-full cursor-pointer text-gray-700 border col-span-8 rounded py-3 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+        }
       >
         {options.map((e) => {
           return (
-            <option value={e.value} key={e.value}>
+            <option value={e.value} key={e.value} className="py-1">
               {e.name}
             </option>
           );

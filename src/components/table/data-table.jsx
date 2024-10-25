@@ -119,7 +119,7 @@ const DataTable = ({ columns, data, setRowSelection, currentPage, totalRows, tot
                   </tr>
                 )}
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={10}>
                     <Pagination
                       rows={data.length}
                       postsPerPage={10}
