@@ -14,7 +14,7 @@ export function InputBase({ id, lable, register, name, disabled }) {
         id={id}
         {...register(name)}
         disabled={disabled}
-        className="appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        className="disabled:cursor-not-allowed appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         type="text"
       />
     </>

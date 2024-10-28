@@ -17,7 +17,7 @@ export function DatepickerBase({ value, setValue, disabled = false, id, label })
         primaryColor={"emerald"}
         displayFormat="DD/MM/YYYY"
         placeholder="_ _ /_ _ /_ _ _ _"
-        inputClassName="pl-12 appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        inputClassName="disabled:cursor-not-allowed pl-12 appearance-none block w-full  text-gray-700 border  col-span-8 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
         toggleClassName="absolute rounded-r-lg -top-0  left-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed text-black"
         dayClassName={(date) => (true ? "bg-red-200 text-red-600 cursor-not-allowed" : "")}
         useRange={false}

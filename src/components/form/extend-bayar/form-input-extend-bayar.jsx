@@ -29,7 +29,11 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
     mutationFn: isEditing ? (session?.user?.role == 6 ? updateApprovalLf : updateFa) : inputExtendBayar,
   });
   const onSubmit = (values) => {
-    values.tgl_actual_bayar = new Date(valueTglExtendBayar.startDate);
+    values.extend_bayar.tgl_actual_bayar = new Date(valueTglExtendBayar.startDate);
+    if (!isEditing) {
+      values.extend_bayar.no_msn = values.no_msn;
+      values.extend_bayar.sts_cetak3 = values.sts_cetak3;
+    }
     console.log("ini values ", values);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
@@ -43,14 +47,14 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
         mutExtendBayar.mutate(
           session?.user?.role == 6
             ? { sts_approval: values.extend_bayar.sts_approval, datas: [{ id: values.extend_bayar.id }] }
-            : values,
+            : values.extend_bayar,
           {
             onSuccess: (data) => {
-              queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
               if (data.status == "fail") {
                 Swal.fire("Failed!", data.message, "info");
               } else if (data.status == "success") {
                 Swal.fire("Success!", data.message, "success").then(() => {
+                  queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
                   router.replace("/pengajuan-extend-bayar");
                 });
               }
@@ -73,7 +77,7 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
           <div className="grid grid-cols-12 gap-x-5 md:gap-x-7">
             <div className="col-span-6">
               <DatepickerBase
-                disabled={session?.user.role == 6 ? true : false}
+                disabled={defaultValues.extend_bayar?.sts_approval == "O" || session?.user.role == 6}
                 value={valueTglExtendBayar}
                 setValue={setValueTglExtendBayar}
                 id={"extend_bayar.tgl_actual_bayar"}
@@ -82,30 +86,33 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
             </div>
             <div className="col-span-6 flex items-end">
               <button
+                disabled={defaultValues.extend_bayar?.sts_approval == "O"}
                 id="button"
                 type="submit"
-                className="w-full px-6 py-2 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+                className="mr-2 w-full bg-yellow disabled:bg-gray-300 cursor-pointer disabled:cursor-not-allowed border-yellow focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
               >
                 Save
               </button>
             </div>
-            <div className="col-span-12 mt-5">
-              <SelectBase
-                name={"extend_bayar.sts_approval"}
-                lable={"Status Pengajuan"}
-                id={"sts_approval"}
-                register={register}
-                disabled={false}
-                options={[
-                  { name: "Rejected", value: "R" },
-                  { name: "Pending", value: "P" },
-                  { name: "Approved", value: "O" },
-                ]}
-              />
-            </div>
+            {session?.user.role == 6 && (
+              <div className="col-span-12 mt-5">
+                <SelectBase
+                  name={"extend_bayar.sts_approval"}
+                  lable={"Status Pengajuan"}
+                  id={"sts_approval"}
+                  register={register}
+                  disabled={defaultValues.extend_bayar?.sts_approval == "O"}
+                  options={[
+                    { name: "Rejected", value: "R" },
+                    { name: "Pending", value: "P" },
+                    { name: "Approved", value: "O" },
+                  ]}
+                />
+              </div>
+            )}
             <div className="col-span-12 mt-5">
               <TextareaBase
-                disabled={session?.user.role == 6 ? true : false}
+                disabled={(session?.user.role == 6) | (defaultValues.extend_bayar?.sts_approval == "O")}
                 placeholder={"Alasan telat input"}
                 rows={3}
                 register={register}

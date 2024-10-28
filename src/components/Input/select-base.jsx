@@ -15,7 +15,7 @@ export function SelectBase({ id, lable, register, name, disabled, options }) {
         {...register(name)}
         id={id}
         className={
-          "appearance-none block w-full cursor-pointer text-gray-700 border col-span-8 rounded py-3 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
+          "disabled:cursor-not-allowed appearance-none block w-full cursor-pointer text-gray-700 border col-span-8 rounded py-3 px-4 focus:outline-none focus:bg-white focus:border-gray-500"
         }
       >
         {options.map((e) => {

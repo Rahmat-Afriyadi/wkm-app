@@ -47,7 +47,6 @@ export default function PageFrame({ children }) {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log("ini type ", selectedFile.type);
       const validTypes = [
         "application/vnd.ms-excel",
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -63,8 +62,8 @@ export default function PageFrame({ children }) {
 
       importTransaksiMut.mutate(data, {
         onSuccess: (data) => {
-          queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
           Swal.fire("Success!", "Berhasil import", "success").then(() => {
+            queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
             router.refresh();
             event.target.value = null;
           });

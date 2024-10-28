@@ -84,7 +84,9 @@ export default function TableFrame({ searchParams }) {
             onClick={() => router.push("/approval-extend-bayar/detail/" + row.original.id)}
           />
           <TrashIcon
-            className="w-7 h-6 hover:bg-slate-300 rounded-sm text-red cursor-pointer"
+            className={`w-7 h-6 hover:bg-slate-300 rounded-sm ${
+              row.original.sts_approval == "O" ? "cursor-not-allowed text-slate-600" : "cursor-pointer text-red"
+            }`}
             aria-hidden="true"
             onClick={() => {
               Swal.fire({
