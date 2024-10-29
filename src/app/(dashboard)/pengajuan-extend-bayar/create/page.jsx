@@ -4,17 +4,21 @@ import { AuthGetApi } from "@/lib/fetchApi";
 import { FormInputExtendBayar } from "@/components/form/extend-bayar/form-input-extend-bayar";
 import { InputBase } from "@/components/Input/input-base";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchFaktur } from "@/server/faktur/search-faktur";
 
 export default function Page() {
-  const { register, reset, handleSubmit } = useForm();
+  const { register, reset, handleSubmit, setFocus } = useForm();
   const [faktur, setFaktur] = useState(null);
   const [message, setMessage] = useState(null);
   const searchMut = useMutation({
     mutationFn: searchFaktur,
   });
+
+  useEffect(() => {
+    setFocus("kode");
+  }, [setFocus]);
 
   const onSubmit = (values) => {
     setFaktur(null);
@@ -52,7 +56,7 @@ export default function Page() {
       {message && (
         <div className="h-screen w-full pt-12 text-center">
           <p className="text-[90px]">{message}</p>
-          <div className="text-[90px] text-center">🐵</div>
+          <div className="text-[90px] text-center">🤡</div>
         </div>
       )}
     </>

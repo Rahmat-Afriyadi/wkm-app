@@ -25,6 +25,8 @@ export default function TableFrame({ searchParams }) {
     queryFn: async () =>
       await readManyExtendBayar({
         ...searchParams,
+        pageParams: searchParams?.page || 1,
+        limit: searchParams?.limit || 10,
         search: searchParams.search_query ? searchParams.search_query : "",
       }),
   });
@@ -89,32 +91,34 @@ export default function TableFrame({ searchParams }) {
             }`}
             aria-hidden="true"
             onClick={() => {
-              Swal.fire({
-                title: "Apakah data yang dimasukan sudah benar",
-                icon: "question",
-                showCancelButton: true,
-                confirmButtonColor: "#0891B2",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Save",
-                showLoaderOnConfirm: true,
-                preConfirm: () => {
-                  deleteMut.mutate(
-                    { id: row.original.id },
-                    {
-                      onSuccess: (data) => {
-                        Swal.fire("Success!", "Pengajuan berhasil dihapus", "info").then(() => {
-                          queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
-                        });
-                      },
-                      onError: (e) => {
-                        console.log("ini error ", e);
-                        Swal.fire("Failed!", e.response.data.message, "error");
-                      },
-                    }
-                  );
-                },
-                allowOutsideClick: () => !Swal.isLoading(),
-              });
+              if (row.original.sts_approval != "O") {
+                Swal.fire({
+                  title: "Apakah anda yakin untuk menghapus data ini",
+                  icon: "question",
+                  showCancelButton: true,
+                  confirmButtonColor: "#0891B2",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Save",
+                  showLoaderOnConfirm: true,
+                  preConfirm: () => {
+                    deleteMut.mutate(
+                      { id: row.original.id },
+                      {
+                        onSuccess: (data) => {
+                          Swal.fire("Success!", "Pengajuan berhasil dihapus", "info").then(() => {
+                            queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar", searchParams] });
+                          });
+                        },
+                        onError: (e) => {
+                          console.log("ini error ", e);
+                          Swal.fire("Failed!", e.response.data.message, "error");
+                        },
+                      }
+                    );
+                  },
+                  allowOutsideClick: () => !Swal.isLoading(),
+                });
+              }
             }}
           />
           {/* Delete Button */}
@@ -128,7 +132,7 @@ export default function TableFrame({ searchParams }) {
       columns={columns}
       data={data?.data}
       totalRows={data?.page.total_rows}
-      totalPages={1}
+      totalPages={data?.page.total_pages}
       currentPage={pageParams}
       setRowSelection={setSelected}
     />

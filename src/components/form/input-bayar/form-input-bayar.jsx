@@ -9,9 +9,11 @@ import { DatepickerInputBayar } from "./datepicker-input-bayar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
-export default function FormInputBayar({ defaultValues }) {
+export default function FormInputBayar({ defaultValues, setFaktur }) {
   const { register, handleSubmit } = useForm({ defaultValues });
+  const router = useRouter();
   const [tab, setTab] = useState(1);
   const [valueTglLhr, setValueTglLhr] = useState({
     startDate: null,
@@ -36,7 +38,10 @@ export default function FormInputBayar({ defaultValues }) {
       preConfirm: () => {
         mutInputBayar.mutate(values, {
           onSuccess: (data) => {
-            Swal.fire("Success!", "Input Pembayaran Berhasil", "info");
+            Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
+              setFaktur(null);
+              router.refresh();
+            });
           },
           onError: (e) => {
             console.log("ini error ", e);

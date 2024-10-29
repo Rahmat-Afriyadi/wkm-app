@@ -1,7 +1,7 @@
 "use client";
 // import DatePicker from "@/components/form/datepicker/datepicker"
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import FormInputBayar from "../../../components/form/input-bayar/form-input-bayar";
 import { InputBase } from "@/components/Input/input-base";
 import { useForm } from "react-hook-form";
@@ -10,12 +10,16 @@ import { useMutation } from "@tanstack/react-query";
 import { searchFaktur } from "@/server/faktur/search-faktur";
 
 export default function Page() {
-  const { register, reset, handleSubmit } = useForm();
+  const { register, reset, handleSubmit, setFocus } = useForm();
   const [faktur, setFaktur] = useState(null);
   const [message, setMessage] = useState(null);
   const searchMut = useMutation({
     mutationFn: searchFaktur,
   });
+
+  useEffect(() => {
+    setFocus("kode");
+  }, [setFocus]);
 
   const onSubmit = (values) => {
     setFaktur(null);
@@ -48,11 +52,11 @@ export default function Page() {
       <br />
       <hr />
       <br />
-      {faktur?.kartu.sts_kartu == "2" && <FormInputBayar defaultValues={faktur} />}
+      {faktur?.kartu.sts_kartu == "2" && <FormInputBayar defaultValues={faktur} setFaktur={setFaktur} />}
       {message && (
         <div className="h-screen w-full pt-12 text-center">
           <p className="text-[90px]">{message}</p>
-          <div className="text-[90px] text-center">🐵</div>
+          <div className="text-[90px] text-center">🤡</div>
         </div>
       )}
     </>

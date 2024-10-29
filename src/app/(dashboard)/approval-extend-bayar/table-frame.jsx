@@ -19,6 +19,8 @@ export default function TableFrame({ searchParams, setSelected }) {
     queryFn: async () =>
       await readManyExtendBayar({
         ...searchParams,
+        pageParams: searchParams?.page || 1,
+        limit: searchParams?.limit || 10,
         search: searchParams.search_query ? searchParams.search_query : "",
       }),
   });
@@ -115,7 +117,7 @@ export default function TableFrame({ searchParams, setSelected }) {
       columns={columns}
       data={data?.data}
       totalRows={data?.page.total_rows}
-      totalPages={1}
+      totalPages={data?.page.total_pages}
       currentPage={pageParams}
       setRowSelection={setSelected}
     />

@@ -26,6 +26,8 @@ export default function TableFrame({ searchParams }) {
     queryFn: async () =>
       await readManyTglMerah({
         ...searchParams,
+        pageParams: searchParams?.page || 1,
+        limit: searchParams?.limit || 10,
         search: searchParams.search_query ? searchParams.search_query : "",
       }),
   });
@@ -33,6 +35,8 @@ export default function TableFrame({ searchParams }) {
   if (isLoading) {
     return "Loading...";
   }
+
+  console.log("data yaa ", data.page);
 
   const columns = [
     {
@@ -76,8 +80,9 @@ export default function TableFrame({ searchParams }) {
                     { id: row.original.id },
                     {
                       onSuccess: (data) => {
+                        router.refresh();
                         Swal.fire("Success!", "Tanggal Merah berhasil dihapus", "info").then(() => {
-                          queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
+                          queryCLient.invalidateQueries({ queryKey: ["tanggal-merah", searchParams] });
                         });
                       },
                       onError: (e) => {
@@ -101,7 +106,7 @@ export default function TableFrame({ searchParams }) {
       columns={columns}
       data={data?.data}
       totalRows={data?.page.total_rows}
-      totalPages={1}
+      totalPages={data?.page.total_pages}
       currentPage={pageParams}
       setRowSelection={setSelected}
     />

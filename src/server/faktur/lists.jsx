@@ -22,7 +22,7 @@ export async function readManyTglMerah(query) {
         tgl2,
       })
   );
-
+  console.log("ini result length ", resultLength, limit);
   return {
     data: response,
     page: {

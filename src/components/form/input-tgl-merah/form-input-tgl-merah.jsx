@@ -38,7 +38,11 @@ export function FormInputTglMerah({ defaultValues, isEditing }) {
         mutTanggalMerah.mutate(values, {
           onSuccess: (data) => {
             queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
-            Swal.fire("Success!", "Tanggal Merah berhasil ditambahkan", "info").then(() => {
+            Swal.fire(
+              "Success!",
+              isEditing ? "Tanggal Merah berhasil diperbarui" : "Tanggal Merah berhasil ditambahkan",
+              "info"
+            ).then(() => {
               router.replace("/input-tanggal-merah");
             });
           },

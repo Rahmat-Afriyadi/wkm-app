@@ -51,7 +51,7 @@ export default function Page() {
       {message && (
         <div className="h-screen w-full pt-12 text-center">
           <p className="text-[90px]">{message}</p>
-          <div className="text-[90px] text-center">🐵</div>
+          <div className="text-[90px] text-center">🤡</div>
         </div>
       )}
     </>
