@@ -8,7 +8,7 @@ export default async function Page({ params }) {
   faktur.extend_bayar = extendBayarNew;
   return (
     <>
-      <p className="text-2xl font-bold mb-9">Detail OTR</p>
+      <p className="text-2xl font-bold mb-9">Detail Pengajuan Extend Bayar</p>
       <FormInputExtendBayar isEditing={true} defaultValues={faktur} />
     </>
   );

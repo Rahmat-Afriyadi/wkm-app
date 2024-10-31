@@ -4,20 +4,22 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import Search from "@/components/Search/index";
-import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
-import { useMutation } from "@tanstack/react-query";
+import { UploadExtendBayarExcel } from "@/server/extend-bayar/upload-data-excel";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
   const [file, setFile] = useState(null);
   const [error, setError] = useState("");
+
   const router = useRouter();
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
 
+  const queryCLient = useQueryClient();
   const importTransaksiMut = useMutation({
-    mutationFn: UploadTanggalMerahExcel,
+    mutationFn: UploadExtendBayarExcel,
   });
 
   const [value, setValue] = useState({ startDate: "", endDate: "" });
@@ -43,6 +45,40 @@ export default function PageFrame({ children }) {
     setValue(newValue);
   };
 
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const validTypes = [
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      ]; // Specify valid types
+      if (!validTypes.includes(selectedFile.type)) {
+        setError("Invalid file type. Please upload a Xlsx file.");
+        setFile(null);
+        return;
+      }
+      setError("");
+      const data = new FormData();
+      data.append("files[]", selectedFile, selectedFile.name);
+
+      importTransaksiMut.mutate(data, {
+        onSuccess: (data) => {
+          Swal.fire("Success!", "Berhasil import", "success").then(() => {
+            queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
+            router.refresh();
+            event.target.value = null;
+          });
+        },
+        onError: (e) => {
+          Swal.fire("Warning!", e.response?.data?.message, "info").then(() => {
+            event.target.value = null;
+          });
+        },
+      });
+      console.log("File selected:", selectedFile);
+    }
+  };
+
   return (
     <>
       <div className="grid mb-6 md:grid-cols-12">
@@ -53,6 +89,19 @@ export default function PageFrame({ children }) {
           >
             Create
           </a>
+          <label
+            htmlFor="import-transaksi"
+            className="mr-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800 cursor-pointer"
+          >
+            Import
+          </label>
+          <input
+            type="file"
+            className="hidden"
+            id="import-transaksi"
+            accept="application/vnd.ms-excel, .xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" // Specify accepted file types
+            onChange={handleFileChange}
+          />
           <Search id="search-query" name="search_query" placeholder={"Search..."} />
           <div className="w-3"></div>
           <div className="w-64">
