@@ -42,6 +42,14 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
               setFaktur(null);
               router.refresh();
             });
+            if (data.status == "success") {
+              Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
+                setFaktur(null);
+                router.refresh();
+              });
+            } else {
+              Swal.fire("Failed!", data.message, "error");
+            }
           },
           onError: (e) => {
             console.log("ini error ", e);

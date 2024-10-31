@@ -63,7 +63,7 @@ export default function TableFrame({ searchParams }) {
             aria-hidden="true"
             onClick={() => router.push("/input-tanggal-merah/detail/" + row.original.id)}
           />
-          <TrashIcon
+          {/* <TrashIcon
             className="w-7 h-6 hover:bg-slate-300 rounded-sm text-red"
             aria-hidden="true"
             onClick={() => {
@@ -95,7 +95,7 @@ export default function TableFrame({ searchParams }) {
                 allowOutsideClick: () => !Swal.isLoading(),
               });
             }}
-          />
+          /> */}
         </div>
       ),
     },

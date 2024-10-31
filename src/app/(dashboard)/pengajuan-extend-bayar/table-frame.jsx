@@ -87,11 +87,11 @@ export default function TableFrame({ searchParams }) {
           />
           <TrashIcon
             className={`w-7 h-6 hover:bg-slate-300 rounded-sm ${
-              row.original.sts_approval == "O" ? "cursor-not-allowed text-slate-600" : "cursor-pointer text-red"
+              row.original.sts_approval != "P" ? "cursor-not-allowed text-slate-600" : "cursor-pointer text-red"
             }`}
             aria-hidden="true"
             onClick={() => {
-              if (row.original.sts_approval != "O") {
+              if (row.original.sts_approval == "P") {
                 Swal.fire({
                   title: "Apakah anda yakin untuk menghapus data ini",
                   icon: "question",

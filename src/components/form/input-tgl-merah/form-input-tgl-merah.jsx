@@ -38,13 +38,21 @@ export function FormInputTglMerah({ defaultValues, isEditing }) {
         mutTanggalMerah.mutate(values, {
           onSuccess: (data) => {
             queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
-            Swal.fire(
-              "Success!",
-              isEditing ? "Tanggal Merah berhasil diperbarui" : "Tanggal Merah berhasil ditambahkan",
-              "info"
-            ).then(() => {
-              router.replace("/input-tanggal-merah");
-            });
+            if (data.status == "success") {
+              Swal.fire(
+                "Success!",
+                isEditing ? "Tanggal Merah berhasil diperbarui" : "Tanggal Merah berhasil ditambahkan",
+                "success"
+              ).then(() => {
+                router.replace("/input-tanggal-merah");
+              });
+            } else {
+              Swal.fire(
+                "Failed!",
+                isEditing ? "Tanggal Merah gagal diperbarui" : "Tanggal Merah gagal ditambahkan",
+                "error"
+              ).then(() => {});
+            }
           },
           onError: (e) => {
             console.log("ini error ", e);

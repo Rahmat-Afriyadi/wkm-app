@@ -33,9 +33,21 @@ export default function TableFrame({ searchParams, setSelected }) {
     {
       id: "select",
       header: ({ table }) => {
+        let disabled = false;
+        if (table.getRowModel().rows.length > 0) {
+          table.getRowModel().rows.forEach((e) => {
+            if (e.original.sts_approval != "P") {
+              disabled = true;
+              return;
+            }
+          });
+        } else {
+          disabled = true;
+        }
         return (
           <input
-            className="cursor-pointer rounder-lg"
+            disabled={disabled}
+            className="cursor-pointer rounder-lg border-black border-2 disabled:border-1 disabled:cursor-not-allowed"
             type="checkbox"
             checked={table.getIsAllPageRowsSelected()}
             onChange={(value) => {
@@ -47,7 +59,8 @@ export default function TableFrame({ searchParams, setSelected }) {
       cell: ({ row }) => {
         return (
           <input
-            className="cursor-pointer rounder-lg"
+            disabled={row.original.sts_approval != "P"}
+            className="cursor-pointer rounder-lg border-black border-2 disabled:border-1 disabled:cursor-not-allowed"
             type="checkbox"
             checked={row.getIsSelected()}
             onChange={(value) => {
