@@ -3,12 +3,14 @@
 import { useSession, signOut, signIn } from "next-auth/react";
 import { useEffect } from "react";
 
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API;
+
 export default function AutoLogoutProvider() {
   const { data: session, status } = useSession();
   useEffect(() => {
     if (status == "authenticated" || status == "loading") {
       if (session?.user.refreshToken != undefined) {
-        fetch("http://127.0.0.1:3001/auth/refresh-token", {
+        fetch(BASE_URL + "/auth/refresh-token", {
           headers: {
             "Access-Control-Allow-Origin": "*",
           },

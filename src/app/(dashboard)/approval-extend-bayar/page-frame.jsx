@@ -16,6 +16,7 @@ export default function PageFrame({ searchParams }) {
   const { register, handleSubmit, watch } = useForm();
   const [selected, setSelected] = useState({});
   const stsApprovalSelected = watch("sts_approval", "");
+  const [statusApproval, setstatusApproval] = useState(searchParams.sp ? searchParams.sp : "");
 
   const [value, setValue] = useState({ startDate: "", endDate: "" });
 
@@ -23,7 +24,9 @@ export default function PageFrame({ searchParams }) {
     const params = new URLSearchParams(searchParams);
     params.set("tgl1", "");
     params.set("tgl2", "");
+    params.set("sa", "P");
     replace(`${pathname}?${params}`);
+    setstatusApproval("P");
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleValueChange = (newValue) => {
@@ -89,6 +92,34 @@ export default function PageFrame({ searchParams }) {
         <div className="col-span-10 mr-2 mt-2 flex justify-start items-end ">
           <Search id="search-query" name="search_query" placeholder={"Search..."} />
           <div className="w-5"></div>
+          <div className="w-3/12 flex items-end">
+            <select
+              value={statusApproval}
+              onChange={(e) => {
+                const params = new URLSearchParams(searchParams);
+                params.set("sa", e.target.value);
+                replace(`${pathname}?${params}`);
+                setstatusApproval(e.target.value);
+              }}
+              className={
+                "block w-full border-gray-300 rounded-md cursor-pointer disabled:cursor-not-allowed focus:ring-cyan-500 focus:border-cyan-500 pl-4 sm:text-sm"
+              }
+            >
+              <option value={"all"} className=" py-1 cursor-pointer">
+                All
+              </option>
+              <option value={"P"} className=" py-1 cursor-pointer">
+                Pending
+              </option>
+              <option value={"O"} className=" py-1 cursor-pointer">
+                Approval
+              </option>
+              <option value={"R"} className=" py-1 cursor-pointer">
+                Rejected
+              </option>
+            </select>
+          </div>
+          <div className="w-5"></div>
           <div className="w-6/12">
             <Datepicker
               id={"range_tgl_merah"}
@@ -101,7 +132,7 @@ export default function PageFrame({ searchParams }) {
             />
           </div>
           <div className="w-5"></div>
-          <form onSubmit={handleSubmit(onSubmit)} className="w-full grid grid-cols-12 gap-x-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-10/12 grid grid-cols-12 gap-x-4">
             <div className="col-span-6 flex items-end">
               <select
                 disabled={selected?.rows?.length < 1}
