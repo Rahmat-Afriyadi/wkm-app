@@ -80,7 +80,7 @@ export default function TableFrame({ searchParams, setSelected }) {
       id: "nm_customer11",
     },
     {
-      header: "Tanggal Actual",
+      header: "Tanggal Bayar",
       accessorFn: (row) => formatDate(new Date(row.tgl_actual_bayar)),
       id: "tgl_actual_bayar",
     },

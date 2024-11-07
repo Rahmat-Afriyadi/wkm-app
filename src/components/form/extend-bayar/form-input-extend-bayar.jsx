@@ -81,7 +81,7 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
                 value={valueTglExtendBayar}
                 setValue={setValueTglExtendBayar}
                 id={"extend_bayar.tgl_actual_bayar"}
-                label={"Tanggal Actual Bayar"}
+                label={"Tanggal Bayar"}
               />
             </div>
             <div className="col-span-6 flex items-end">
