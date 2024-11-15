@@ -10,7 +10,7 @@ import { TrashIcon } from "lucide-react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-export default function TableFrame({ searchParams, setSelected }) {
+export default function TableFrame({ searchParams, setSelected, selected }) {
   const pageParams = searchParams?.page || 1;
   const router = useRouter();
 
@@ -133,6 +133,7 @@ export default function TableFrame({ searchParams, setSelected }) {
       totalPages={data?.page.total_pages}
       currentPage={pageParams}
       setRowSelection={setSelected}
+      rowSelection={selected}
     />
   );
 }

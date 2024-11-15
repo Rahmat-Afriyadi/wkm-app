@@ -20,7 +20,7 @@ import {
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import Pagination from "../Pagination";
 
-const DataTable = ({ columns, data, setRowSelection, currentPage, totalRows, totalPages }) => {
+const DataTable = ({ columns, data, rowSelection, setRowSelection, currentPage, totalRows, totalPages }) => {
   const [selected, setSelected] = useState([]);
 
   // Debounced search function
@@ -53,6 +53,12 @@ const DataTable = ({ columns, data, setRowSelection, currentPage, totalRows, tot
   useEffect(() => {
     setRowSelection(table.getSelectedRowModel());
   }, [selected]); // eslint-disable-line
+
+  useEffect(() => {
+    if (rowSelection == false) {
+      setSelected([]);
+    }
+  }, [rowSelection]); // eslint-disable-line
 
   const visibleRows = table.getRowModel().rows;
 

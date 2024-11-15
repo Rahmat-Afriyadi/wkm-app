@@ -14,7 +14,7 @@ export default function PageFrame({ searchParams }) {
   const { replace } = useRouter();
   const pathname = usePathname();
   const { register, handleSubmit, watch } = useForm();
-  const [selected, setSelected] = useState({});
+  const [selected, setSelected] = useState({ rows: [] });
   const stsApprovalSelected = watch("sts_approval", "");
   const [statusApproval, setstatusApproval] = useState(searchParams.sp ? searchParams.sp : "");
 
@@ -74,6 +74,7 @@ export default function PageFrame({ searchParams }) {
               } else if (data.status == "success") {
                 Swal.fire("Success!", data.message, "success");
               }
+              setSelected(false);
             },
             onError: (e) => {
               console.log("ini error ", e);
@@ -173,7 +174,7 @@ export default function PageFrame({ searchParams }) {
             {/* <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">{children}</div> */}
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               <Suspense key={searchParams}>
-                <TableFrame searchParams={searchParams} setSelected={setSelected} />
+                <TableFrame searchParams={searchParams} setSelected={setSelected} selected={selected} />
               </Suspense>
             </div>
           </div>

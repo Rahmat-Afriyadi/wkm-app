@@ -55,7 +55,11 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
               } else if (data.status == "success") {
                 Swal.fire("Success!", data.message, "success").then(() => {
                   queryClient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
-                  router.replace("/pengajuan-extend-bayar");
+                  if (session?.user?.role == 6) {
+                    router.replace("/approval-extend-bayar");
+                  } else {
+                    router.replace("/pengajuan-extend-bayar");
+                  }
                 });
               }
             },
