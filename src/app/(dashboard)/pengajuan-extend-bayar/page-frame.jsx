@@ -64,7 +64,7 @@ export default function PageFrame({ children }) {
       importTransaksiMut.mutate(data, {
         onSuccess: (data) => {
           Swal.fire("Success!", "Berhasil import", "success").then(() => {
-            queryCLient.invalidateQueries({ queryKey: ["tanggal-merah"] });
+            queryCLient.invalidateQueries({ queryKey: ["pengajuan-extend-bayar"] });
             router.refresh();
             event.target.value = null;
           });
