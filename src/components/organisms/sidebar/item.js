@@ -15,6 +15,11 @@ const navigation = [
     icon: ChartPieIcon,
   },
   {
+    name: "Data Renewal",
+    to: "/data-renewal",
+    icon: ChartPieIcon,
+  },
+  {
     name: "Export WA Blast",
     to: "/wa-blast",
     icon: UsersIcon,
