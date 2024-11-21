@@ -8,11 +8,39 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchFaktur } from "@/server/faktur/search-faktur";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import Datepicker from "react-tailwindcss-datepicker";
 
 export default function Page() {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+
   const { register, reset, handleSubmit, setFocus } = useForm();
   const [faktur, setFaktur] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const today = new Date();
+  const [value, setValue] = useState({
+    startDate: today.toISOString().split("T")[0],
+    endDate: today.toISOString().split("T")[0],
+  });
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("tgl1", value.startDate);
+    params.set("tgl2", value.endDate);
+    replace(`${pathname}?${params}`);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleValueChange = (newValue) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("tgl1", newValue.startDate);
+    params.set("tgl2", newValue.endDate);
+    replace(`${pathname}?${params}`);
+    setValue(newValue);
+  };
+
   const searchMut = useMutation({
     mutationFn: searchFaktur,
   });

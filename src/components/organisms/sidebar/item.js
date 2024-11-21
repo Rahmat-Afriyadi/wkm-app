@@ -20,6 +20,11 @@ const navigation = [
     icon: ChartPieIcon,
   },
   {
+    name: "Dashboard Pembayaran",
+    to: "/dashboard-pembayaran",
+    icon: ChartPieIcon,
+  },
+  {
     name: "Export WA Blast",
     to: "/wa-blast",
     icon: UsersIcon,

@@ -4,7 +4,7 @@ import { authOptions } from "../../auth/[...nextauth]/route";
 import { refreshToken } from "@/lib/fetchApi";
 export const POST = async (_req) => {
   const BASE_URL = "http://127.0.0.1:3001";
-  const url = "/export-data-renewal";
+  const url = "/export-data-pembayaran";
   const session = await getServerSession(authOptions);
   const body = await _req.json();
 
