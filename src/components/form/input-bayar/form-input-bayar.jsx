@@ -15,6 +15,8 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
   const { register, handleSubmit } = useForm({ defaultValues });
   const router = useRouter();
   const [tab, setTab] = useState(1);
+  const today = new Date();
+  today.setDate(today.getDate() - 1);
   const [valueTglLhr, setValueTglLhr] = useState({
     startDate: null,
     endDate: null,
@@ -26,7 +28,9 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
   });
   const onSubmit = (values) => {
     values.tgl_bayar = new Date(valueTglLhr.startDate);
-    console.log("ini values ", values);
+    if (values.tgl_bayar < new Date("2024-01-01")) {
+      return Swal.fire("Failed!", "Moohon mengisi tanggal bayar terlebih dahulu", "error");
+    }
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
       icon: "question",
