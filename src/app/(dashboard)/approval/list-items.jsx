@@ -10,11 +10,13 @@ export default async function ListAsuransi({ searchParams }) {
   const limit = searchParams?.limit || 10;
   const search = searchParams?.search_query;
   const sb = searchParams?.sb;
+  const ja = searchParams?.ja || 0;
 
   const { data, page } = await readManyApproval({
     tgl1: searchParams?.tgl1,
     tgl2: searchParams?.tgl2,
     sb,
+    ja,
     search,
     limit,
     pageParams,
@@ -36,6 +38,9 @@ export default async function ListAsuransi({ searchParams }) {
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             No HP
+          </th>
+          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+            Jenis Asuransi
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             Tgl Pengajuan
