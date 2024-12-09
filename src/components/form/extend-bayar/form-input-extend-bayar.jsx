@@ -34,6 +34,9 @@ export function FormInputExtendBayar({ defaultValues, isEditing }) {
       values.extend_bayar.no_msn = values.no_msn;
       values.extend_bayar.sts_cetak3 = values.sts_cetak3;
     }
+    if (values.extend_bayar.deskripsi.length < 3) {
+      return Swal.fire("Failed!", "mohon diisi alasan telat bayar", "error");
+    }
     console.log("ini values ", values);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
