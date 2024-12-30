@@ -1,6 +1,6 @@
 import React from "react";
 
-export function SelectBase({ id, lable, register, name, disabled, options }) {
+export function SelectBase({ id, lable, register, name, disabled, options, required = false }) {
   return (
     <>
       <label
@@ -11,6 +11,7 @@ export function SelectBase({ id, lable, register, name, disabled, options }) {
         {lable}
       </label>
       <select
+      required = {required}
         disabled={disabled}
         {...register(name)}
         id={id}

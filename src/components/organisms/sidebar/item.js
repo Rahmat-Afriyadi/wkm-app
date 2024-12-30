@@ -110,6 +110,16 @@ const navigation = [
     to: "/approval-extend-bayar",
     icon: FolderIcon,
   },
+  {
+    name: "Pengajuan Bantuan",
+    to: "/pengajuan-bantuan",
+    icon: FolderIcon,
+  },
+  {
+    name: "Tiket Bantuan",
+    to: "/tiket-bantuan",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];
