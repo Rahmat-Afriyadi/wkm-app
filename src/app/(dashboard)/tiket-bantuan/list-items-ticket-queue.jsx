@@ -29,8 +29,9 @@ export default function ListItemTicketQueue({ month, year }) {
     );
   }
 
-  // Jika data kosong
-  if (!data || data.length === 0) {
+  // Validasi respons data
+  const ticketQueueData = data || [];
+  if (ticketQueueData.length === 0) {
     return (
       <div className="text-center text-gray-500 py-4">
         Data tidak ditemukan
@@ -39,7 +40,7 @@ export default function ListItemTicketQueue({ month, year }) {
   }
 
   // Render tabel data
-  const tableQueueContent = data.map((ticket, i) => (
+  const tableQueueContent = ticketQueueData.map((ticket, i) => (
     <ItemTicketQueue key={i} id={i} ticket={ticket} />
   ));
 

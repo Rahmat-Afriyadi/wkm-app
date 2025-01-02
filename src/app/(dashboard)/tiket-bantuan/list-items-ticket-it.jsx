@@ -7,12 +7,12 @@ import { fetchTicketIT } from "@/server/pengajuan-bantuan/lists";
 export default function ListItemTicketIt() {
   // Gunakan useQuery untuk memanggil API dengan fetchTicketIT
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["ticketIT"],
-    queryFn: fetchTicketIT,
+    queryKey: ["ticketIT"], // Unik untuk query ini
+    queryFn: fetchTicketIT, // Fungsi API
   });
 
   // Ambil data tiket dari hasil query
-  const ticketITData = data?.data;
+  const ticketITData = data?.data || []; // Pastikan array tidak undefined
 
   // Loading state
   if (isLoading) {
@@ -31,7 +31,7 @@ export default function ListItemTicketIt() {
   }
 
   // Jika data kosong
-  if (!ticketITData || ticketITData.length === 0) {
+  if (ticketITData.length === 0) {
     return (
       <div className="text-center text-gray-500 py-4">Data tidak ditemukan</div>
     );
@@ -39,7 +39,7 @@ export default function ListItemTicketIt() {
 
   // Render tabel data
   const tableITContent = ticketITData.map((ticket, i) => (
-    <ItemTicketIt key={i} id={i} ticket={ticket} />
+    <ItemTicketIt key={ticket?.id || i} id={ticket?.id || i} ticket={ticket} />
   ));
 
   return (
