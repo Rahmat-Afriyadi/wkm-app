@@ -96,7 +96,6 @@ export default function CreateTicketPage() {
                 name = 'kd_user_client'
                 setValue={(name, value) => setSelectedClients(value)} 
                 defaultValues={selectedClients} 
-                required
               />
         </div>
         )}

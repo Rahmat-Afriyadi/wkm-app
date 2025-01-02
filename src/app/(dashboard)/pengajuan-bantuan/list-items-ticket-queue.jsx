@@ -7,7 +7,7 @@ export default async function ListItemTicketQueue() {
   try {
     // Panggil API 1: List Ticket Queue
     const response = await fetchTicketQueue("", "");
-    const ticketQueueData = response?.data || [];
+    const ticketQueueData = response || [];
 
     // Jika data tidak ditemukan, tampilkan pesan "Tidak Ada Data"
     if (ticketQueueData.length === 0) {
