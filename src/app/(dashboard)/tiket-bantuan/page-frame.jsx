@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import ListItemTicketIt from "./list-items-ticket-it";
 import ListItemTicketQueue from "./list-items-ticket-queue";
 import { useSession } from "next-auth/react";
+import ButtonExportDataTiketBantuan from "@/components/form/tiket-bantuan/form-export";
 
-export default function PageFrame({children, searchParams}) {
+export default function PageFrame() {
   const router = useRouter();
-  const { data: session } = useSession(); 
+  const { data: session } = useSession();
 
   // Mendapatkan bulan dan tahun sekarang
   const currentDate = new Date();
@@ -42,10 +43,14 @@ export default function PageFrame({children, searchParams}) {
 
   const years = getYears();
 
-  // Fungsi untuk refresh data berdasarkan parameter bulan dan tahun
-  const handleFilterChange = () => {
-    console.log("Filter applied: ", { selectedMonth, selectedYear });
-    // Implementasikan panggilan API di sini dengan parameter bulan dan tahun
+  const handleMonthChange = (value) => {
+    setSelectedMonth(value);
+    router.refresh();
+  };
+
+  const handleYearChange = (value) => {
+    setSelectedYear(value);
+    router.refresh();
   };
 
   // Interval auto-refresh halaman
@@ -58,23 +63,23 @@ export default function PageFrame({children, searchParams}) {
     return () => clearInterval(interval);
   }, [router]);
 
+  const handleExport = () => {
+    // Fungsi untuk mengekspor data, misalnya panggil API untuk mengunduh data
+    console.log("Export data");
+  };
+
   return (
-    <>
-      {session?.user.role == 8 && (
-        <div className="mb-4 flex items-center space-x-4">
+    <>{session?.user.role == 8 && (
+      <div className="mb-4 flex items-center justify-between">
+        {/* Kontainer untuk Dropdown Bulan dan Tahun */}
+        <div className="flex items-center space-x-4">
           {/* Dropdown Bulan */}
           <div className="form-group">
-            <label
-              htmlFor="month"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Pilih Bulan
-            </label>
             <select
               id="month"
               value={selectedMonth}
-              onChange={(e) => setSelectedMonth(e.target.value)}
-              className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
+              onChange={(e) => handleMonthChange(e.target.value)}
+              className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
             >
               {months.map((month) => (
                 <option key={month.value} value={month.value}>
@@ -83,20 +88,14 @@ export default function PageFrame({children, searchParams}) {
               ))}
             </select>
           </div>
-
+    
           {/* Dropdown Tahun */}
           <div className="form-group">
-            <label
-              htmlFor="year"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Pilih Tahun
-            </label>
             <select
               id="year"
               value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
+              onChange={(e) => handleYearChange(e.target.value)}
+              className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
             >
               {years.map((year) => (
                 <option key={year} value={year}>
@@ -105,17 +104,16 @@ export default function PageFrame({children, searchParams}) {
               ))}
             </select>
           </div>
-
-          {/* Tombol Apply Filter */}
-          <button
-            onClick={handleFilterChange}
-            className="mt-6 px-4 py-2 text-white bg-blue-600 rounded-md shadow hover:bg-blue-700"
-          >
-            Terapkan Filter
-          </button>
         </div>
-      )}
-
+    
+        <ButtonExportDataTiketBantuan
+          params={{
+            year: selectedYear,
+            month: selectedMonth,
+          }}
+          />
+      </div>
+    )}
       {/* Konten Utama */}
       <div className="flex flex-col mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -123,13 +121,16 @@ export default function PageFrame({children, searchParams}) {
             <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
               {session?.user.role == 7 && (
                 <div className="overflow-y-auto max-h-96">
-                  <ListItemTicketIt searchParams={searchParams} />
+                  <ListItemTicketIt />
                 </div>
               )}
               {/* Menyertakan ListItem dan meneruskan searchParams untuk digunakan di dalamnya */}
               {session?.user.role == 8 && (
                 <div className="overflow-y-auto max-h-96">
-                  <ListItemTicketQueue month={selectedMonth} year={selectedYear} />
+                  <ListItemTicketQueue
+                    month={selectedMonth}
+                    year={selectedYear}
+                  />
                 </div>
               )}
             </div>

@@ -1,30 +1,49 @@
-"use server";
+"use client";
 
+import { useQuery } from "@tanstack/react-query";
+import ItemTicketIt from "./item-ticket-it";
 import { fetchTicketIT } from "@/server/pengajuan-bantuan/lists";
-import ItemTicketIT from "./item-ticket-it";
 
-export default async function ListItemTicketIT() {
-  // Panggil API 1: List Ticket Queue
-  const { data: ticketITData } = await fetchTicketIT();
-  // console.log("queue",ticketQueueData); // Log data untuk memastikan diterima dengan benar
+export default function ListItemTicketIt() {
+  // Gunakan useQuery untuk memanggil API dengan fetchTicketIT
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["ticketIT"],
+    queryFn: fetchTicketIT,
+  });
 
-  // Jika data tidak ditemukan, tampilkan pesan error
-  if (!ticketITData || ticketITData.length === 0) {
+  // Ambil data tiket dari hasil query
+  const ticketITData = data?.data;
+
+  // Loading state
+  if (isLoading) {
     return (
-      <div className="text-center text-gray-500 py-4">
-        -
+      <div className="text-center text-gray-500 py-4">Memuat data...</div>
+    );
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 py-4">
+        Terjadi kesalahan saat memuat data tiket.
       </div>
     );
   }
 
-  // Render Item untuk Tabel 1 (Queue)
+  // Jika data kosong
+  if (!ticketITData || ticketITData.length === 0) {
+    return (
+      <div className="text-center text-gray-500 py-4">Data tidak ditemukan</div>
+    );
+  }
+
+  // Render tabel data
   const tableITContent = ticketITData.map((ticket, i) => (
-    <ItemTicketIT key={i} id={i} ticket={ticket} />
+    <ItemTicketIt key={i} id={i} ticket={ticket} />
   ));
 
   return (
     <div className="space-y-10">
-      {/* Tabel 1: List Ticket Queue */}
       <div>
         <h2 className="text-lg font-semibold mb-4">List Antrian Tiket</h2>
         <table className="min-w-full divide-y divide-gray-300">
@@ -44,7 +63,7 @@ export default async function ListItemTicketIT() {
               tableITContent
             ) : (
               <tr>
-                <td colSpan="6" className="px-3 py-4 text-center text-gray-500">
+                <td colSpan="7" className="px-3 py-4 text-center text-gray-500">
                   Data tidak ditemukan
                 </td>
               </tr>

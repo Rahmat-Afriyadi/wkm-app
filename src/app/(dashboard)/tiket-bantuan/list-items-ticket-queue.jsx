@@ -1,24 +1,45 @@
-"use server";
+"use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { fetchTicketQueue } from "@/server/pengajuan-bantuan/lists";
 import ItemTicketQueue from "./item-ticket-queue";
 
-export default async function ListItemTicketQueue({month, year}) {
-  // Panggil API 1: List Ticket Queue
-  const { data: ticketQueueData } = await fetchTicketQueue(month, year);
-  // console.log("queue",ticketQueueData); // Log data untuk memastikan diterima dengan benar
+export default function ListItemTicketQueue({ month, year }) {
+  // Gunakan useQuery untuk mem-fetch data tiket
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["ticketQueue", month, year], // Query key harus unik untuk setiap kombinasi parameter
+    queryFn: () => fetchTicketQueue(month, year), // Panggil API dengan parameter
+  });
 
-  // Jika data tidak ditemukan, tampilkan pesan error
-  if (!ticketQueueData || ticketQueueData.length === 0) {
+  // Loading state
+  if (isLoading) {
     return (
       <div className="text-center text-gray-500 py-4">
-        -
+        Memuat data...
       </div>
     );
   }
 
-  // Render Item untuk Tabel 1 (Queue)
-  const tableQueueContent = ticketQueueData.map((ticket, i) => (
+  // Error state
+  if (isError) {
+    return (
+      <div className="text-center text-red-500 py-4">
+        Terjadi kesalahan saat memuat data antrian tiket.
+      </div>
+    );
+  }
+
+  // Jika data kosong
+  if (!data || data.length === 0) {
+    return (
+      <div className="text-center text-gray-500 py-4">
+        Data tidak ditemukan
+      </div>
+    );
+  }
+
+  // Render tabel data
+  const tableQueueContent = data.map((ticket, i) => (
     <ItemTicketQueue key={i} id={i} ticket={ticket} />
   ));
 
@@ -36,18 +57,11 @@ export default async function ListItemTicketQueue({month, year}) {
               <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
               <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">User IT</th>
               <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Assign Date</th>
+              <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Aksi</th>
             </tr>
           </thead>
           <tbody className="bg-white">
-            {tableQueueContent.length > 0 ? (
-              tableQueueContent
-            ) : (
-              <tr>
-                <td colSpan="6" className="px-3 py-4 text-center text-gray-500">
-                  Data tidak ditemukan
-                </td>
-              </tr>
-            )}
+            {tableQueueContent}
           </tbody>
         </table>
       </div>

@@ -1,11 +1,10 @@
 "use client";
 
 import React, { memo } from "react";
-import moment from "moment";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { useRouter } from "next/navigation";
 
-const ItemTicketIT = ({ ticket, id }) => {
+const ItemTicketIt = ({ ticket, id }) => {
   const router = useRouter();
   const getStatusLabel = (status) => {
     switch (status) {
@@ -43,4 +42,4 @@ const ItemTicketIT = ({ ticket, id }) => {
   );
 };
 
-export default memo(ItemTicketIT);
+export default memo(ItemTicketIt);

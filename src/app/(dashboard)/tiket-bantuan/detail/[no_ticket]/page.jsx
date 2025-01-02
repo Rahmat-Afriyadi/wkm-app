@@ -205,7 +205,7 @@ export default function EditTicketPage({ params }) {
             id="kd_user_it"
             {...register("kd_user_it")}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
-            disabled
+            disabled={session?.user.role === 7}
           />
         </div>
 
@@ -318,11 +318,12 @@ export default function EditTicketPage({ params }) {
             {...register("solution")}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             rows={4}
+            disabled={session?.user.role === 8}
           />
         </div>
 
         {/* Nama Client Dropdown (Multiple Select) */}
-        {session?.user.role == 7 && (
+     
           <div className="form-group">
             <label
               htmlFor="kd_user_client"
@@ -338,7 +339,7 @@ export default function EditTicketPage({ params }) {
               disabled
             />
           </div>
-        )}
+     
 
         {/* Submit Button */}
         <div className="flex justify-center">

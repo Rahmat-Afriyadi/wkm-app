@@ -23,16 +23,20 @@ export async function fetchTicketIT() {
 
 // Fungsi untuk mengambil data dari ticket queue tanpa parameter
 export async function fetchTicketQueue(month, year) {
-  // Memanggil API untuk mengambil data ticket queue dengan query parameters
-  const queryParams = new URLSearchParams({
-    month: month,
-    year: year,
-  });
+  try {
 
-  const response = await AuthGetApi(`/ticket-support/ticket-queue?${queryParams.toString()}`);
+    const queryParams = new URLSearchParams({
+      month: month.toString(),
+      year: year.toString(),
+    });
 
-  return {
-    data: response,
-  };
+    const response = await AuthGetApi(`/ticket-support/ticket-queue?${queryParams.toString()}`);
+ 
+    return response;
+  } catch (error) {
+    console.error("Gagal mengambil data ticket queue:", error.message);
+    throw error;
+  }
 }
+
 
