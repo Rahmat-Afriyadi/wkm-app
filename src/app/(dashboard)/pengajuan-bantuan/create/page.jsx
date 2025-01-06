@@ -37,7 +37,12 @@ export default function CreateTicketPage() {
         setMessage("Ticket has been created successfully!"); // Set success message
         // reset();
         // setSelectedClients([]);
-        setTimeout(() => router.back(), 1000);
+        setTimeout(() => {
+          router.back();
+          setTimeout(() => {
+            window.location.reload(); // Reload the page
+          }, 100); // Memuat ulang halaman sebelumnya
+        }, 1000);
       } else {
         setMessage("Failed to create ticket. Please try again."); // Set error message
         console.log(response); 

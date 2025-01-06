@@ -1,26 +1,30 @@
 "use client"
 
+import { request } from "http";
 import { useRef, useState } from "react";
 
-export default function ButttonExportDataRenewal({params}){
+export default function ButttonExportDataTiketBantuan({params}){
     const {year, month} = params
     const aBlobUrl = useRef(null);
     const [submitted, setSubmit] = useState(false)
-
+    const requestBody = {
+        year: parseInt(year, 10), // Konversi year menjadi integer
+        month: parseInt(month, 10), // Konversi month menjadi integer
+      };
     const handleSubmit = async() =>{
         setSubmit(false)
-        const url = "/api/data-renewal/export-data-renewal";
+        const url = "api/tiket-bantuan/export-rekap-tiket";
         const response = await fetch(url,{
             method: "POST", // *GET, POST, PUT, DELETE, etc.
             mode: "no-cors", // no-cors, *cors, same-origin
             headers: {
             "Content-Type": "application/json",
             },
-            body: JSON.stringify({year: year, month: month})
+            body: JSON.stringify(requestBody),
         });
-       
+    
         const response1 =  await response.blob()
-        const filename = `Rekap Data Tiket Support ${year} - ${month}.xlsx`
+        const filename = `Rekap Data Tiket Support ${month} - ${year}.xlsx`
 
         if(aBlobUrl.current)aBlobUrl.current.href = URL.createObjectURL(response1)
         if(aBlobUrl.current)aBlobUrl.current.download = filename

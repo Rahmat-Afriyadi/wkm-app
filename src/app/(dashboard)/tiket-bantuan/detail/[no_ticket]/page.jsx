@@ -8,6 +8,7 @@ import { SelectBase } from "@/components/Input/select-base";
 import { ViewTicket } from "@/server/pengajuan-bantuan/view-ticket";
 import { UpdateTicket } from "@/server/pengajuan-bantuan/update-ticket-support";
 import { fetchClients } from "@/server/pengajuan-bantuan/mst-client-ts";
+import { MstItSupport } from "@/server/pengajuan-bantuan/mst-it-support";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
@@ -27,6 +28,11 @@ export default function EditTicketPage({ params }) {
   const { data: options, isLoading: isLoadingClients } = useQuery({
     queryKey: ["tiket-bantuan"],
     queryFn: async () => await fetchClients(),
+  });
+
+  const { data: MstIt, isLoading: isLoadingItSupports } = useQuery({
+    queryKey: ["mst-it-supports"],
+    queryFn: async () => await MstItSupport(),
   });
   const { handleSubmit, control, register, reset } = useForm();
 
@@ -89,12 +95,14 @@ export default function EditTicketPage({ params }) {
   const onSubmit = async (data) => {
     const formattedData = {
       case: data.case,
-      status: data.status,
+      status: parseInt(data.status, 10),
       jenis_ticket: data.jenis_ticket,
       kd_user_it: data.kd_user_it,
       kd_user_clients: selectedClients.map((client) => ({ name: client.name })),
-      solution : data.solution
     };
+    if (data.solution && data.solution !== "Belum Ditentukan") {
+      formattedData.solution = data.solution;
+    }
     console.log(formattedData);
     const params = data.no_ticket;
     try {
@@ -102,7 +110,12 @@ export default function EditTicketPage({ params }) {
       console.log(response);
       if (response.message?.toLowerCase().includes("successfully")) {
         setMessage("Ticket berhasil diperbarui!");
-        setTimeout(() => router.back(), 1000);
+        setTimeout(() => {
+          router.back();
+          setTimeout(() => {
+            window.location.reload(); // Reload the page
+          }, 100); // Memuat ulang halaman sebelumnya
+        }, 1000);
       } else {
         setMessage("Gagal memperbarui ticket. Silakan coba lagi.");
         console.log(response);
@@ -113,7 +126,8 @@ export default function EditTicketPage({ params }) {
     }
   };
 
-  if (isLoadingTicket || isLoadingClients) return <p>Loading...</p>;
+  if (isLoadingTicket || isLoadingClients || isLoadingItSupports)
+    return <p>Loading...</p>;
 
   return (
     <div>
@@ -189,7 +203,6 @@ export default function EditTicketPage({ params }) {
               { name: "Reject", value: 4 },
             ]}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
-          
           />
         </div>
 
@@ -201,11 +214,21 @@ export default function EditTicketPage({ params }) {
           >
             Ditangani Oleh
           </label>
-          <input
+          <SelectBase
+            name="kd_user_it"
             id="kd_user_it"
-            {...register("kd_user_it")}
+            label="Ditangani Oleh"
+            register={register}
+            defaultValues={ticketData.kd_user_it} // Pastikan ini sesuai dengan data yang Anda terima
+            options={[
+              { name: "Belum Ditetapkan", value: "" }, // Menambahkan opsi kosong
+              ...(MstIt?.map((itSupport) => ({
+                name: itSupport.name, // Ganti dengan nama yang sesuai dari data MstItSupport
+                value: itSupport.kd_user, // Ganti dengan ID yang sesuai dari data MstItSupport
+              })) || []),
+            ]}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
-            disabled={session?.user.role === 7}
+            disabled={session?.user.role === 7} // Disable jika role adalah 7
           />
         </div>
 
@@ -323,23 +346,22 @@ export default function EditTicketPage({ params }) {
         </div>
 
         {/* Nama Client Dropdown (Multiple Select) */}
-     
-          <div className="form-group">
-            <label
-              htmlFor="kd_user_client"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Nama Client
-            </label>
-            <input
-              id="kd_user_client"
-              name="kd_user_client"
-              value={selectedClients.map((client) => client.name).join(", ")} // Ambil properti 'name' dari setiap objek
-              className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
-              disabled
-            />
-          </div>
-     
+
+        <div className="form-group">
+          <label
+            htmlFor="kd_user_client"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Nama Client
+          </label>
+          <input
+            id="kd_user_client"
+            name="kd_user_client"
+            value={selectedClients.map((client) => client.name).join(", ")} // Ambil properti 'name' dari setiap objek
+            className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
+            disabled
+          />
+        </div>
 
         {/* Submit Button */}
         <div className="flex justify-center">
