@@ -30,7 +30,7 @@
     "react-dom": "^18",
     "react-files": "^3.0.0",
     "react-froala-wysiwyg": "^4.2.1",
-    "react-hook-form": "^7.51.5",
+    "react-hook-form": "^7.54.2",
     "react-spinners": "^0.13.8",
     "react-tailwindcss-datepicker": "^1.6.6",
     "recoil": "^0.7.7",
