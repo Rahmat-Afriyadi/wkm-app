@@ -11,7 +11,7 @@ export function SelectBase({ id, lable, register, name, disabled, options, requi
         {lable}
       </label>
       <select
-      required = {required}
+        required={required}
         disabled={disabled}
         {...register(name)}
         id={id}
