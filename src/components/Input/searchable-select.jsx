@@ -1,0 +1,44 @@
+import { useEffect, useState } from "react";
+
+export default function SearchableSelect({ options, name, setValue, setOpen = (e) => e }) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedOption, setSelectedOption] = useState(null);
+
+  const filteredOptions = options.filter((option) => option.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  useEffect(() => {
+    return setValue(name, selectedOption);
+  }, [selectedOption]); // eslint-disable-line
+
+  return (
+    <div className="flex flex-col items-center ">
+      <p className="text-2xl font-semibold">Searchable Select Input</p>
+      <div className="relative w-80">
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        {filteredOptions.length > 0 && (
+          <ul className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+            {filteredOptions.map((option, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  setSelectedOption(option);
+                  setSearchTerm(option); // Update search term to the selected option
+                  setOpen(false);
+                }}
+                className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
+              >
+                {option}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+}
