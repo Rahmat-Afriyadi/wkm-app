@@ -4,11 +4,11 @@ function InputGroup({ id, name, label, placeholder, value, type = "text", regist
   return (
     <>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-900">
+        <label htmlFor={id} className="block text-sm font-medium text-gray-900 cursor-pointer">
           {label}
         </label>
       )}
-      <div className="relative mt-1 rounded-md shadow-sm">
+      <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
         <input
           id={id}
           name={name}

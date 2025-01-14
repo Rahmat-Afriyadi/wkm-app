@@ -257,7 +257,6 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
                 <InputBase name={"kodepos2"} lable={"Kodepos"} id={"kodepos2"} register={register} disabled={true} />
               </div>
             </div>
-
             <div
               className={`${tab == 2 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-2 md:gap-x-4`}
               id="styled-profile"

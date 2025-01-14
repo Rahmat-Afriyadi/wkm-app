@@ -2,17 +2,18 @@
 
 import { useState } from "react";
 
-export default function RadioButtonComponent({ options = [], name }) {
+export default function RadioButtonComponent({ options = [], name, setValue, label }) {
   const [selectedOption, setSelectedOption] = useState("");
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);
+    setValue(name, event.target.value);
   };
 
   return (
-    <div className="w-full mx-auto">
-      <h1 className="text-md font-bold">{name}</h1>
-      <div className="flex gap-3 p-2 bg-gray-300 rounded-md justify-center">
+    <div className="w-full mx-auto -mt-1">
+      <h1 className="">{label}</h1>
+      <div className="flex gap-3 px-2 py-1 border-2 border-gray-300 rounded-md justify-start">
         {options &&
           options.map((e) => {
             return (

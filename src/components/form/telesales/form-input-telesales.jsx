@@ -8,18 +8,21 @@ import { Form, useForm } from "react-hook-form";
 import SelectGroup from "@/components/Input/select-group";
 import { ArrowDownCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import DrawerCenter from "@/components/drawer/drawer-center";
+import Drawer from "@/components/drawer/drawer";
 import { masterKodepos } from "@/server/kodepos/master-kodepos";
 import { masterAktifJual } from "@/server/master/aktif-jual";
+import { masterProdukAsuransi } from "@/server/master/produk-asuransi";
 import { useQuery } from "@tanstack/react-query";
+import TableProdukAsuransi from "./table-produk-asuransi";
 
-export default function FormInputTelesales() {
+export default function FormInputTelesales({ isEditing = false }) {
   const {
     register,
     setValue,
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({ defaultValues: isEditing ? {} : { kirim_ke: 1 } });
 
   const onSubmit = (data) => {
     console.log(data);
@@ -27,20 +30,27 @@ export default function FormInputTelesales() {
 
   const [openAlamat, setOpenAlamat] = useState(false);
   const [openKodepos, setOpenKodepos] = useState(false);
+  const [openProdukAsuransi, setOpenProdukAsuransi] = useState(false);
+
+  const [menuTab, setMenuTab] = useState(1);
+  const [asuransiTypeTab, setAsuransiTypeTab] = useState(1);
+  const kirimKe = watch("kirim_ke");
 
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
     queryFn: async () => await masterKodepos(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
-
   const { data: aktifJual } = useQuery({
     queryKey: ["aktif-jual"],
     queryFn: async () => await masterAktifJual(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
-
-  console.log("ini data ", aktifJual.data);
+  const { data: produkAsuransi } = useQuery({
+    queryKey: ["produk-asuransi"],
+    queryFn: async () => await masterProdukAsuransi(1),
+    initialData: { data: [{ id: "", nama: "", rate: 0 }] },
+  });
 
   const selectedKodepos = watch("kodepos");
 
@@ -62,7 +72,18 @@ export default function FormInputTelesales() {
             <SearchableSelect options={kodepos?.data} name={"kodepos"} setValue={setValue} setOpen={setOpenKodepos} />
           </div>
         </DrawerCenter>
-
+        <Drawer open={openProdukAsuransi} setOpen={setOpenProdukAsuransi}>
+          <TableProdukAsuransi
+            options={produkAsuransi.data}
+            handleChange={(e) => {
+              console.log("ini item yaa ", e);
+              setValue("id_produk_asuransi", e.kd_produk);
+              setValue("nm_produk_asuransi", e.nm_produk);
+              setValue("nm_vendor", e.vendor.nm_vendor);
+              setOpenProdukAsuransi(false);
+            }}
+          />
+        </Drawer>
         <div className="col-span-1">
           <p className="text-lg font-bold mb-3">Faktur</p>
           <div className="grid grid-cols-8 gap-3">
@@ -352,8 +373,7 @@ export default function FormInputTelesales() {
             <div className="col-span-1"></div>
           </div>
         </div>
-
-        <div className="col-span-1">
+        <div className="col-span-1 ">
           <p className="text-lg font-bold mb-3">WKM</p>
           <div className="grid grid-cols-8 gap-3">
             <div className="col-span-3">
@@ -574,16 +594,37 @@ export default function FormInputTelesales() {
             </div>
           </div>
         </div>
-
-        <br />
-
-        <div className="col-span-2">
-          <div className="grid grid-cols-3">
+        <div className="col-span-1 mt-8">
+          <div className="grid grid-cols-8">
+            <div className="col-span-7 grid grid-cols-2 border-2 rounded-md border-yellow overflow-hidden">
+              <div
+                onClick={() => setMenuTab(1)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  menuTab == 1 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>Membership</p>
+              </div>
+              <div
+                onClick={() => setMenuTab(2)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  menuTab == 2 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>Asuransi</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={`col-span-2 py-5 ${menuTab != 1 ? "hidden" : ""}`}>
+          <div className="grid grid-cols-3 ">
             <div className="col-span-3">
-              <div className="grid grid-cols-12">
+              <div className="grid grid-cols-12 gap-3">
                 <div className="col-span-3">
                   <RadioButtonComponent
-                    name={"Status Membership"}
+                    setValue={setValue}
+                    label={"Status Membership"}
+                    name={"sts_membership"}
                     options={[
                       { name: "Oke", value: "O" },
                       { name: "Pending", value: "P" },
@@ -592,7 +633,329 @@ export default function FormInputTelesales() {
                     ]}
                   />
                 </div>
+                <div className="col-span-2">
+                  <SelectGroup
+                    name={"jns_membership"}
+                    label={"Produk"}
+                    id={"jns_membership"}
+                    register={register}
+                    disabled={false}
+                    options={[{ name: "", value: "" }]}
+                    errors={errors}
+                  />
+                </div>
+                <div className="col-span-7 bg-gray-300 row-span-4"></div>
+                <div className="col-span-2">
+                  <SelectGroup
+                    name={"alasan_tdk_membership"}
+                    label={"Alasan"}
+                    id={"alasan_tdk_membership"}
+                    register={register}
+                    disabled={false}
+                    options={[{ name: "", value: "" }]}
+                    errors={errors}
+                  />
+                </div>
+                <div className="col-span-1"></div>
+                <div className="col-span-2">
+                  <SelectGroup
+                    name={"kd_promo_transfer"}
+                    label={"Promo Transfer"}
+                    id={"kd_promo_transfer"}
+                    register={register}
+                    disabled={false}
+                    options={[{ name: "", value: "" }]}
+                    errors={errors}
+                  />
+                </div>
+                {/* <div className="col-span-7"></div> */}
+                <div className="col-span-3">
+                  <RadioButtonComponent
+                    setValue={setValue}
+                    label={"Status"}
+                    name="jns_bayar"
+                    options={[
+                      { name: "Cash", value: "C" },
+                      { name: "Transfer", value: "T" },
+                      { name: "QR", value: "Q" },
+                      { name: "Etc", value: "0" },
+                    ]}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <InputGroup
+                    name={"tgl_janji_bayar"}
+                    label={"Tanggal Bayar"}
+                    id={"tgl_janji_bayar"}
+                    register={register}
+                    disabled={false}
+                    errors={errors}
+                    type="date"
+                  />
+                </div>
+                {/* <div className="col-span-7"></div> */}
+                <div className="col-span-3">
+                  <RadioButtonComponent
+                    setValue={setValue}
+                    label={"Kirim ke"}
+                    name="kirim_ke"
+                    options={[
+                      { name: "Rumah", value: "1" },
+                      { name: "Kantor", value: "2" },
+                      { name: "ADC", value: "3" },
+                    ]}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <RadioButtonComponent
+                    setValue={setValue}
+                    label={"Tipe Kartu"}
+                    name={"type_kartu"}
+                    options={[
+                      { name: "Fisik", value: "F" },
+                      { name: "E-Card", value: "E" },
+                    ]}
+                  />
+                </div>
               </div>
+            </div>
+          </div>
+        </div>
+        <div className={`col-span-2 py-5 ${menuTab != 1 ? "hidden" : ""}`}>
+          <div
+            className={`${kirimKe == 2 ? "" : "hidden"} grid grid-cols-12 gap-x-2 md:gap-x-4`}
+            id="styled-profile"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+          >
+            <div className="col-span-12 mt-1 mb-3">
+              <p className="py-2 px-4 rounded-md border-2 border-gray-300 font-bold inline-block">Kantor</p>
+            </div>
+            <div className="col-span-6">
+              <InputGroup
+                errors={errors}
+                name={"kerja_di"}
+                label={"Nama PT"}
+                id={"kerja_di"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6">
+              <InputGroup
+                errors={errors}
+                label={"Alamat Kantor"}
+                name={"alamat_ktr_fkt"}
+                id={"Alamat Kantor"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kota_ktr_fkt"}
+                label={"Kota"}
+                id={"kota_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kec_ktr_fkt"}
+                label={"Kecamatan"}
+                id={"kec_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kel_ktr_fkt"}
+                label={"Kelurahan"}
+                id={"kel_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"rw_ktr_fkt"}
+                label={"RW"}
+                id={"rw_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"rt_ktr_fkt"}
+                label={"RT"}
+                id={"rt_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kodepos_ktr_fkt"}
+                label={"Kodepos"}
+                id={"kodepos_ktr_fkt"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+          </div>
+          <div
+            className={`${kirimKe == 3 ? "" : "hidden"} grid grid-cols-12 gap-x-4`}
+            id="styled-profile"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+          >
+            <div className="col-span-12 mt-1 mb-3">
+              <p className="py-2 px-4 rounded-md border-2 border-gray-300 font-bold inline-block">AHAS</p>
+            </div>
+            <div className="col-span-6">
+              <InputGroup
+                errors={errors}
+                name={"alamat_srt12"}
+                label={"Nama PT"}
+                id={"alamat_srt12"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6">
+              <InputGroup
+                errors={errors}
+                name={"alamat_srt11"}
+                label={"Alamat"}
+                id={"alamat_srt11"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kota_srt1"}
+                label={"Kota"}
+                id={"kota_srt1"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kec_srt1"}
+                label={"Kecamatan"}
+                id={"kec_srt1"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kel_srt1"}
+                label={"Kelurahan"}
+                id={"kel_srt1"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputGroup
+                errors={errors}
+                name={"kodepos_srt1"}
+                label={"Kodepos"}
+                id={"kodepos_srt1"}
+                register={register}
+                disabled={false}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="col-span-1"></div>
+        <div className={`col-span-1 mt-4 ${menuTab != 2 ? "hidden" : ""}`}>
+          <div className="grid grid-cols-8">
+            <div className="col-span-7 grid grid-cols-2 border-2 rounded-md border-yellow overflow-hidden">
+              <div
+                onClick={() => setAsuransiTypeTab(1)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  asuransiTypeTab == 1 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>PA</p>
+              </div>
+              <div
+                onClick={() => setAsuransiTypeTab(2)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  asuransiTypeTab == 2 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>Motor</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="col-span-1"></div>
+        <div className="col-span-2 mt-5 mb-2">
+          <div className="grid grid-cols-4 gap-3">
+            <div className="col-span-1">
+              <RadioButtonComponent
+                setValue={setValue}
+                label={"Status Asuransi PA"}
+                name={"sts_asuransi_pa"}
+                options={[
+                  { name: "Oke", value: "O" },
+                  { name: "Pending", value: "P" },
+                  { name: "Tidak", value: "T" },
+                  { name: "Pros", value: "F" },
+                ]}
+              />
+            </div>
+            <div className="col-span-1">
+              <label htmlFor={"id_produk"} className="block text-sm font-medium text-gray-900 cursor-pointer">
+                {"Id Produk"}
+              </label>
+              <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
+                <input
+                  readOnly
+                  onClick={() => setOpenProdukAsuransi(true)}
+                  id={"id_produk"}
+                  placeholder="Id Produk"
+                  {...register("id_produk_asuransi")}
+                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
+                />
+              </div>
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"nm_vendor"}
+                label={"Nama Vendor"}
+                id={"nm_vendor"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"nm_produk_asuransi"}
+                label={"Nama Produk"}
+                id={"nm_produk_asuransi"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
             </div>
           </div>
         </div>
