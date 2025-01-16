@@ -11,7 +11,7 @@ export default function RadioButtonComponent({ options = [], name, setValue, lab
   };
 
   return (
-    <div className="w-full mx-auto -mt-1">
+    <div className="w-full mx-auto ">
       <h1 className="">{label}</h1>
       <div className="flex gap-3 px-2 py-1 border-2 border-gray-300 rounded-md justify-start">
         {options &&

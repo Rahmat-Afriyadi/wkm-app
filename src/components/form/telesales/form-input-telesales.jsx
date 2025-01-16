@@ -16,6 +16,7 @@ import { useQuery } from "@tanstack/react-query";
 import TableProdukAsuransi from "./table-produk-asuransi";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
+  console.log(defaultValues.tgl_lahir_fkt);
   const {
     register,
     setValue,
@@ -419,12 +420,22 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1 flex items-end">
-              <button
-                onClick={() => setOpenKetTelp1(true)}
-                className="w-full  h-9 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-              >
-                <ArrowDownCircleIcon className="h-6 w-6 ml-1" />
-              </button>
+              <SelectGroup
+                name={"ket_wa_info"}
+                id={"ket_wa_info"}
+                register={register}
+                disabled={false}
+                options={[
+                  { name: "1", value: "1" },
+                  { name: "2", value: "2" },
+                  { name: "4", value: "4" },
+                  { name: "5", value: "5" },
+                  { name: "6", value: "6" },
+                  { name: "7", value: "7" },
+                  { name: "8", value: "8" },
+                ]}
+                errors={errors}
+              />
             </div>
             <div className="col-span-3">
               <InputGroup
@@ -580,13 +591,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer">
-              <button
-                onClick={() => setOpenKetTelp1(true)}
-                className="w-full  h-9 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-              >
-                <p>X</p>
-                <ArrowDownCircleIcon className="h-6 w-6 ml-1" />
-              </button>
+              <SelectGroup
+                name={"ket_no_telp_wkm"}
+                id={"ket_no_telp_wkm"}
+                register={register}
+                disabled={false}
+                options={[{ name: "", value: "" }]}
+                errors={errors}
+              />
             </div>
             <div className="col-span-3"></div>
             <div className="col-span-1"></div>
@@ -646,11 +658,34 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
           </div>
         </div>
+        <div className={`col-span-1 mt-8 ${menuTab != 2 ? "hidden" : ""}`}>
+          <div className="grid grid-cols-8">
+            <div className="col-span-7 grid grid-cols-2 border-2 rounded-md border-yellow overflow-hidden">
+              <div
+                onClick={() => setAsuransiTypeTab(1)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  asuransiTypeTab == 1 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>PA</p>
+              </div>
+              <div
+                onClick={() => setAsuransiTypeTab(2)}
+                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
+                  asuransiTypeTab == 2 ? "bg-yellow" : ""
+                }`}
+              >
+                <p>Motor</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className={`col-span-2 py-5 ${menuTab != 1 ? "hidden" : ""}`}>
           <div className="grid grid-cols-3 ">
             <div className="col-span-3">
               <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-3">
+                <div className="col-span-3 -mt-1">
                   <RadioButtonComponent
                     setValue={setValue}
                     label={"Status Membership"}
@@ -913,31 +948,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
           </div>
         </div>
+
         <div className="col-span-1"></div>
-        <div className={`col-span-1 mt-4 ${menuTab != 2 ? "hidden" : ""}`}>
-          <div className="grid grid-cols-8">
-            <div className="col-span-7 grid grid-cols-2 border-2 rounded-md border-yellow overflow-hidden">
-              <div
-                onClick={() => setAsuransiTypeTab(1)}
-                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
-                  asuransiTypeTab == 1 ? "bg-yellow" : ""
-                }`}
-              >
-                <p>PA</p>
-              </div>
-              <div
-                onClick={() => setAsuransiTypeTab(2)}
-                className={`col-span-1 flex justify-center cursor-pointer p-2 font-bold ${
-                  asuransiTypeTab == 2 ? "bg-yellow" : ""
-                }`}
-              >
-                <p>Motor</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="col-span-1"></div>
-        <div className="col-span-2 mt-5 mb-2">
+        <div className={`col-span-2 mt-5 mb-2 ${asuransiTypeTab == 1 && menuTab == 2 ? "" : "hidden"}`}>
           <div className="grid grid-cols-4 gap-3">
             <div className="col-span-1">
               <RadioButtonComponent
@@ -985,6 +998,102 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 register={register}
                 disabled={true}
                 errors={errors}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className={`col-span-2 mt-5 mb-2 ${asuransiTypeTab == 2 && menuTab == 2 ? "" : "hidden"}`}>
+          <div className="grid grid-cols-4 gap-3">
+            <div className="col-span-1">
+              <RadioButtonComponent
+                setValue={setValue}
+                label={"Status Asuransi Motor"}
+                name={"sts_asuransi_mtr"}
+                options={[
+                  { name: "Oke", value: "O" },
+                  { name: "Pending", value: "P" },
+                  { name: "Tidak", value: "T" },
+                  { name: "Pros", value: "F" },
+                ]}
+              />
+            </div>
+            <div className="col-span-1">
+              <label htmlFor={"id_produk"} className="block text-sm font-medium text-gray-900 cursor-pointer">
+                {"Id Produk"}
+              </label>
+              <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
+                <input
+                  readOnly
+                  onClick={() => setOpenProdukAsuransi(true)}
+                  id={"id_produk"}
+                  placeholder="Id Produk"
+                  {...register("id_produk_asuransi")}
+                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
+                />
+              </div>
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"nm_vendor"}
+                label={"Nama Vendor"}
+                id={"nm_vendor"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"nm_produk_asuransi"}
+                label={"Nama Produk"}
+                id={"nm_produk_asuransi"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"asuransi_mtr_nm_motor"}
+                label={"Nama Motor"}
+                id={"asuransi_mtr_nm_motor"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"asuransi_mtr_no_mtr"}
+                label={"Nomor Motor"}
+                placeholder={"Nomor Motor"}
+                id={"asuransi_mtr_no_mtr"}
+                register={register}
+                disabled={false}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"asuransi_mtr_tahun"}
+                label={"Tahun"}
+                id={"asuransi_mtr_tahun"}
+                register={register}
+                disabled={false}
+                errors={errors}
+                type="number"
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"asuransi_mtr_otr"}
+                label={"OTR"}
+                id={"asuransi_mtr_otr"}
+                register={register}
+                disabled={false}
+                errors={errors}
+                type="number"
               />
             </div>
           </div>

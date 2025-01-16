@@ -16,7 +16,8 @@ export default function Page({ params, searchParams }) {
   if (isLoading) {
     return "Loading...";
   }
-  faktur.data.tgl_lahir_fkt = faktur.data.tgl_lahir_fkt.substring(0, 10);
+  faktur.data.tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt?.substring(0, 10);
+  faktur.data.tgl_faktur = faktur.data?.tgl_faktur?.substring(0, 10);
 
   return <FormInputTelesales defaultValues={faktur.data} isEditing={true} />;
 }
