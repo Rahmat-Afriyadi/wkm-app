@@ -7,6 +7,5 @@ export const masterAktifJual = async () => {
   if (data.status == 200) {
     res.data = data.data;
   }
-  console.log("ini aktif jual ", res.data);
   return res;
 };

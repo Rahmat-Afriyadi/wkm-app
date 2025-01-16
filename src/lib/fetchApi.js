@@ -3,8 +3,9 @@
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../app/api/auth/[...nextauth]/route";
-const BASE_URL = "http://localhost:3001";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_API;
 const BASE_URL_MOKITA = "https://api-ahass.wahanahonda.com";
+
 export async function refreshToken(refreshToken) {
   const res = await fetch(BASE_URL + "/auth/refresh-token", {
     method: "POST",
@@ -47,7 +48,6 @@ export async function AuthGetApi(url) {
         Authorization: `Bearer ${session?.user.accessToken}`,
       },
     });
-    // return await res.json();
   }
   return await res.json();
 }

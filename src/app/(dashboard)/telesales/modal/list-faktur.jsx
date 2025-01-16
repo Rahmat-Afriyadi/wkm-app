@@ -6,9 +6,8 @@ import Modal from "@/components/Modal/index";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 
-export default function ModalListAsuransi({ children }) {
+export default function ModalListFaktur({ children }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: session } = useSession();
 
   function resetModal() {
     setIsModalOpen(false);
@@ -24,7 +23,7 @@ export default function ModalListAsuransi({ children }) {
         <AdjustmentsHorizontalIcon className="w-6 h-5" aria-hidden="true" />
       </button>
 
-      <Modal isModalOpen={isModalOpen} setIsModalOpen={resetModal} title="List Asuransi">
+      <Modal isModalOpen={isModalOpen} setIsModalOpen={resetModal} title="List Data">
         <div className="grid grid-cols-1 mt-6 gap-y-6 gap-x-4">{children}</div>
       </Modal>
     </>

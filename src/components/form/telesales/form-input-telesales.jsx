@@ -15,26 +15,29 @@ import { masterProdukAsuransi } from "@/server/master/produk-asuransi";
 import { useQuery } from "@tanstack/react-query";
 import TableProdukAsuransi from "./table-produk-asuransi";
 
-export default function FormInputTelesales({ isEditing = false }) {
+export default function FormInputTelesales({ defaultValues, isEditing = false }) {
   const {
     register,
     setValue,
     watch,
+    reset,
     handleSubmit,
     formState: { errors },
-  } = useForm({ defaultValues: isEditing ? {} : { kirim_ke: 1 } });
+  } = useForm({ defaultValues: isEditing ? defaultValues : {} });
 
   const onSubmit = (data) => {
     console.log(data);
   };
 
-  const [openAlamat, setOpenAlamat] = useState(false);
+  useEffect(() => {
+    return reset(defaultValues);
+  }, [defaultValues]); // eslint-disable-line
+
   const [openKodepos, setOpenKodepos] = useState(false);
   const [openProdukAsuransi, setOpenProdukAsuransi] = useState(false);
 
   const [menuTab, setMenuTab] = useState(1);
   const [asuransiTypeTab, setAsuransiTypeTab] = useState(1);
-  const kirimKe = watch("kirim_ke");
 
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
@@ -52,6 +55,8 @@ export default function FormInputTelesales({ isEditing = false }) {
     initialData: { data: [{ id: "", nama: "", rate: 0 }] },
   });
 
+  const kirimKe = watch("kirim_ke");
+  const ketNmWkm = watch("ket_nm_wkm");
   const selectedKodepos = watch("kodepos");
 
   useEffect(() => {
@@ -63,6 +68,12 @@ export default function FormInputTelesales({ isEditing = false }) {
       setValue("kota_wkm", fillKodepos[0]);
     }
   }, [selectedKodepos]); // eslint-disable-line
+
+  useEffect(() => {
+    if (ketNmWkm == 1) {
+      setValue("nm_customer_wkm", watch("nm_customer_fkt"));
+    }
+  }, [ketNmWkm]); // eslint-disable-line
 
   return (
     <>
@@ -76,7 +87,6 @@ export default function FormInputTelesales({ isEditing = false }) {
           <TableProdukAsuransi
             options={produkAsuransi.data}
             handleChange={(e) => {
-              console.log("ini item yaa ", e);
               setValue("id_produk_asuransi", e.kd_produk);
               setValue("nm_produk_asuransi", e.nm_produk);
               setValue("nm_vendor", e.vendor.nm_vendor);
@@ -382,15 +392,26 @@ export default function FormInputTelesales({ isEditing = false }) {
                 label={"Nama Customer"}
                 id={"nm_customer_wkm"}
                 register={register}
-                disabled={false}
+                disabled={ketNmWkm == 1}
                 errors={errors}
               />
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
+            <div className="col-span-1 flex items-end justify-center cursor-pointer">
+              <SelectGroup
+                name="ket_nm_wkm"
+                id="ket_nm_wkm"
+                errors={errors}
+                register={register}
+                options={[
+                  { name: "0", value: "" },
+                  { name: "1", value: "1" },
+                ]}
+              />
+            </div>
             <div className="col-span-3">
               <InputGroup
                 name={"no_info"}
-                label={"Nomor Into"}
+                label={"Nomor Info"}
                 id={"no_info"}
                 register={register}
                 disabled={false}
@@ -402,7 +423,6 @@ export default function FormInputTelesales({ isEditing = false }) {
                 onClick={() => setOpenKetTelp1(true)}
                 className="w-full  h-9 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
               >
-                <p>X</p>
                 <ArrowDownCircleIcon className="h-6 w-6 ml-1" />
               </button>
             </div>
@@ -470,13 +490,14 @@ export default function FormInputTelesales({ isEditing = false }) {
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
             <div className="col-span-3">
-              <SelectGroup
-                name="kd_aktivitas_jual_membership"
-                id="kd_aktivitas_jual_membership"
-                label={"Aktivitas Jual"}
-                errors={errors}
+              <InputGroup
+                name={"tgl_lahir_wkm"}
+                label={"Tanggal Lahir"}
+                id={"tgl_lahir_wkm"}
                 register={register}
-                options={aktifJual.data}
+                disabled={false}
+                errors={errors}
+                type="date"
               />
             </div>
             <div className="col-span-1 flex items-end"></div>
@@ -498,7 +519,16 @@ export default function FormInputTelesales({ isEditing = false }) {
                 <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
               </button>
             </div>
-            <div className="col-span-3"></div>
+            <div className="col-span-3">
+              <SelectGroup
+                name="kd_aktivitas_jual_membership"
+                id="kd_aktivitas_jual_membership"
+                label={"Aktivitas Jual"}
+                errors={errors}
+                register={register}
+                options={aktifJual.data}
+              />
+            </div>
             <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
               <InputGroup
