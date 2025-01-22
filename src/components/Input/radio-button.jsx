@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-export default function RadioButtonComponent({ options = [], name, setValue, label }) {
-  const [selectedOption, setSelectedOption] = useState("");
+export default function RadioButtonComponent({ options = [], name, setValue, label, defaultValue }) {
+  const [selectedOption, setSelectedOption] = useState(defaultValue);
 
   const handleChange = (event) => {
     setSelectedOption(event.target.value);

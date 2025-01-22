@@ -12,11 +12,15 @@ import Drawer from "@/components/drawer/drawer";
 import { masterKodepos } from "@/server/kodepos/master-kodepos";
 import { masterAktifJual } from "@/server/master/aktif-jual";
 import { masterProdukAsuransi } from "@/server/master/produk-asuransi";
-import { useQuery } from "@tanstack/react-query";
+import { masterAgama } from "@/server/master/agama";
+import { masterPendidikan } from "@/server/master/pendidikan";
+import { masterKeluarBulan } from "@/server/master/keluar-bulan";
+import { masterTujuanPakai } from "@/server/master/tujuan-pakai";
+import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
+import { Query, useQuery, useQueryClient } from "@tanstack/react-query";
 import TableProdukAsuransi from "./table-produk-asuransi";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
-  console.log(defaultValues.tgl_lahir_fkt);
   const {
     register,
     setValue,
@@ -26,13 +30,15 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     formState: { errors },
   } = useForm({ defaultValues: isEditing ? defaultValues : {} });
 
+  const kirimKe = watch("kirim_ke");
+  const ketNmWkm = watch("ket_nm_wkm");
+  const selectedKodepos = watch("kodepos");
+  const noMtr = watch("no_mtr");
+  const tahunMtr = watch("asuransi_mtr_tahun");
+
   const onSubmit = (data) => {
     console.log(data);
   };
-
-  useEffect(() => {
-    return reset(defaultValues);
-  }, [defaultValues]); // eslint-disable-line
 
   const [openKodepos, setOpenKodepos] = useState(false);
   const [openProdukAsuransi, setOpenProdukAsuransi] = useState(false);
@@ -40,6 +46,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const [menuTab, setMenuTab] = useState(1);
   const [asuransiTypeTab, setAsuransiTypeTab] = useState(1);
 
+  const queryCLient = useQueryClient();
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
     queryFn: async () => await masterKodepos(),
@@ -50,15 +57,36 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     queryFn: async () => await masterAktifJual(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
+  const { data: pendidikan } = useQuery({
+    queryKey: ["pendidikan"],
+    queryFn: async () => await masterPendidikan(),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: agama } = useQuery({
+    queryKey: ["agama"],
+    queryFn: async () => await masterAgama(),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: keluarBln } = useQuery({
+    queryKey: ["keluar-bulan"],
+    queryFn: async () => await masterKeluarBulan(),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: tujuPak } = useQuery({
+    queryKey: ["tujuan-pakai"],
+    queryFn: async () => await masterTujuanPakai(),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
   const { data: produkAsuransi } = useQuery({
     queryKey: ["produk-asuransi"],
     queryFn: async () => await masterProdukAsuransi(1),
     initialData: { data: [{ id: "", nama: "", rate: 0 }] },
   });
-
-  const kirimKe = watch("kirim_ke");
-  const ketNmWkm = watch("ket_nm_wkm");
-  const selectedKodepos = watch("kodepos");
+  const { data: detailOtr } = useQuery({
+    queryKey: ["detail-otr-no-mtr", noMtr, tahunMtr],
+    queryFn: async () => await detailOtrNoMtr({ no_mtr: noMtr, tahun: parseInt(tahunMtr, 10) }),
+    initialData: { data: { id: "", otr: 0, tahun: 0, no_mtr: "" } },
+  });
 
   useEffect(() => {
     if (selectedKodepos) {
@@ -71,10 +99,22 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [selectedKodepos]); // eslint-disable-line
 
   useEffect(() => {
+    if (!isEditing) {
+      reset();
+    } else if (defaultValues && pendidikan && agama && keluarBln && tujuPak) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, pendidikan, agama, keluarBln, tujuPak]); // eslint-disable-line
+
+  useEffect(() => {
     if (ketNmWkm == 1) {
       setValue("nm_customer_wkm", watch("nm_customer_fkt"));
     }
   }, [ketNmWkm]); // eslint-disable-line
+
+  useEffect(() => {
+    setValue("asuransi_mtr_otr", detailOtr.data.otr);
+  }, [detailOtr]); // eslint-disable-line
 
   return (
     <>
@@ -95,6 +135,20 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             }}
           />
         </Drawer>
+        <div className="col-span-2 -mt-10 mb-2">
+          <div className="grid grid-cols-2">
+            <div className="col-span-1"></div>
+            <div className="col-span-1">
+              <button
+                id="button"
+                type="submit"
+                className="w-full px-6 py-1 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+              >
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
         <div className="col-span-1">
           <p className="text-lg font-bold mb-3">Faktur</p>
           <div className="grid grid-cols-8 gap-3">
@@ -256,7 +310,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Agama"}
                 id={"agama_fkt"}
                 register={register}
-                options={[{ name: "", value: "" }]}
+                options={agama.data}
                 disabled={true}
                 errors={errors}
               />
@@ -307,7 +361,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 register={register}
                 disabled={true}
                 errors={errors}
-                options={[{ name: "", value: "" }]}
+                options={pendidikan.data}
               />
             </div>
             <div className="col-span-1"></div>
@@ -353,7 +407,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Pengeluaran"}
                 id={"keluar_bln_fkt"}
                 register={register}
-                options={[{ name: "", value: "" }]}
+                options={keluarBln.data}
                 disabled={true}
                 errors={errors}
               />
@@ -361,13 +415,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-1"></div>
 
             <div className="col-span-3">
-              <InputGroup
+              <SelectGroup
                 name={"tujuan_pakai_fkt"}
                 label={"Tujuan Pakai"}
                 id={"tujuan_pakai_fkt"}
                 register={register}
                 disabled={true}
                 errors={errors}
+                options={tujuPak.data}
               />
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
@@ -626,13 +681,23 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer">
-              <button
-                onClick={() => setOpenKetTelp1(true)}
-                className="w-full  h-9 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-              >
-                <p>X</p>
-                <ArrowDownCircleIcon className="h-6 w-6 ml-1" />
-              </button>
+              <SelectGroup
+                name={"ket_no_telp_wkm"}
+                id={"ket_no_telp_wkm"}
+                register={register}
+                disabled={false}
+                options={[
+                  { name: "0", value: "0" },
+                  { name: "1", value: "1" },
+                  { name: "2", value: "2" },
+                  { name: "3", value: "3" },
+                  { name: "4", value: "4" },
+                  { name: "6", value: "6" },
+                  { name: "7", value: "7" },
+                  { name: "X", value: "X" },
+                ]}
+                errors={errors}
+              />
             </div>
           </div>
         </div>
@@ -689,6 +754,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   <RadioButtonComponent
                     setValue={setValue}
                     label={"Status Membership"}
+                    defaultValue={watch("sts_membership")}
                     name={"sts_membership"}
                     options={[
                       { name: "Oke", value: "O" },
@@ -753,7 +819,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     label={"Tanggal Bayar"}
                     id={"tgl_janji_bayar"}
                     register={register}
-                    disabled={false}
+                    disabled={!(watch("sts_membership") == "O")}
                     errors={errors}
                     type="date"
                   />
@@ -1055,9 +1121,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"asuransi_mtr_nm_motor"}
+                name={"nm_mtr"}
                 label={"Nama Motor"}
-                id={"asuransi_mtr_nm_motor"}
+                id={"nm_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1065,10 +1131,10 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"asuransi_mtr_no_mtr"}
+                name={"no_mtr"}
                 label={"Nomor Motor"}
                 placeholder={"Nomor Motor"}
-                id={"asuransi_mtr_no_mtr"}
+                id={"no_mtr"}
                 register={register}
                 disabled={false}
                 errors={errors}
