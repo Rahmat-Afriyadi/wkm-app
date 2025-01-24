@@ -17,14 +17,14 @@ export default function RadioButtonComponent({ options = [], name, setValue, lab
         {options &&
           options.map((e) => {
             return (
-              <label key={e.value + "sts_membership"} className="flex items-center gap-1 cursor-pointer">
+              <label key={e.value} className="flex items-center gap-1 cursor-pointer">
                 <input
                   type="radio"
-                  name="options"
+                  name={name}
                   value={e.value}
                   checked={selectedOption === e.value}
                   onChange={handleChange}
-                  className="w-4 h-4 text-blue-500 border-gray-300 focus:ring-blue-500 cursor-pointer"
+                  className="w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 cursor-pointer"
                 />
                 <span className="text-gray-700">{e.name}</span>
               </label>

@@ -9,6 +9,9 @@ import SelectGroup from "@/components/Input/select-group";
 import { ArrowDownCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import DrawerCenter from "@/components/drawer/drawer-center";
 import Drawer from "@/components/drawer/drawer";
+import { Query, useQuery, useQueryClient } from "@tanstack/react-query";
+import TableProdukAsuransi from "./table-produk-asuransi";
+
 import { masterKodepos } from "@/server/kodepos/master-kodepos";
 import { masterAktifJual } from "@/server/master/aktif-jual";
 import { masterProdukAsuransi } from "@/server/master/produk-asuransi";
@@ -16,9 +19,9 @@ import { masterAgama } from "@/server/master/agama";
 import { masterPendidikan } from "@/server/master/pendidikan";
 import { masterKeluarBulan } from "@/server/master/keluar-bulan";
 import { masterTujuanPakai } from "@/server/master/tujuan-pakai";
+import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership";
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
-import { Query, useQuery, useQueryClient } from "@tanstack/react-query";
-import TableProdukAsuransi from "./table-produk-asuransi";
+import ModalMotor from "@/components/Modal/mtr/modal-mtr";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
   const {
@@ -33,7 +36,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const kirimKe = watch("kirim_ke");
   const ketNmWkm = watch("ket_nm_wkm");
   const selectedKodepos = watch("kodepos");
-  const noMtr = watch("no_mtr");
+  const noMtrAsuransi = watch("asuransi_no_mtr");
   const tahunMtr = watch("asuransi_mtr_tahun");
 
   const onSubmit = (data) => {
@@ -41,7 +44,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   };
 
   const [openKodepos, setOpenKodepos] = useState(false);
-  const [openProdukAsuransi, setOpenProdukAsuransi] = useState(false);
+  const [openMstMtr, setOpenMstMtr] = useState(false);
+  const [openProdukAsuransiPa, setOpenProdukAsuransiPa] = useState(false);
+  const [openProdukAsuransiMtr, setOpenProdukAsuransiMtr] = useState(false);
 
   const [menuTab, setMenuTab] = useState(1);
   const [asuransiTypeTab, setAsuransiTypeTab] = useState(1);
@@ -50,6 +55,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
     queryFn: async () => await masterKodepos(),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: alasanTdkMembership } = useQuery({
+    queryKey: ["alasan-tdk-membership"],
+    queryFn: async () => await masterAlasanTdkMembership(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
   const { data: aktifJual } = useQuery({
@@ -77,14 +87,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     queryFn: async () => await masterTujuanPakai(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
-  const { data: produkAsuransi } = useQuery({
-    queryKey: ["produk-asuransi"],
+  const { data: produkAsuransiMtr } = useQuery({
+    queryKey: ["produk-asuransi-mtr"],
     queryFn: async () => await masterProdukAsuransi(1),
     initialData: { data: [{ id: "", nama: "", rate: 0 }] },
   });
+  const { data: produkAsuransiPa } = useQuery({
+    queryKey: ["produk-asuransi-pa"],
+    queryFn: async () => await masterProdukAsuransi(2),
+    initialData: { data: [{ id: "", nama: "", rate: 0 }] },
+  });
   const { data: detailOtr } = useQuery({
-    queryKey: ["detail-otr-no-mtr", noMtr, tahunMtr],
-    queryFn: async () => await detailOtrNoMtr({ no_mtr: noMtr, tahun: parseInt(tahunMtr, 10) }),
+    queryKey: ["detail-otr-no-mtr", noMtrAsuransi, tahunMtr],
+    queryFn: async () => await detailOtrNoMtr({ no_mtr: noMtrAsuransi, tahun: parseInt(tahunMtr, 10) }),
     initialData: { data: { id: "", otr: 0, tahun: 0, no_mtr: "" } },
   });
 
@@ -124,18 +139,39 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <SearchableSelect options={kodepos?.data} name={"kodepos"} setValue={setValue} setOpen={setOpenKodepos} />
           </div>
         </DrawerCenter>
-        <Drawer open={openProdukAsuransi} setOpen={setOpenProdukAsuransi}>
+        <Drawer open={openProdukAsuransiPa} setOpen={setOpenProdukAsuransiPa}>
           <TableProdukAsuransi
-            options={produkAsuransi.data}
+            options={produkAsuransiPa.data}
             handleChange={(e) => {
-              setValue("id_produk_asuransi", e.kd_produk);
-              setValue("nm_produk_asuransi", e.nm_produk);
-              setValue("nm_vendor", e.vendor.nm_vendor);
-              setOpenProdukAsuransi(false);
+              setValue("id_produk_asuransi_pa", e.kd_produk);
+              setValue("nm_produk_asuransi_pa", e.nm_produk);
+              setValue("nm_vendor_pa", e.vendor.nm_vendor);
+              setOpenProdukAsuransiPa(false);
             }}
           />
         </Drawer>
-        <div className="col-span-2 -mt-10 mb-2">
+        <Drawer open={openProdukAsuransiMtr} setOpen={setOpenProdukAsuransiMtr}>
+          <TableProdukAsuransi
+            options={produkAsuransiMtr.data}
+            handleChange={(e) => {
+              setValue("id_produk_asuransi_mtr", e.kd_produk);
+              setValue("nm_produk_asuransi_mtr", e.nm_produk);
+              setValue("nm_vendor_mtr", e.vendor.nm_vendor);
+              setValue("rate", e.rate);
+              setValue("admin", e.admin);
+              setOpenProdukAsuransiMtr(false);
+            }}
+          />
+        </Drawer>
+        <ModalMotor
+          handleClick={(e) => {
+            setValue("asuransi_no_mtr", e.no_mtr);
+            setValue("asuransi_nm_mtr", e.nm_mtr);
+          }}
+          isModalOpen={openMstMtr}
+          setIsModalOpen={setOpenMstMtr}
+        />
+        <div className="col-span-2 -mt-2 mb-2">
           <div className="grid grid-cols-2">
             <div className="col-span-1"></div>
             <div className="col-span-1">
@@ -776,18 +812,57 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   />
                 </div>
                 <div className="col-span-7 bg-gray-300 row-span-4"></div>
-                <div className="col-span-2">
-                  <SelectGroup
-                    name={"alasan_tdk_membership"}
-                    label={"Alasan"}
-                    id={"alasan_tdk_membership"}
-                    register={register}
-                    disabled={false}
-                    options={[{ name: "", value: "" }]}
-                    errors={errors}
-                  />
+                <div className="col-span-3">
+                  {watch("sts_membership") == "T" && (
+                    <SelectGroup
+                      name={"alasan_tdk_membership"}
+                      label={"Alasan Tidak"}
+                      id={"alasan_tdk_membership"}
+                      register={register}
+                      disabled={false}
+                      options={alasanTdkMembership?.data}
+                      errors={errors}
+                    />
+                  )}
+                  {watch("sts_membership") == "P" && (
+                    <SelectGroup
+                      name={"alasan_pending_membership"}
+                      label={"Alasan Pending"}
+                      id={"alasan_pending_membership"}
+                      register={register}
+                      disabled={false}
+                      options={[
+                        { name: "Pikir-pikir/ragu", value: 1 },
+                        { name: "Telp Kembali", value: 2 },
+                        { name: "Telp Tidak Diangkat", value: 3 },
+                        { name: "Telp Salah Sambung", value: 5 },
+                      ]}
+                      errors={errors}
+                    />
+                  )}
+                  {watch("sts_membership") == "O" && (
+                    <InputGroup
+                      name={"tgl_janji_bayar"}
+                      label={"Tanggal Bayar"}
+                      id={"tgl_janji_bayar"}
+                      register={register}
+                      disabled={!(watch("sts_membership") == "O")}
+                      errors={errors}
+                      type="date"
+                    />
+                  )}
+                  {watch("sts_membership") == "F" && (
+                    <InputGroup
+                      name={"tgl_prospect_membership"}
+                      label={"Tanggal Prospect"}
+                      id={"tgl_prospect_membership"}
+                      register={register}
+                      disabled={!(watch("sts_membership") == "F")}
+                      errors={errors}
+                      type="date"
+                    />
+                  )}
                 </div>
-                <div className="col-span-1"></div>
                 <div className="col-span-2">
                   <SelectGroup
                     name={"kd_promo_transfer"}
@@ -814,14 +889,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   />
                 </div>
                 <div className="col-span-2">
-                  <InputGroup
-                    name={"tgl_janji_bayar"}
-                    label={"Tanggal Bayar"}
-                    id={"tgl_janji_bayar"}
-                    register={register}
-                    disabled={!(watch("sts_membership") == "O")}
-                    errors={errors}
-                    type="date"
+                  <RadioButtonComponent
+                    setValue={setValue}
+                    label={"Tipe Kartu"}
+                    name={"type_kartu"}
+                    options={[
+                      { name: "Fisik", value: "F" },
+                      { name: "E-Card", value: "E" },
+                    ]}
                   />
                 </div>
                 {/* <div className="col-span-7"></div> */}
@@ -834,17 +909,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       { name: "Rumah", value: "1" },
                       { name: "Kantor", value: "2" },
                       { name: "ADC", value: "3" },
-                    ]}
-                  />
-                </div>
-                <div className="col-span-2">
-                  <RadioButtonComponent
-                    setValue={setValue}
-                    label={"Tipe Kartu"}
-                    name={"type_kartu"}
-                    options={[
-                      { name: "Fisik", value: "F" },
-                      { name: "E-Card", value: "E" },
                     ]}
                   />
                 </div>
@@ -1038,19 +1102,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
                 <input
                   readOnly
-                  onClick={() => setOpenProdukAsuransi(true)}
+                  onClick={() => setOpenProdukAsuransiPa(true)}
                   id={"id_produk"}
                   placeholder="Id Produk"
-                  {...register("id_produk_asuransi")}
+                  {...register("id_produk_asuransi_pa")}
                   className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
                 />
               </div>
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"nm_vendor"}
+                name={"nm_vendor_pa"}
                 label={"Nama Vendor"}
-                id={"nm_vendor"}
+                id={"nm_vendor_pa"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1058,9 +1122,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"nm_produk_asuransi"}
+                name={"nm_produk_asuransi_pa"}
                 label={"Nama Produk"}
-                id={"nm_produk_asuransi"}
+                id={"nm_produk_asuransi_pa"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1091,19 +1155,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
                 <input
                   readOnly
-                  onClick={() => setOpenProdukAsuransi(true)}
+                  onClick={() => setOpenProdukAsuransiMtr(true)}
                   id={"id_produk"}
                   placeholder="Id Produk"
-                  {...register("id_produk_asuransi")}
+                  {...register("id_produk_asuransi_mtr")}
                   className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
                 />
               </div>
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"nm_vendor"}
+                name={"nm_vendor_mtr"}
                 label={"Nama Vendor"}
-                id={"nm_vendor"}
+                id={"nm_vendor_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1111,9 +1175,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"nm_produk_asuransi"}
+                name={"nm_produk_asuransi_mtr"}
                 label={"Nama Produk"}
-                id={"nm_produk_asuransi"}
+                id={"nm_produk_asuransi_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1121,9 +1185,29 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"nm_mtr"}
+                name={"rate"}
+                label={"Rate"}
+                id={"rate"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"admin"}
+                label={"Biaya Admin"}
+                id={"admin"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"asuransi_nm_mtr"}
                 label={"Nama Motor"}
-                id={"nm_mtr"}
+                id={"asuransi_nm_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1131,13 +1215,15 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"no_mtr"}
+                name={"asuransi_no_mtr"}
                 label={"Nomor Motor"}
                 placeholder={"Nomor Motor"}
-                id={"no_mtr"}
+                id={"asuransi_no_mtr"}
                 register={register}
                 disabled={false}
                 errors={errors}
+                readOnly
+                onClick={() => setOpenMstMtr(true)}
               />
             </div>
             <div className="col-span-1">

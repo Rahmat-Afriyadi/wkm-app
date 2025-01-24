@@ -36,6 +36,8 @@ export default function Page({ params, searchParams }) {
   faktur.data.tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt?.substring(0, 10);
   faktur.data.tgl_faktur = faktur.data?.tgl_faktur?.substring(0, 10);
   faktur.data.asuransi_mtr_tahun = new Date(faktur.data?.tgl_faktur).getFullYear();
+  faktur.data.asuransi_nm_mtr = faktur.data?.nm_mtr;
+  faktur.data.asuransi_no_mtr = faktur.data?.no_mtr;
 
   const handleAmbilData = (item) => {
     ambilDataMut.mutate(

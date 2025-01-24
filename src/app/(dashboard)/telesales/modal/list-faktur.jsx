@@ -19,7 +19,7 @@ export default function ModalListFaktur({ children }) {
 
   return (
     <>
-      <button className="text-yellow hover:text-white bg-black p-1 rounded-lg" onClick={handleChange}>
+      <button className="text-yellow hover:text-white bg-black p-1 rounded-lg z-10 absolute" onClick={handleChange}>
         <AdjustmentsHorizontalIcon className="w-6 h-5" aria-hidden="true" />
       </button>
 
