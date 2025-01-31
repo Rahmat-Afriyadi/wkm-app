@@ -2,14 +2,7 @@
 
 import { useState } from "react";
 
-export default function RadioButtonComponent({ options = [], name, setValue, label, defaultValue }) {
-  const [selectedOption, setSelectedOption] = useState(defaultValue);
-
-  const handleChange = (event) => {
-    setSelectedOption(event.target.value);
-    setValue(name, event.target.value);
-  };
-
+export default function RadioButtonComponent({ options = [], name, label, register, validation, errors }) {
   return (
     <div className="w-full mx-auto ">
       <h1 className="">{label}</h1>
@@ -20,10 +13,8 @@ export default function RadioButtonComponent({ options = [], name, setValue, lab
               <label key={e.value} className="flex items-center gap-1 cursor-pointer">
                 <input
                   type="radio"
-                  name={name}
                   value={e.value}
-                  checked={selectedOption === e.value}
-                  onChange={handleChange}
+                  {...register(name, validation)}
                   className="w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 cursor-pointer"
                 />
                 <span className="text-gray-700">{e.name}</span>
@@ -31,8 +22,11 @@ export default function RadioButtonComponent({ options = [], name, setValue, lab
             );
           })}
       </div>
-
-      {/* {selectedOption && <p className="mt-4 text-green-600 font-medium">You selected: {selectedOption}</p>} */}
+      {errors[name] && (
+        <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
+          {errors[name]?.message}
+        </p>
+      )}
     </div>
   );
 }

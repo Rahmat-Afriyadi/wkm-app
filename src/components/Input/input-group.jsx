@@ -8,6 +8,7 @@ function InputGroup({ id, name, label, placeholder, value, type = "text", regist
           {label}
         </label>
       )}
+
       <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
         <input
           id={id}
@@ -30,7 +31,7 @@ function InputGroup({ id, name, label, placeholder, value, type = "text", regist
         )}
       </div>
       {errors[name] && (
-        <p className="text-sm text-red-600" style={{ marginTop: 2 }}>
+        <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
           {errors[name]?.message}
         </p>
       )}

@@ -2,10 +2,20 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_API;
+const BASE_URLWAHANAK = process.env.NEXT_PUBLIC_BASE_WAHANAK;
+const WAHANAK_TOKEN = process.env.NEXT_PUBLIC_WAHANAK_TOKEN;
 
 export default axios.create({
   baseURL: BASE_URL,
   headers: {
+    "Content-Type": "application/json",
+  },
+});
+
+const axiosE = axios.create({
+  baseURL: BASE_URLWAHANAK,
+  headers: {
+    token: WAHANAK_TOKEN,
     "Content-Type": "application/json",
   },
 });
@@ -48,4 +58,4 @@ axiosAuth.interceptors.response.use(
   }
 );
 
-export { axiosAuth };
+export { axiosAuth, axiosE };
