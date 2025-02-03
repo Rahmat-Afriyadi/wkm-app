@@ -49,49 +49,53 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const noMtrAsuransi = watch("asuransi_no_mtr");
   const tahunMtr = watch("asuransi_mtr_tahun");
   const otrValue = watch("otr");
+  const rate = watch("rate");
+  const amountValue = watch("amount");
+  const biayaAdmin = watch("admin");
 
   const onSubmit = (values) => {
     values.asuransi_mtr_otr = parseInt(values?.otr?.replace(/Rp\s?|,/g, ""));
+    values.asuransi_mtr_amount = parseInt(values?.amount?.replace(/Rp\s?|,/g, ""));
     values.renewal_ke = parseInt(values.renewal_ke);
     values.tgl_faktur = new Date(values.tgl_faktur);
     values.tgl_lahir_fkt = new Date(values.tgl_lahir_fkt);
     values.tgl_lahir_wkm = new Date(values.tgl_lahir_wkm);
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
     values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
-
-    Swal.fire({
-      title: "Apakah data yang dimasukan sudah benar",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#0891B2",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Save",
-      showLoaderOnConfirm: true,
-      preConfirm: () => {
-        mutUpdateCustomer.mutate(values, {
-          onSuccess: (data) => {
-            // Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-            //   setFaktur(null);
-            //   router.refresh();
-            // });
-            // if (data.status == "success") {
-            //   Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-            //     setFaktur(null);
-            //     router.refresh();
-            //   });
-            // } else {
-            //   Swal.fire("Failed!", data.message, "error");
-            // }
-            console.log("ini data suksess yaaa ", data);
-          },
-          onError: (e) => {
-            console.log("ini error ", e);
-            Swal.fire("Failed!", e.response.data.message, "error");
-          },
-        });
-      },
-      allowOutsideClick: () => !Swal.isLoading(),
-    });
+    console.log("ini values ", values);
+    // Swal.fire({
+    //   title: "Apakah data yang dimasukan sudah benar",
+    //   icon: "question",
+    //   showCancelButton: true,
+    //   confirmButtonColor: "#0891B2",
+    //   cancelButtonColor: "#d33",
+    //   confirmButtonText: "Save",
+    //   showLoaderOnConfirm: true,
+    //   preConfirm: () => {
+    //     mutUpdateCustomer.mutate(values, {
+    //       onSuccess: (data) => {
+    //         // Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
+    //         //   setFaktur(null);
+    //         //   router.refresh();
+    //         // });
+    //         // if (data.status == "success") {
+    //         //   Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
+    //         //     setFaktur(null);
+    //         //     router.refresh();
+    //         //   });
+    //         // } else {
+    //         //   Swal.fire("Failed!", data.message, "error");
+    //         // }
+    //         console.log("ini data suksess yaaa ", data);
+    //       },
+    //       onError: (e) => {
+    //         console.log("ini error ", e);
+    //         Swal.fire("Failed!", e.response.data.message, "error");
+    //       },
+    //     });
+    //   },
+    //   allowOutsideClick: () => !Swal.isLoading(),
+    // });
   };
 
   const handleRpChange = (e, field) => {
@@ -244,6 +248,21 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   useEffect(() => {
     handleRpChange({ target: { value: "" + detailOtr.data.otr } }, "otr");
   }, [detailOtr]); // eslint-disable-line
+
+  useEffect(() => {
+    console.log("ini otr value ", parseInt(otrValue?.replace(/Rp\s?|,/g, "")));
+    setValue(
+      "asuransi_mtr_amount",
+      handleRpChange(
+        {
+          target: {
+            value: "" + parseFloat(parseInt(otrValue?.replace(/Rp\s?|,/g, "")) * (rate / 100) + biayaAdmin).toFixed(0),
+          },
+        },
+        "amount"
+      )
+    );
+  }, [otrValue, rate, biayaAdmin]); // eslint-disable-line
 
   return (
     <>
@@ -1431,6 +1450,31 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 type="text"
                 value={otrValue || ""}
                 onChange={(e) => handleRpChange(e, "otr")}
+                register={register}
+                validation={{
+                  required: false,
+                  min: {
+                    value: 0,
+                    message: "Expected salary cannot be less than 0",
+                  },
+                  pattern: {
+                    value: /^Rp\s?\d{1,3}(,\d{3})*$/,
+                    message: "Invalid salary format",
+                  },
+                }}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                readOnly
+                name={"asuransi_mtr_amount"}
+                label={"Amount Asuransi Motor"}
+                id={"asuransi_mtr_amount"}
+                disabled={false}
+                errors={errors}
+                type="text"
+                value={amountValue || ""}
+                onChange={(e) => handleRpChange(e, "amount")}
                 register={register}
                 validation={{
                   required: false,
