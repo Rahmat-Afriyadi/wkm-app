@@ -1,7 +1,6 @@
 import React from "react";
 
-export default function TableProdukAsuransi({ options, handleChange = (e) => console.log(e) }) {
-  console.log("options ", options);
+export default function TableMstMtr({ options, handleChange = (e) => console.log(e) }) {
   return (
     <div className="p-4 bg-white ">
       <p className="font-bold text-lg">List Produk</p>

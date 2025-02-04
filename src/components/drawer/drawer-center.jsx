@@ -13,7 +13,7 @@ export default function DrawerCenter({ open, setOpen, children }) {
       <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
         <DialogPanel
           transition
-          className="pointer-events-auto max-w-md transform rounded-lg p-1 transition duration-500 ease-in-out"
+          className="pointer-events-auto  transform rounded-lg p-1 transition duration-500 ease-in-out"
         >
           {/* Form in here */}
           {children}

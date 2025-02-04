@@ -10,7 +10,7 @@ import ButtonExportDataTiketBantuan from "@/components/form/tiket-bantuan/form-e
 export default function PageFrame() {
   const router = useRouter();
   const { data: session } = useSession();
-
+  console.log("ini session ", session?.user);
   // Mendapatkan bulan dan tahun sekarang
   const currentDate = new Date();
   const currentMonth = (currentDate.getMonth() + 1).toString(); // Bulan dalam angka (1-12)
@@ -69,51 +69,52 @@ export default function PageFrame() {
   };
 
   return (
-    <>{session?.user.role == 8 && (
-      <div className="mb-4 flex items-center justify-between">
-        {/* Kontainer untuk Dropdown Bulan dan Tahun */}
-        <div className="flex items-center space-x-4">
-          {/* Dropdown Bulan */}
-          <div className="form-group">
-            <select
-              id="month"
-              value={selectedMonth}
-              onChange={(e) => handleMonthChange(e.target.value)}
-              className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
-            >
-              {months.map((month) => (
-                <option key={month.value} value={month.value}>
-                  {month.label}
-                </option>
-              ))}
-            </select>
+    <>
+      {session?.user.role == 8 && (
+        <div className="mb-4 flex items-center justify-between">
+          {/* Kontainer untuk Dropdown Bulan dan Tahun */}
+          <div className="flex items-center space-x-4">
+            {/* Dropdown Bulan */}
+            <div className="form-group">
+              <select
+                id="month"
+                value={selectedMonth}
+                onChange={(e) => handleMonthChange(e.target.value)}
+                className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
+              >
+                {months.map((month) => (
+                  <option key={month.value} value={month.value}>
+                    {month.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Dropdown Tahun */}
+            <div className="form-group">
+              <select
+                id="year"
+                value={selectedYear}
+                onChange={(e) => handleYearChange(e.target.value)}
+                className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
-    
-          {/* Dropdown Tahun */}
-          <div className="form-group">
-            <select
-              id="year"
-              value={selectedYear}
-              onChange={(e) => handleYearChange(e.target.value)}
-              className="mt-1 block w-auto border-gray-500 rounded-md shadow-sm"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-    
-        <ButtonExportDataTiketBantuan
-          params={{
-            year: selectedYear,
-            month: selectedMonth,
-          }}
+
+          <ButtonExportDataTiketBantuan
+            params={{
+              year: selectedYear,
+              month: selectedMonth,
+            }}
           />
-      </div>
-    )}
+        </div>
+      )}
       {/* Konten Utama */}
       <div className="flex flex-col mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -127,10 +128,7 @@ export default function PageFrame() {
               {/* Menyertakan ListItem dan meneruskan searchParams untuk digunakan di dalamnya */}
               {session?.user.role == 8 && (
                 <div className="overflow-y-auto max-h-96">
-                  <ListItemTicketQueue
-                    month={selectedMonth}
-                    year={selectedYear}
-                  />
+                  <ListItemTicketQueue month={selectedMonth} year={selectedYear} />
                 </div>
               )}
             </div>

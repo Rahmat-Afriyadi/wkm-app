@@ -2,6 +2,7 @@ import React from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 
 export default function Search({ id, name, placeholder }) {
   const searchParams = useSearchParams();
@@ -14,11 +15,11 @@ export default function Search({ id, name, placeholder }) {
     replace(`${pathname}?${params}`);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     const params = new URLSearchParams(searchParams);
     params.set(name, "");
     replace(`${pathname}?${params}`);
-  },[]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
@@ -26,13 +27,8 @@ export default function Search({ id, name, placeholder }) {
         Search
       </label>
       <div className="relative mt-1 rounded-md shadow-sm">
-        <div
-          className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
-          aria-hidden="true">
-          <MagnifyingGlassIcon
-            className="w-4 h-4 mr-3 text-gray-400"
-            aria-hidden="true"
-          />
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" aria-hidden="true">
+          <MagnifyingGlassIcon className="w-4 h-4 mr-3 text-gray-400" aria-hidden="true" />
         </div>
         <input
           type="search"
