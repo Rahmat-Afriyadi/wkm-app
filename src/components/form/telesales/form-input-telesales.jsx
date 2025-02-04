@@ -56,6 +56,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const onSubmit = (values) => {
     values.asuransi_mtr_otr = parseInt(values?.otr?.replace(/Rp\s?|,/g, ""));
     values.asuransi_mtr_amount = parseInt(values?.amount?.replace(/Rp\s?|,/g, ""));
+    values.asuransi_mtr_tahun = parseInt(values.asuransi_mtr_tahun);
     values.renewal_ke = parseInt(values.renewal_ke);
     values.tgl_faktur = new Date(values.tgl_faktur);
     values.tgl_lahir_fkt = new Date(values.tgl_lahir_fkt);
@@ -63,39 +64,39 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
     values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
     console.log("ini values ", values);
-    // Swal.fire({
-    //   title: "Apakah data yang dimasukan sudah benar",
-    //   icon: "question",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#0891B2",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Save",
-    //   showLoaderOnConfirm: true,
-    //   preConfirm: () => {
-    //     mutUpdateCustomer.mutate(values, {
-    //       onSuccess: (data) => {
-    //         // Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-    //         //   setFaktur(null);
-    //         //   router.refresh();
-    //         // });
-    //         // if (data.status == "success") {
-    //         //   Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-    //         //     setFaktur(null);
-    //         //     router.refresh();
-    //         //   });
-    //         // } else {
-    //         //   Swal.fire("Failed!", data.message, "error");
-    //         // }
-    //         console.log("ini data suksess yaaa ", data);
-    //       },
-    //       onError: (e) => {
-    //         console.log("ini error ", e);
-    //         Swal.fire("Failed!", e.response.data.message, "error");
-    //       },
-    //     });
-    //   },
-    //   allowOutsideClick: () => !Swal.isLoading(),
-    // });
+    Swal.fire({
+      title: "Apakah data yang dimasukan sudah benar",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0891B2",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save",
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        mutUpdateCustomer.mutate(values, {
+          onSuccess: (data) => {
+            // Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
+            //   setFaktur(null);
+            //   router.refresh();
+            // });
+            // if (data.status == "success") {
+            //   Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
+            //     setFaktur(null);
+            //     router.refresh();
+            //   });
+            // } else {
+            //   Swal.fire("Failed!", data.message, "error");
+            // }
+            console.log("ini data suksess yaaa ", data);
+          },
+          onError: (e) => {
+            console.log("ini error ", e);
+            Swal.fire("Failed!", e.response.data.message, "error");
+          },
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
   };
 
   const handleRpChange = (e, field) => {
@@ -250,13 +251,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [detailOtr]); // eslint-disable-line
 
   useEffect(() => {
-    console.log("ini otr value ", parseInt(otrValue?.replace(/Rp\s?|,/g, "")));
     setValue(
       "asuransi_mtr_amount",
       handleRpChange(
         {
           target: {
-            value: "" + parseFloat(parseInt(otrValue?.replace(/Rp\s?|,/g, "")) * (rate / 100) + biayaAdmin).toFixed(0),
+            value: formatCurrency(
+              "" + (parseFloat(otrValue?.replace(/Rp\s?|,/g, "") * (parseFloat(rate) / 100)) + parseFloat(biayaAdmin))
+            ),
           },
         },
         "amount"
@@ -288,6 +290,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               setValue("id_produk_asuransi_pa", e.kd_produk);
               setValue("nm_produk_asuransi_pa", e.nm_produk);
               setValue("nm_vendor_pa", e.vendor.nm_vendor);
+              setValue("rate", e.rate);
+              setValue("admin", e.admin);
+              setValue("premi", e.premi);
               setOpenProdukAsuransiPa(false);
             }}
           />
@@ -1326,6 +1331,36 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"nm_produk_asuransi_pa"}
                 label={"Nama Produk"}
                 id={"nm_produk_asuransi_pa"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"rate"}
+                label={"Rate"}
+                id={"rate"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"admin"}
+                label={"Biaya Admin"}
+                id={"admin"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"premi"}
+                label={"Biaya Premi"}
+                id={"premi"}
                 register={register}
                 disabled={true}
                 errors={errors}

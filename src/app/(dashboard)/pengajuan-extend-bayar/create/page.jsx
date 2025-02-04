@@ -27,7 +27,6 @@ export default function Page() {
         if (data.hasOwnProperty("message")) {
           setFaktur(null);
           setMessage(data.message);
-          console.log("ini data yaa 2", data);
         } else {
           setMessage(null);
           setFaktur(data);
