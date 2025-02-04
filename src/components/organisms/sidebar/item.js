@@ -120,6 +120,11 @@ const navigation = [
     to: "/tiket-bantuan",
     icon: FolderIcon,
   },
+  {
+    name: "Master Script",
+    to: "/master-script",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];
