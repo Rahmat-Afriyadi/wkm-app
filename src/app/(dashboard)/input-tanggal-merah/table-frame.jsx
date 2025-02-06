@@ -36,8 +36,6 @@ export default function TableFrame({ searchParams }) {
     return "Loading...";
   }
 
-  console.log("data yaa ", data.page);
-
   const columns = [
     {
       header: "Tanggal Awal",

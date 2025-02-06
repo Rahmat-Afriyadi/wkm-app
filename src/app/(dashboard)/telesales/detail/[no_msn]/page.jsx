@@ -34,6 +34,7 @@ export default function Page({ params, searchParams }) {
     return "Loading...";
   }
   faktur.data.tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt?.substring(0, 10);
+  faktur.data.tgl_lahir_wkm = faktur.data?.tgl_lahir_wkm?.substring(0, 10);
   faktur.data.tgl_faktur = faktur.data?.tgl_faktur?.substring(0, 10);
   faktur.data.asuransi_mtr_tahun = new Date(faktur.data?.tgl_faktur).getFullYear();
   faktur.data.asuransi_nm_mtr = faktur.data?.nm_mtr;
