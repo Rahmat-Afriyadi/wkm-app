@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import TableProdukAsuransi from "./table-produk-asuransi";
 import { formatCurrency } from "@/lib/utils/format-currentcy";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 import { updateOkeMembership } from "@/server/customer/oke-membership";
 import { masterKodepos } from "@/server/kodepos/master-kodepos";
@@ -1081,12 +1082,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer">
                   <p className="text-sm font-medium text-gray-900 -mt-1">Merchant</p>
 
-                  <button
-                    onClick={() => setOpenKodepos(true)}
+                  <Link
                     className="w-10/12  h-8 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                    href="http://192.168.70.17:3002/merchant"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
-                  </button>
+                  </Link>
                 </div>
                 <div className="col-span-3">
                   <RadioButtonComponent
