@@ -84,7 +84,7 @@ export default function EditTicketPage({ params }) {
 
   const onSubmit = async (data) => {
     const formattedData = {
-      case: data.case,
+      problem: data.problem,
       status : data.status,
       jenis_ticket: data.jenis_ticket,
       kd_user_clients: selectedClients.map(client => ({ name: client.name })),
@@ -140,12 +140,12 @@ export default function EditTicketPage({ params }) {
           />
         </div>
 
-        {/* Case */}
+        {/* problem */}
         <div className="form-group">
-          <label htmlFor="case" className="block text-sm font-medium text-gray-700">Case</label>
+          <label htmlFor="problem" className="block text-sm font-medium text-gray-700">Problem</label>
           <textarea
-            id="case"
-            {...register("case")}
+            id="problem"
+            {...register("problem")}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             rows={4}
           />

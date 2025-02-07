@@ -26,7 +26,7 @@ export default function CreateTicketPage() {
 
   const onSubmit = async (data) => {
     const formattedData = {
-      case: data.case,
+      problem: data.problem,
       jenis_ticket: data.jenis_ticket,
       kd_user_clients: selectedClients.map(client => ({ name: client.name })),
     };
@@ -63,12 +63,12 @@ export default function CreateTicketPage() {
       <br />
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Case */}
+        {/* problem */}
         <div className="form-group">
-          <label htmlFor="case" className="block text-sm font-medium text-gray-700">Case</label>
+          <label htmlFor="problem" className="block text-sm font-medium text-gray-700">Problem</label>
           <textarea
-            id="case"
-            {...register("case", { required: "Case is required" })}
+            id="problem"
+            {...register("problem", { required: "Problem is required" })}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             rows={4}
           />
