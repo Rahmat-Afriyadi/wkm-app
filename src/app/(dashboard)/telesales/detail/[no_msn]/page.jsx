@@ -40,6 +40,16 @@ export default function Page({ params, searchParams }) {
   faktur.data.asuransi_nm_mtr = faktur.data?.nm_mtr;
   faktur.data.asuransi_no_mtr = faktur.data?.no_mtr;
 
+  if (faktur.data.ketHubTs == 1) {
+    faktur.data.no_hub = faktur.data.no_hp_fkt;
+  } else if (faktur.data.ketHubTs == 2) {
+    faktur.data.no_hub = faktur.data.no_hp_wkm;
+  } else if (faktur.data.ketHubTs == 4) {
+    faktur.data.no_hub = faktur.data.no_telp_fkt;
+  } else if (faktur.data.ketHubTs == 5) {
+    faktur.data.no_hub = faktur.data.no_telp_wkm;
+  }
+
   const handleAmbilData = (item) => {
     ambilDataMut.mutate(
       {
