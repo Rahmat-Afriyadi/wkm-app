@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import TableProdukAsuransi from "./table-produk-asuransi";
 import { formatCurrency } from "@/lib/utils/format-currentcy";
 import Swal from "sweetalert2";
+import Link from "next/link";
 
 import { updateOkeMembership } from "@/server/customer/oke-membership";
 import { masterKodepos } from "@/server/kodepos/master-kodepos";
@@ -30,6 +31,7 @@ import { masterScript } from "@/server/master/script";
 import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership";
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
 import ModalMotor from "@/components/Modal/mtr/modal-mtr";
+import { errorSelector } from "recoil";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
   const {
@@ -38,13 +40,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     watch,
     reset,
     handleSubmit,
+    setFocus,
+    clearErrors,
+    trigger,
     formState: { errors },
   } = useForm({ defaultValues: isEditing ? defaultValues : {} });
 
   const kirimKe = watch("kirim_ke");
   const ketNmWkm = watch("ket_nm_wkm");
   const ketWaInfo = watch("ket_wa_info");
-  const ketHubTs = watch("ket_hub_ts");
+  const ketHubTs = watch("no_yg_dihub_ts");
   const selectedKodepos = watch("kodepos");
   const noMtrAsuransi = watch("asuransi_no_mtr");
   const tahunMtr = watch("asuransi_mtr_tahun");
@@ -52,10 +57,15 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const rate = watch("rate");
   const amountValue = watch("amount");
   const biayaAdmin = watch("admin");
+  const stsMembership = watch("sts_membership");
+  const stsAsuransiPa = watch("sts_asuransi_pa");
+  const stsAsuransiMtr = watch("sts_asuransi_mtr");
 
-  const onSubmit = (values) => {
+  const onSubmit = async (values) => {
+    clearErrors();
     values.asuransi_mtr_otr = parseInt(values?.otr?.replace(/Rp\s?|,/g, ""));
     values.asuransi_mtr_amount = parseInt(values?.amount?.replace(/Rp\s?|,/g, ""));
+    values.asuransi_mtr_tahun = parseInt(values.asuransi_mtr_tahun);
     values.renewal_ke = parseInt(values.renewal_ke);
     values.tgl_faktur = new Date(values.tgl_faktur);
     values.tgl_lahir_fkt = new Date(values.tgl_lahir_fkt);
@@ -63,39 +73,53 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
     values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
     console.log("ini values ", values);
-    // Swal.fire({
-    //   title: "Apakah data yang dimasukan sudah benar",
-    //   icon: "question",
-    //   showCancelButton: true,
-    //   confirmButtonColor: "#0891B2",
-    //   cancelButtonColor: "#d33",
-    //   confirmButtonText: "Save",
-    //   showLoaderOnConfirm: true,
-    //   preConfirm: () => {
-    //     mutUpdateCustomer.mutate(values, {
-    //       onSuccess: (data) => {
-    //         // Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-    //         //   setFaktur(null);
-    //         //   router.refresh();
-    //         // });
-    //         // if (data.status == "success") {
-    //         //   Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-    //         //     setFaktur(null);
-    //         //     router.refresh();
-    //         //   });
-    //         // } else {
-    //         //   Swal.fire("Failed!", data.message, "error");
-    //         // }
-    //         console.log("ini data suksess yaaa ", data);
-    //       },
-    //       onError: (e) => {
-    //         console.log("ini error ", e);
-    //         Swal.fire("Failed!", e.response.data.message, "error");
-    //       },
-    //     });
-    //   },
-    //   allowOutsideClick: () => !Swal.isLoading(),
-    // });
+    if (values.sts_asuransi_pa == "" || values.sts_asuransi_pa == null) {
+      return Swal.fire({
+        title: "Apakah kamu sudah menawarkan produk Asuransi PA",
+        icon: "question",
+        confirmButtonColor: "#0891B2",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oke",
+        showLoaderOnConfirm: true,
+      }).then(() => {
+        setFocus("sts_asuransi_pa");
+        setMenuTab(2);
+      });
+    }
+    if (values.sts_asuransi_mtr == "" || values.sts_asuransi_mtr == null) {
+      return Swal.fire({
+        title: "Apakah kamu sudah menawarkan produk Asuransi Motor",
+        icon: "question",
+        confirmButtonColor: "#0891B2",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oke",
+        showLoaderOnConfirm: true,
+      });
+    }
+    Swal.fire({
+      title: "Apakah data yang dimasukan sudah benar",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#0891B2",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Save",
+      showLoaderOnConfirm: true,
+      preConfirm: () => {
+        mutUpdateCustomer.mutate(values, {
+          onSuccess: (data) => {
+            Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
+              setFaktur(null);
+              router.refresh();
+            });
+          },
+          onError: (e) => {
+            console.log("ini error ", e);
+            Swal.fire("Failed!", e.response.data.message, "error");
+          },
+        });
+      },
+      allowOutsideClick: () => !Swal.isLoading(),
+    });
   };
 
   const handleRpChange = (e, field) => {
@@ -207,7 +231,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [selectedKodepos]); // eslint-disable-line
 
   useEffect(() => {
-    console.log("ini hobbies yaa ", hobbies);
     if (!isEditing) {
       reset();
     } else if (defaultValues && pendidikan && agama && keluarBln && tujuPak && hobbies) {
@@ -235,13 +258,13 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
   useEffect(() => {
     if (ketHubTs == 1) {
-      setValue("no_yg_dihub_ts", watch("no_hp_fkt"));
+      setValue("no_hub", watch("no_hp_fkt"));
     } else if (ketHubTs == 2) {
-      setValue("no_yg_dihub_ts", watch("no_hp_wkm"));
+      setValue("no_hub", watch("no_hp_wkm"));
     } else if (ketHubTs == 4) {
-      setValue("no_yg_dihub_ts", watch("no_telp_fkt"));
+      setValue("no_hub", watch("no_telp_fkt"));
     } else if (ketHubTs == 5) {
-      setValue("no_yg_dihub_ts", watch("no_telp_wkm"));
+      setValue("no_hub", watch("no_telp_wkm"));
     }
   }, [ketHubTs]); // eslint-disable-line
 
@@ -250,19 +273,24 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [detailOtr]); // eslint-disable-line
 
   useEffect(() => {
-    console.log("ini otr value ", parseInt(otrValue?.replace(/Rp\s?|,/g, "")));
-    setValue(
-      "asuransi_mtr_amount",
-      handleRpChange(
-        {
-          target: {
-            value: "" + parseFloat(parseInt(otrValue?.replace(/Rp\s?|,/g, "")) * (rate / 100) + biayaAdmin).toFixed(0),
-          },
+    handleRpChange(
+      {
+        target: {
+          value: formatCurrency("" + parseInt(otrValue?.replace(/Rp\s?|,/g, "") * (rate / 100) + biayaAdmin)),
         },
-        "amount"
-      )
+      },
+      "amount"
     );
-  }, [otrValue, rate, biayaAdmin]); // eslint-disable-line
+  }, [otrValue, rate, biayaAdmin, detailOtr, amountValue]); // eslint-disable-line
+
+  // useEffect(() => {
+  //   if (stsAsuransiPa !== "O") {
+  //     setValue("id_produk_asuransi_pa", ""); // Reset field jika tidak diperlukan
+  //     clearErrors("id_produk_asuransi_pa"); // Hapus error jika status berubah
+  //   } else {
+  //     trigger("id_produk_asuransi_pa"); // Validasi ulang jika status "O"
+  //   }
+  // }, [stsAsuransiPa, setValue, trigger, clearErrors]);
 
   return (
     <>
@@ -288,6 +316,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               setValue("id_produk_asuransi_pa", e.kd_produk);
               setValue("nm_produk_asuransi_pa", e.nm_produk);
               setValue("nm_vendor_pa", e.vendor.nm_vendor);
+              setValue("rate", e.rate);
+              setValue("admin", e.admin);
+              setValue("premi", e.premi);
               setOpenProdukAsuransiPa(false);
             }}
           />
@@ -875,9 +906,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-1"></div>
             <div className="col-span-3">
               <InputGroup
-                name={"no_yg_dihub_ts"}
+                name={"no_hub"}
                 label={"No Hub"}
-                id={"no_yg_dihub_ts"}
+                id={"no_hub"}
                 register={register}
                 validation={{ required: "This field is required" }}
                 disabled={false}
@@ -886,8 +917,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer">
               <SelectGroup
-                name={"ket_hub_ts"}
-                id={"ket_hub_ts"}
+                name={"no_yg_dihub_ts"}
+                id={"no_yg_dihub_ts"}
                 register={register}
                 disabled={false}
                 options={[
@@ -955,9 +986,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     register={register}
                     validation={{ required: "This field is required" }}
                     errors={errors}
-                    setValue={setValue}
                     label={"Status Membership"}
-                    defaultValue={watch("sts_membership")}
                     name={"sts_membership"}
                     options={[
                       { name: "Oke", value: "O" },
@@ -974,6 +1003,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     id={"jns_membership"}
                     register={register}
                     disabled={false}
+                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                     options={produkMembership?.data}
                     errors={errors}
                   />
@@ -998,6 +1028,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       name={"alasan_tdk_membership"}
                       label={"Alasan Tidak"}
                       id={"alasan_tdk_membership"}
+                      validation={{ required: "This field is required" }}
                       register={register}
                       disabled={false}
                       options={alasanTdkMembership?.data}
@@ -1009,6 +1040,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       name={"alasan_pending_membership"}
                       label={"Alasan Pending"}
                       id={"alasan_pending_membership"}
+                      validation={{ required: "This field is required" }}
                       register={register}
                       disabled={false}
                       options={[
@@ -1026,9 +1058,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       label={"Tanggal Bayar"}
                       id={"tgl_janji_bayar"}
                       register={register}
-                      disabled={!(watch("sts_membership") == "O")}
                       errors={errors}
-                      validation={{ required: "This field is required" }}
+                      validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                       type="date"
                     />
                   )}
@@ -1038,7 +1069,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       label={"Tanggal Prospect"}
                       id={"tgl_prospect_membership"}
                       register={register}
-                      disabled={!(watch("sts_membership") == "F")}
                       errors={errors}
                       type="date"
                     />
@@ -1052,25 +1082,27 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     register={register}
                     disabled={false}
                     options={promoTransfer?.data}
+                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                     errors={errors}
                   />
                 </div>
                 <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer">
                   <p className="text-sm font-medium text-gray-900 -mt-1">Merchant</p>
 
-                  <button
-                    onClick={() => setOpenKodepos(true)}
+                  <Link
                     className="w-10/12  h-8 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                    href="http://192.168.70.17:3002/merchant"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
                     <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
-                  </button>
+                  </Link>
                 </div>
                 <div className="col-span-3">
                   <RadioButtonComponent
                     register={register}
-                    validation={{ required: "This field is required" }}
+                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                     errors={errors}
-                    setValue={setValue}
                     label={"Status"}
                     name="jns_bayar"
                     options={[
@@ -1084,9 +1116,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-2">
                   <RadioButtonComponent
                     register={register}
-                    validation={{ required: "This field is required" }}
+                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                     errors={errors}
-                    setValue={setValue}
                     label={"Tipe Kartu"}
                     name={"type_kartu"}
                     options={[
@@ -1099,7 +1130,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-3">
                   <RadioButtonComponent
                     register={register}
-                    validation={{ required: "This field is required" }}
+                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
                     errors={errors}
                     setValue={setValue}
                     label={"Kirim ke"}
@@ -1285,7 +1316,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <RadioButtonComponent
                 register={register}
                 errors={errors}
-                setValue={setValue}
                 label={"Status Asuransi PA"}
                 name={"sts_asuransi_pa"}
                 options={[
@@ -1297,6 +1327,48 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1">
+              {stsAsuransiPa == "T" && (
+                <SelectGroup
+                  name={"alasan_tdk_asuransi_pa"}
+                  label={"Alasan Tidak"}
+                  id={"alasan_tdk_asuransi_pa"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  disabled={false}
+                  options={alasanTdkMembership?.data}
+                  errors={errors}
+                />
+              )}
+              {stsAsuransiPa == "P" && (
+                <SelectGroup
+                  name={"alasan_pending_asuransi_pa"}
+                  label={"Alasan Pending"}
+                  id={"alasan_pending_asuransi_pa"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  disabled={false}
+                  options={[
+                    { name: "Pikir-pikir/ragu", value: 1 },
+                    { name: "Telp Kembali", value: 2 },
+                    { name: "Telp Tidak Diangkat", value: 3 },
+                    { name: "Telp Salah Sambung", value: 5 },
+                  ]}
+                  errors={errors}
+                />
+              )}
+              {stsAsuransiPa == "F" && (
+                <InputGroup
+                  name={"tgl_prospect_asuransi_pa"}
+                  label={"Tanggal Prospect"}
+                  id={"tgl_prospect_asuransi_pa"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  errors={errors}
+                  type="date"
+                />
+              )}
+            </div>
+            <div className="col-span-1">
               <label htmlFor={"id_produk"} className="block text-sm font-medium text-gray-900 cursor-pointer">
                 {"Id Produk"}
               </label>
@@ -1304,11 +1376,21 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <input
                   readOnly
                   onClick={() => setOpenProdukAsuransiPa(true)}
-                  id={"id_produk"}
+                  id={"id_produk_asuransi_pa"}
                   placeholder="Id Produk"
-                  {...register("id_produk_asuransi_pa")}
+                  {...register("id_produk_asuransi_pa", {
+                    validate: (value) => {
+                      console.log("ini dari validasi ", stsAsuransiPa);
+                      return stsAsuransiPa === "O" && !value ? "This field is required" : true;
+                    }, // ✅ Validasi dinamis
+                  })}
                   className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
                 />
+                {errors["id_produk_asuransi_pa"] && (
+                  <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
+                    {errors["id_produk_asuransi_pa"]?.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="col-span-1">
@@ -1326,6 +1408,36 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"nm_produk_asuransi_pa"}
                 label={"Nama Produk"}
                 id={"nm_produk_asuransi_pa"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"rate"}
+                label={"Rate"}
+                id={"rate"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"admin"}
+                label={"Biaya Admin"}
+                id={"admin"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1">
+              <InputGroup
+                name={"premi"}
+                label={"Biaya Premi"}
+                id={"premi"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1351,6 +1463,48 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 ]}
               />
             </div>
+            <div className="col-span-1 flex flex-col justify-end">
+              {stsAsuransiMtr == "T" && (
+                <SelectGroup
+                  name={"alasan_tdk_asuransi_mtr"}
+                  label={"Alasan Tidak"}
+                  id={"alasan_tdk_asuransi_mtr"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  disabled={false}
+                  options={alasanTdkMembership?.data}
+                  errors={errors}
+                />
+              )}
+              {stsAsuransiMtr == "P" && (
+                <SelectGroup
+                  name={"alasan_pending_asuransi_mtr"}
+                  label={"Alasan Pending"}
+                  id={"alasan_pending_asuransi_mtr"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  disabled={false}
+                  options={[
+                    { name: "Pikir-pikir/ragu", value: 1 },
+                    { name: "Telp Kembali", value: 2 },
+                    { name: "Telp Tidak Diangkat", value: 3 },
+                    { name: "Telp Salah Sambung", value: 5 },
+                  ]}
+                  errors={errors}
+                />
+              )}
+              {stsAsuransiMtr == "F" && (
+                <InputGroup
+                  name={"tgl_prospect_asuransi_mtr"}
+                  label={"Tanggal Prospect"}
+                  id={"tgl_prospect_asuransi_mtr"}
+                  validation={{ required: "This field is required" }}
+                  register={register}
+                  errors={errors}
+                  type="date"
+                />
+              )}
+            </div>
             <div className="col-span-1">
               <label htmlFor={"id_produk"} className="block text-sm font-medium text-gray-900 cursor-pointer">
                 {"Id Produk"}
@@ -1361,9 +1515,18 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   onClick={() => setOpenProdukAsuransiMtr(true)}
                   id={"id_produk"}
                   placeholder="Id Produk"
-                  {...register("id_produk_asuransi_mtr")}
+                  {...register("id_produk_asuransi_mtr", {
+                    validate: (value) => {
+                      return stsAsuransiMtr === "O" && !value ? "This field is required" : true;
+                    }, // ✅ Validasi dinamis
+                  })}
                   className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
                 />
+                {errors["id_produk_asuransi_mtr"] && (
+                  <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
+                    {errors["id_produk_asuransi_mtr"]?.message}
+                  </p>
+                )}
               </div>
             </div>
             <div className="col-span-1">
@@ -1455,11 +1618,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   required: false,
                   min: {
                     value: 0,
-                    message: "Expected salary cannot be less than 0",
+                    message: "Amount cannot be less than 0",
                   },
                   pattern: {
                     value: /^Rp\s?\d{1,3}(,\d{3})*$/,
-                    message: "Invalid salary format",
+                    message: "Invalid amount format",
                   },
                 }}
               />
@@ -1480,12 +1643,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   required: false,
                   min: {
                     value: 0,
-                    message: "Expected salary cannot be less than 0",
+                    message: "Amount cannot be less than 0",
                   },
-                  pattern: {
-                    value: /^Rp\s?\d{1,3}(,\d{3})*$/,
-                    message: "Invalid salary format",
-                  },
+                  // pattern: {
+                  //   value: /^Rp\s?\d{1,3}(,\d{3})*$/,
+                  //   message: "Invalid amount format",
+                  // },
                 }}
               />
             </div>

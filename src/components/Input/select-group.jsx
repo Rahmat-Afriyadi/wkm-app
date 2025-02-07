@@ -19,6 +19,9 @@ export default function SelectGroup({ label, name, id, register, disabled, error
           errors[name] ? "pr-10 text-red-900 ring-red-300 placeholder:text-red-300 focus:ring-red-500" : ""
         } ${disabled ? "bg-gray-300 cursor-not-allowed" : ""}`}
       >
+        <option value={""} className="py-1 cursor-pointer">
+          Pilih {label}
+        </option>
         {options.map((e) => {
           return (
             <option value={e.value} key={e.value} className="py-1 cursor-pointer">

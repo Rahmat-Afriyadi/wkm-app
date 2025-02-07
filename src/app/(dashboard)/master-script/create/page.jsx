@@ -13,17 +13,15 @@ import "froala-editor/js/plugins/paragraph_format.min.js";
 import "froala-editor/js/plugins/font_size.min.js";
 import "froala-editor/js/plugins/lists.min.js";
 import "froala-editor/js/plugins/align.min.js";
-import 'froala-editor/js/froala_editor.pkgd.min.js'; 
+import "froala-editor/js/froala_editor.pkgd.min.js";
 
 const FroalaEditor = dynamic(() => import("react-froala-wysiwyg"), { ssr: false });
-
 
 export default function CreateScriptPage() {
   const router = useRouter();
   const { data: session } = useSession();
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState("");
   const [editorContent, setEditorContent] = useState(""); // State for editor content
-
 
   const { handleSubmit, register, reset } = useForm();
 
@@ -36,7 +34,7 @@ export default function CreateScriptPage() {
 
     try {
       // console.log("data dikirim:", formattedData);
-     const response = await CreateScript(formattedData); // Kirim data ke API untuk create
+      const response = await CreateScript(formattedData); // Kirim data ke API untuk create
       if (response.message?.toLowerCase().includes("successfully")) {
         setMessage("Script berhasil dibuat!");
         setTimeout(() => {
@@ -66,10 +64,7 @@ export default function CreateScriptPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         {/* Title */}
         <div className="form-group">
-          <label
-            htmlFor="title"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="title" className="block text-sm font-medium text-gray-700">
             Judul
           </label>
           <input
@@ -82,10 +77,7 @@ export default function CreateScriptPage() {
 
         {/* Script (Froala Editor) */}
         <div className="form-group">
-          <label
-            htmlFor="script"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="script" className="block text-sm font-medium text-gray-700">
             Script
           </label>
           <FroalaEditor
@@ -96,34 +88,45 @@ export default function CreateScriptPage() {
               heightMin: 300, // Set the height of the editor to be more visible
               placeholderText: "Tulis script di sini... tambahkan # di setiap topik judul topik",
               toolbarInline: false, // Use a full toolbar
-              charCounterCount: true, 
+              charCounterCount: true,
               toolbarButtons: [
-                'undo', 'redo', '|',
-                'bold', 'italic', 'underline', 'strikeThrough', '|',
-                'fontSize', 'color', 'inlineStyle', '|',
-                'paragraphFormat', 'align', '|',
-                'formatOL', 'formatUL', 'outdent', 'indent', '|',
-                'clearFormatting'
+                "undo",
+                "redo",
+                "|",
+                "bold",
+                "italic",
+                "underline",
+                "strikeThrough",
+                "|",
+                "fontSize",
+                "color",
+                "inlineStyle",
+                "|",
+                "paragraphFormat",
+                "align",
+                "|",
+                "formatOL",
+                "formatUL",
+                "outdent",
+                "indent",
+                "|",
+                "clearFormatting",
               ],
               fontFamily: {
-                'arial': 'Arial',
-                'times': 'Times New Roman',
-                'courier': 'Courier New',
-                'georgia': 'Georgia',
-                'verdana': 'Verdana'
+                arial: "Arial",
+                times: "Times New Roman",
+                courier: "Courier New",
+                georgia: "Georgia",
+                verdana: "Verdana",
               },
-              fontSize: ['12', '14', '16', '18', '24', '36'],  
-            
+              fontSize: ["12", "14", "16", "18", "24", "36"],
             }}
           />
         </div>
 
         {/* Status Aktif */}
         <div className="form-group">
-          <label
-            htmlFor="isActive"
-            className="block text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="isActive" className="block text-sm font-medium text-gray-700">
             Status Aktif
           </label>
           <select
@@ -139,10 +142,7 @@ export default function CreateScriptPage() {
 
         {/* Submit Button */}
         <div className="flex justify-center">
-          <button
-            type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-          >
+          <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
             Create
           </button>
         </div>
