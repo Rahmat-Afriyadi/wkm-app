@@ -33,6 +33,30 @@ export default function Page({ params, searchParams }) {
   if (isLoading) {
     return "Loading...";
   }
+
+  if (faktur.data.asuransi_pa?.id !== "" && faktur.data.asuransi_pa?.id !== undefined) {
+    faktur.data.id_produk_asuransi_pa = faktur.data.asuransi_pa.id_produk;
+    faktur.data.nm_produk_asuransi_pa = faktur.data.asuransi_pa.produk.nm_produk;
+    faktur.data.nm_vendor_pa = faktur.data.asuransi_pa.produk.vendor.nm_vendor;
+    faktur.data.rate_pa = faktur.data.asuransi_pa.produk.rate;
+    faktur.data.admin_pa = faktur.data.asuransi_pa.produk.admin;
+    faktur.data.premi = faktur.data.asuransi_pa.premi;
+  }
+  if (faktur.data.asuransi_mtr?.id !== "" && faktur.data.asuransi_mtr?.id !== undefined) {
+    faktur.data.id_produk_asuransi_mtr = faktur.data.asuransi_mtr.id_produk;
+    faktur.data.nm_produk_asuransi_mtr = faktur.data.asuransi_mtr.produk.nm_produk;
+    faktur.data.nm_vendor_mtr = faktur.data.asuransi_mtr.id_produk;
+    faktur.data.rate_mtr = faktur.data.asuransi_mtr.produk.rate;
+    faktur.data.admin_mtr = faktur.data.asuransi_mtr.produk.admin;
+  }
+  if (faktur.data.memberships?.length > 0) {
+    faktur.data.kd_promo_transfer = faktur.data?.memberships[0].kd_promo_transfer;
+    faktur.data.kirim_ke = faktur.data?.memberships[0].kirim_ke;
+    faktur.data.jns_bayar = faktur.data?.memberships[0].jns_bayar;
+    faktur.data.jns_membership = faktur.data?.memberships[0].jns_membership;
+    faktur.data.type_kartu = faktur.data?.memberships[0].type_kartu;
+    faktur.data.tgl_janji_bayar = faktur.data?.memberships[0].tgl_janji_bayar?.substring(0, 10);
+  }
   faktur.data.tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt?.substring(0, 10);
   faktur.data.tgl_lahir_wkm = faktur.data?.tgl_lahir_wkm?.substring(0, 10);
   faktur.data.tgl_faktur = faktur.data?.tgl_faktur?.substring(0, 10);
@@ -40,14 +64,24 @@ export default function Page({ params, searchParams }) {
   faktur.data.asuransi_nm_mtr = faktur.data?.nm_mtr;
   faktur.data.asuransi_no_mtr = faktur.data?.no_mtr;
 
-  if (faktur.data.ketHubTs == 1) {
+  if (faktur.data.no_yg_dihub_ts == 1) {
     faktur.data.no_hub = faktur.data.no_hp_fkt;
-  } else if (faktur.data.ketHubTs == 2) {
+  } else if (faktur.data.no_yg_dihub_ts == 2) {
     faktur.data.no_hub = faktur.data.no_hp_wkm;
-  } else if (faktur.data.ketHubTs == 4) {
+  } else if (faktur.data.no_yg_dihub_ts == 4) {
     faktur.data.no_hub = faktur.data.no_telp_fkt;
-  } else if (faktur.data.ketHubTs == 5) {
+  } else if (faktur.data.no_yg_dihub_ts == 5) {
     faktur.data.no_hub = faktur.data.no_telp_wkm;
+  }
+
+  if (faktur.data.ket_wa_info == 1) {
+    faktur.data.no_info = faktur.data.no_hp_fkt;
+  } else if (faktur.data.ket_wa_info == 2) {
+    faktur.data.no_info = faktur.data.no_hp_wkm;
+  } else if (faktur.data.ket_wa_info == 4) {
+    faktur.data.no_info = faktur.data.no_telp_fkt;
+  } else if (faktur.data.ket_wa_info == 5) {
+    faktur.data.no_info = faktur.data.no_telp_wkm;
   }
 
   const handleAmbilData = (item) => {

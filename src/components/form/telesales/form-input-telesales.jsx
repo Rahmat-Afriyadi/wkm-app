@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import InputGroup from "@/components/Input/input-group";
+import TextAreaGroup from "@/components/Input/text-area-group";
 import RadioButtonComponent from "@/components/Input/radio-button";
 import SearchableSelect from "@/components/Input/searchable-select";
 import { Form, useForm } from "react-hook-form";
@@ -32,8 +33,10 @@ import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
 import ModalMotor from "@/components/Modal/mtr/modal-mtr";
 import { errorSelector } from "recoil";
+import { useRouter } from "next/navigation";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
+  const router = useRouter();
   const {
     register,
     setValue,
@@ -41,13 +44,13 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     reset,
     handleSubmit,
     setFocus,
-    clearErrors,
-    trigger,
+    setError,
     formState: { errors },
   } = useForm({ defaultValues: isEditing ? defaultValues : {} });
 
   const kirimKe = watch("kirim_ke");
   const ketNmWkm = watch("ket_nm_wkm");
+  const ketNoKtp = watch("ket_no_ktpnpwp_wkm");
   const ketWaInfo = watch("ket_wa_info");
   const ketHubTs = watch("no_yg_dihub_ts");
   const selectedKodepos = watch("kodepos");
@@ -60,9 +63,42 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const stsMembership = watch("sts_membership");
   const stsAsuransiPa = watch("sts_asuransi_pa");
   const stsAsuransiMtr = watch("sts_asuransi_mtr");
-
+  const alasanPendingMembership = watch("alasan_pending_membership");
+  console.log("erorr", errors);
   const onSubmit = async (values) => {
-    clearErrors();
+    if (values.sts_membership !== "P") {
+      console.log("kesini gk sih ");
+      if ((values.sts_asuransi_pa == "P" || values.sts_asuransi_pa == "F") && popUpPa == 1) {
+        return Swal.fire({
+          title: "Apakah kamu sudah menawarkan produk Asuransi PA",
+          icon: "question",
+          confirmButtonColor: "#0891B2",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Oke",
+          showLoaderOnConfirm: true,
+        }).then(() => {
+          setFocus("sts_asuransi_pa");
+          setMenuTab(2);
+          setPopUpPa(0);
+        });
+      }
+
+      if ((values.sts_asuransi_mtr == "P" || values.sts_asuransi_mtr == "F") && popUpMtr == 1) {
+        return Swal.fire({
+          title: "Apakah kamu sudah menawarkan produk Asuransi Motor",
+          icon: "question",
+          confirmButtonColor: "#0891B2",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Oke",
+          showLoaderOnConfirm: true,
+        }).then((e) => {
+          setFocus("sts_asuransi_mtr");
+          setMenuTab(2);
+          setAsuransiTypeTab(2);
+          setPopUpMtr(0);
+        });
+      }
+    }
     values.asuransi_mtr_otr = parseInt(values?.otr?.replace(/Rp\s?|,/g, ""));
     values.asuransi_mtr_amount = parseInt(values?.amount?.replace(/Rp\s?|,/g, ""));
     values.asuransi_mtr_tahun = parseInt(values.asuransi_mtr_tahun);
@@ -73,29 +109,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
     values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
     console.log("ini values ", values);
-    if (values.sts_asuransi_pa == "" || values.sts_asuransi_pa == null) {
-      return Swal.fire({
-        title: "Apakah kamu sudah menawarkan produk Asuransi PA",
-        icon: "question",
-        confirmButtonColor: "#0891B2",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Oke",
-        showLoaderOnConfirm: true,
-      }).then(() => {
-        setFocus("sts_asuransi_pa");
-        setMenuTab(2);
-      });
-    }
-    if (values.sts_asuransi_mtr == "" || values.sts_asuransi_mtr == null) {
-      return Swal.fire({
-        title: "Apakah kamu sudah menawarkan produk Asuransi Motor",
-        icon: "question",
-        confirmButtonColor: "#0891B2",
-        cancelButtonColor: "#d33",
-        confirmButtonText: "Oke",
-        showLoaderOnConfirm: true,
-      });
-    }
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
       icon: "question",
@@ -108,8 +121,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
         mutUpdateCustomer.mutate(values, {
           onSuccess: (data) => {
             Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-              setFaktur(null);
-              router.refresh();
+              router.replace("/pending/membership");
             });
           },
           onError: (e) => {
@@ -131,7 +143,10 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     });
   };
 
+  const validasiNoTelp = ["1", "1A", "1B"];
   const [openKodepos, setOpenKodepos] = useState(false);
+  const [popUpPa, setPopUpPa] = useState(1);
+  const [popUpMtr, setPopUpMtr] = useState(1);
   const [openScript, setOpenScript] = useState(false);
   const [openMstMtr, setOpenMstMtr] = useState(false);
   const [openProdukAsuransiPa, setOpenProdukAsuransiPa] = useState(false);
@@ -245,25 +260,31 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [ketNmWkm]); // eslint-disable-line
 
   useEffect(() => {
-    if (ketWaInfo == 1) {
-      setValue("no_info", watch("no_telp_fkt"));
-    } else if (ketWaInfo == 2) {
-      setValue("no_info", watch("no_hp_fkt"));
-    } else if (ketWaInfo == 3) {
-      setValue("no_info", watch("no_telp_wkm"));
-    } else if (ketWaInfo == 4) {
-      setValue("no_info", watch("no_hp_wkm"));
+    if (ketNoKtp == 1) {
+      setValue("no_ktpnpwp_wkm", watch("no_ktpnpwp_fkt"));
+    }
+  }, [ketNoKtp]); // eslint-disable-line
+
+  useEffect(() => {
+    if (ketWaInfo == 1 && validasiNoTelp.includes(watch("ket_no_hp_fkt"))) {
+      setValue("no_wa", watch("no_hp_fkt"));
+    } else if (ketWaInfo == 2 && validasiNoTelp.includes(watch("ket_no_hp_wkm"))) {
+      setValue("no_wa", watch("no_hp_wkm"));
+    } else if (ketWaInfo == 4 && validasiNoTelp.includes(watch("ket_no_telp_fkt"))) {
+      setValue("no_wa", watch("no_telp_fkt"));
+    } else if (ketWaInfo == 5 && validasiNoTelp.includes(watch("ket_no_telp_wkm"))) {
+      setValue("no_wa", watch("no_telp_wkm"));
     }
   }, [ketWaInfo]); // eslint-disable-line
 
   useEffect(() => {
-    if (ketHubTs == 1) {
+    if (ketHubTs == 1 && validasiNoTelp.includes(watch("ket_no_hp_fkt"))) {
       setValue("no_hub", watch("no_hp_fkt"));
-    } else if (ketHubTs == 2) {
+    } else if (ketHubTs == 2 && validasiNoTelp.includes(watch("ket_no_hp_wkm"))) {
       setValue("no_hub", watch("no_hp_wkm"));
-    } else if (ketHubTs == 4) {
+    } else if (ketHubTs == 4 && validasiNoTelp.includes(watch("ket_no_telp_fkt"))) {
       setValue("no_hub", watch("no_telp_fkt"));
-    } else if (ketHubTs == 5) {
+    } else if (ketHubTs == 5 && validasiNoTelp.includes(watch("ket_no_telp_wkm"))) {
       setValue("no_hub", watch("no_telp_wkm"));
     }
   }, [ketHubTs]); // eslint-disable-line
@@ -271,6 +292,17 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   useEffect(() => {
     handleRpChange({ target: { value: "" + detailOtr.data.otr } }, "otr");
   }, [detailOtr]); // eslint-disable-line
+
+  useEffect(() => {
+    if (stsMembership == "P") {
+      if (stsAsuransiPa == "P") {
+        setValue("alasan_pending_asuransi_pa", alasanPendingMembership);
+      }
+      if (stsAsuransiMtr == "P") {
+        setValue("alasan_pending_asuransi_mtr", alasanPendingMembership);
+      }
+    }
+  }, [alasanPendingMembership]); // eslint-disable-line
 
   useEffect(() => {
     handleRpChange(
@@ -282,15 +314,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       "amount"
     );
   }, [otrValue, rate, biayaAdmin, detailOtr, amountValue]); // eslint-disable-line
-
-  // useEffect(() => {
-  //   if (stsAsuransiPa !== "O") {
-  //     setValue("id_produk_asuransi_pa", ""); // Reset field jika tidak diperlukan
-  //     clearErrors("id_produk_asuransi_pa"); // Hapus error jika status berubah
-  //   } else {
-  //     trigger("id_produk_asuransi_pa"); // Validasi ulang jika status "O"
-  //   }
-  // }, [stsAsuransiPa, setValue, trigger, clearErrors]);
 
   return (
     <>
@@ -316,8 +339,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               setValue("id_produk_asuransi_pa", e.kd_produk);
               setValue("nm_produk_asuransi_pa", e.nm_produk);
               setValue("nm_vendor_pa", e.vendor.nm_vendor);
-              setValue("rate", e.rate);
-              setValue("admin", e.admin);
+              setValue("rate_pa", e.rate);
+              setValue("admin_pa", e.admin);
               setValue("premi", e.premi);
               setOpenProdukAsuransiPa(false);
             }}
@@ -330,8 +353,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               setValue("id_produk_asuransi_mtr", e.kd_produk);
               setValue("nm_produk_asuransi_mtr", e.nm_produk);
               setValue("nm_vendor_mtr", e.vendor.nm_vendor);
-              setValue("rate", e.rate);
-              setValue("admin", e.admin);
+              setValue("rate_mtr", e.rate);
+              setValue("admin_mtr", e.admin);
               setOpenProdukAsuransiMtr(false);
             }}
           />
@@ -407,19 +430,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 type="date"
               />
             </div>
-            <div className="col-span-1"></div>
 
-            <div className="col-span-3">
-              <InputGroup
+            <div className="col-span-3 row-span-2 ">
+              <TextAreaGroup
                 name={"alamat_fkt"}
                 label={"Alamat"}
                 id={"alamat_fkt"}
                 register={register}
                 disabled={true}
                 errors={errors}
+                rows={5}
               />
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
+            <div className="col-span-1 row-span-2"></div>
             <div className="col-span-3">
               <InputGroup
                 name={"nm_mtr"}
@@ -430,7 +453,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 errors={errors}
               />
             </div>
-            <div className="col-span-1"></div>
 
             <div className="col-span-3">
               <InputGroup
@@ -442,7 +464,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 errors={errors}
               />
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
+            {/* <div className="col-span-1 flex items-end justify-center cursor-pointer"></div> */}
             <div className="col-span-3">
               <InputGroup
                 name={"tgl_lahir_fkt"}
@@ -514,18 +536,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
-            <div className="col-span-3">
-              <SelectGroup
-                name={"agama_fkt"}
-                label={"Agama"}
-                id={"agama_fkt"}
-                register={register}
-                options={agama.data}
-                disabled={true}
-                errors={errors}
-              />
-            </div>
-            <div className="col-span-1"></div>
 
             <div className="col-span-3">
               <InputGroup
@@ -543,6 +553,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 id="ket_no_telp_fkt"
                 errors={errors}
                 register={register}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 options={[
                   { name: "", value: "" },
                   { name: "1", value: "1" },
@@ -565,17 +576,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-3">
               <SelectGroup
-                name={"kode_didik_fkt"}
-                label={"Pendidikan"}
-                id={"kode_didik_fkt"}
+                name={"agama_fkt"}
+                label={"Agama"}
+                id={"agama_fkt"}
                 register={register}
+                options={agama.data}
                 disabled={true}
                 errors={errors}
-                options={pendidikan.data}
               />
             </div>
             <div className="col-span-1"></div>
-
             <div className="col-span-3">
               <InputGroup
                 name={"no_hp_fkt"}
@@ -588,10 +598,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer">
               <SelectGroup
-                name="ket_no_telp_fkt"
-                id="ket_no_telp_fkt"
+                name="ket_no_hp_fkt"
+                id="ket_no_hp_fkt"
                 errors={errors}
                 register={register}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 options={[
                   { name: "", value: "" },
                   { name: "1", value: "1" },
@@ -611,6 +622,20 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 ]}
               />
             </div>
+
+            <div className="col-span-3">
+              <SelectGroup
+                name={"kode_didik_fkt"}
+                label={"Pendidikan"}
+                id={"kode_didik_fkt"}
+                register={register}
+                disabled={true}
+                errors={errors}
+                options={pendidikan.data}
+              />
+            </div>
+            <div className="col-span-1"></div>
+
             <div className="col-span-3">
               <SelectGroup
                 name={"keluar_bln_fkt"}
@@ -648,6 +673,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1"></div>
+            <div className="col-span-3">
+              <InputGroup
+                name={"no_ktpnpwp_fkt"}
+                label={"Nomor KTP"}
+                id={"no_ktpnpwp_fkt"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
           </div>
         </div>
         <div className="col-span-1 ">
@@ -660,7 +695,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 id={"nm_customer_wkm"}
                 register={register}
                 disabled={ketNmWkm == 1}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 errors={errors}
               />
             </div>
@@ -678,11 +713,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-3">
               <InputGroup
-                name={"no_info"}
+                name={"no_wa"}
                 label={"Nomor Info"}
-                id={"no_info"}
+                id={"no_wa"}
                 register={register}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 disabled={false}
                 errors={errors}
               />
@@ -696,20 +731,20 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 options={[
                   { name: "1", value: "1" },
                   { name: "2", value: "2" },
-                  { name: "3", value: "3" },
                   { name: "4", value: "4" },
+                  { name: "5", value: "5" },
                 ]}
                 errors={errors}
               />
             </div>
-            <div className="col-span-3">
-              <InputGroup
+            <div className="col-span-3 row-span-2">
+              <TextAreaGroup
                 name={"alamat_wkm"}
                 label={"Alamat"}
                 id={"alamat_wkm"}
                 register={register}
-                disabled={false}
                 errors={errors}
+                rows={5}
               />
             </div>
             <div className="col-span-1 flex items-end justify-center cursor-pointer">
@@ -731,15 +766,39 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-3">
               <InputGroup
-                name={"alasan_tdk_membership"}
-                label={"Alasan"}
-                id={"alasan_tdk_membership"}
+                name={"no_ktpnpwp_wkm"}
+                label={"Nomor KTP"}
+                id={"no_ktpnpwp_wkm"}
                 register={register}
-                disabled={true}
+                disabled={ketNoKtp == 1}
                 errors={errors}
               />
             </div>
-            <div className="col-span-1"></div>
+            <div className="col-span-1 flex items-end justify-center cursor-pointer">
+              <SelectGroup
+                name="ket_no_ktpnpwp_wkm"
+                id="ket_no_ktpnpwp_wkm"
+                errors={errors}
+                register={register}
+                options={[
+                  { name: "0", value: "" },
+                  { name: "1", value: "1" },
+                ]}
+              />
+            </div>
+            <div className="col-span-1 flex items-end"></div>
+            <div className="col-span-3">
+              <InputGroup
+                name={"tgl_lahir_wkm"}
+                label={"Tanggal Lahir"}
+                id={"tgl_lahir_wkm"}
+                register={register}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
+                disabled={false}
+                errors={errors}
+                type="date"
+              />
+            </div>
             <div className="col-span-3">
               <div className="w-full grid grid-cols-2 gap-x-3">
                 <div className="col-span-1">
@@ -764,19 +823,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 </div>
               </div>
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
+            <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
-              <InputGroup
-                name={"tgl_lahir_wkm"}
-                label={"Tanggal Lahir"}
-                id={"tgl_lahir_wkm"}
-                register={register}
-                validation={{ required: "This field is required" }}
-                disabled={false}
+              <SelectGroup
+                name="kd_aktivitas_jual_membership"
+                id="kd_aktivitas_jual_membership"
+                label={"Aktivitas Jual"}
                 errors={errors}
-                type="date"
+                register={register}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
+                options={aktifJual.data}
               />
             </div>
+
             <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
               <InputGroup
@@ -784,7 +843,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Kodepos"}
                 id={"kodepos_wkm"}
                 register={register}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 disabled={false}
                 errors={errors}
               />
@@ -797,37 +856,36 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
               </button>
             </div>
-            <div className="col-span-3">
-              <SelectGroup
-                name="kd_aktivitas_jual_membership"
-                id="kd_aktivitas_jual_membership"
-                label={"Aktivitas Jual"}
-                errors={errors}
+            <div className="col-span-3 row-span-2">
+              <TextAreaGroup
+                name={"alamat_bantuan"}
+                label={"Alamat Bantuan"}
+                id={"alamat_bantuan"}
                 register={register}
-                validation={{ required: "This field is required" }}
-                options={aktifJual.data}
+                disabled={true}
+                errors={errors}
+                rows={5}
               />
             </div>
-            <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
               <InputGroup
                 name={"kel_wkm"}
+                readOnly
                 label={"Kelurahan"}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 id={"kel_wkm"}
                 register={register}
                 disabled={false}
                 errors={errors}
               />
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
-            <div className="col-span-3"></div>
             <div className="col-span-1"></div>
             <div className="col-span-3">
               <InputGroup
                 name={"kec_wkm"}
+                readOnly
                 label={"Kecamatan"}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 id={"kec_wkm"}
                 register={register}
                 disabled={false}
@@ -840,8 +898,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-3">
               <InputGroup
                 name={"kota_wkm"}
+                readOnly
                 label={"Kota"}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 id={"kota_wkm"}
                 register={register}
                 disabled={false}
@@ -857,7 +916,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Telp"}
                 id={"no_telp_wkm"}
                 register={register}
-                validation={{ required: "This field is required" }}
                 disabled={false}
                 errors={errors}
               />
@@ -868,6 +926,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 id={"ket_no_telp_wkm"}
                 register={register}
                 disabled={false}
+                validation={watch("no_telp_wkm") != "" ? { required: "This field is required" } : {}}
                 options={[
                   { name: "", value: "" },
                   { name: "1", value: "1" },
@@ -907,10 +966,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-3">
               <InputGroup
                 name={"no_hub"}
+                readOnly
                 label={"No Hub"}
                 id={"no_hub"}
                 register={register}
-                validation={{ required: "This field is required" }}
+                validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                 disabled={false}
                 errors={errors}
               />
@@ -984,7 +1044,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-3 -mt-1">
                   <RadioButtonComponent
                     register={register}
-                    validation={{ required: "This field is required" }}
+                    validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                     errors={errors}
                     label={"Status Membership"}
                     name={"sts_membership"}
@@ -1028,7 +1088,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       name={"alasan_tdk_membership"}
                       label={"Alasan Tidak"}
                       id={"alasan_tdk_membership"}
-                      validation={{ required: "This field is required" }}
+                      validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                       register={register}
                       disabled={false}
                       options={alasanTdkMembership?.data}
@@ -1069,6 +1129,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       label={"Tanggal Prospect"}
                       id={"tgl_prospect_membership"}
                       register={register}
+                      validation={stsMembership == "F" ? { required: "This field is required" } : {}}
                       errors={errors}
                       type="date"
                     />
@@ -1332,7 +1393,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_tdk_asuransi_pa"}
                   label={"Alasan Tidak"}
                   id={"alasan_tdk_asuransi_pa"}
-                  validation={{ required: "This field is required" }}
                   register={register}
                   disabled={false}
                   options={alasanTdkMembership?.data}
@@ -1344,7 +1404,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_pa"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_pa"}
-                  validation={{ required: "This field is required" }}
                   register={register}
                   disabled={false}
                   options={[
@@ -1361,7 +1420,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"tgl_prospect_asuransi_pa"}
                   label={"Tanggal Prospect"}
                   id={"tgl_prospect_asuransi_pa"}
-                  validation={{ required: "This field is required" }}
+                  validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                   register={register}
                   errors={errors}
                   type="date"
@@ -1380,7 +1439,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   placeholder="Id Produk"
                   {...register("id_produk_asuransi_pa", {
                     validate: (value) => {
-                      console.log("ini dari validasi ", stsAsuransiPa);
                       return stsAsuransiPa === "O" && !value ? "This field is required" : true;
                     }, // ✅ Validasi dinamis
                   })}
@@ -1415,9 +1473,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"rate"}
+                name={"rate_pa"}
                 label={"Rate"}
-                id={"rate"}
+                id={"rate_pa"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1425,9 +1483,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"admin"}
+                name={"admin_pa"}
                 label={"Biaya Admin"}
-                id={"admin"}
+                id={"admin_pa"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1469,7 +1527,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_tdk_asuransi_mtr"}
                   label={"Alasan Tidak"}
                   id={"alasan_tdk_asuransi_mtr"}
-                  validation={{ required: "This field is required" }}
                   register={register}
                   disabled={false}
                   options={alasanTdkMembership?.data}
@@ -1481,7 +1538,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_mtr"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_mtr"}
-                  validation={{ required: "This field is required" }}
                   register={register}
                   disabled={false}
                   options={[
@@ -1498,7 +1554,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"tgl_prospect_asuransi_mtr"}
                   label={"Tanggal Prospect"}
                   id={"tgl_prospect_asuransi_mtr"}
-                  validation={{ required: "This field is required" }}
+                  validation={watch("sts_membership") != "P" ? { required: "This field is required" } : {}}
                   register={register}
                   errors={errors}
                   type="date"
@@ -1551,9 +1607,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"rate"}
+                name={"rate_mtr"}
                 label={"Rate"}
-                id={"rate"}
+                id={"rate_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -1561,9 +1617,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1">
               <InputGroup
-                name={"admin"}
+                name={"admin_mtr"}
                 label={"Biaya Admin"}
-                id={"admin"}
+                id={"admin_mtr"}
                 register={register}
                 disabled={true}
                 errors={errors}
