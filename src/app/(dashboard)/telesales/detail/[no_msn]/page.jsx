@@ -35,6 +35,7 @@ export default function Page({ params, searchParams }) {
   }
 
   if (faktur.data.asuransi_pa?.id !== "" && faktur.data.asuransi_pa?.id !== undefined) {
+    faktur.data.asuransi_pa_id = faktur.data.asuransi_pa?.id;
     faktur.data.id_produk_asuransi_pa = faktur.data.asuransi_pa.id_produk;
     faktur.data.nm_produk_asuransi_pa = faktur.data.asuransi_pa.produk.nm_produk;
     faktur.data.nm_vendor_pa = faktur.data.asuransi_pa.produk.vendor.nm_vendor;
@@ -43,6 +44,7 @@ export default function Page({ params, searchParams }) {
     faktur.data.premi = faktur.data.asuransi_pa.premi;
   }
   if (faktur.data.asuransi_mtr?.id !== "" && faktur.data.asuransi_mtr?.id !== undefined) {
+    faktur.data.asuransi_mtr_id = faktur.data.asuransi_mtr?.id;
     faktur.data.id_produk_asuransi_mtr = faktur.data.asuransi_mtr.id_produk;
     faktur.data.nm_produk_asuransi_mtr = faktur.data.asuransi_mtr.produk.nm_produk;
     faktur.data.nm_vendor_mtr = faktur.data.asuransi_mtr.id_produk;
@@ -50,6 +52,7 @@ export default function Page({ params, searchParams }) {
     faktur.data.admin_mtr = faktur.data.asuransi_mtr.produk.admin;
   }
   if (faktur.data.memberships?.length > 0) {
+    faktur.data.membership_id = faktur.data?.memberships[0].id;
     faktur.data.kd_promo_transfer = faktur.data?.memberships[0].kd_promo_transfer;
     faktur.data.kirim_ke = faktur.data?.memberships[0].kirim_ke;
     faktur.data.jns_bayar = faktur.data?.memberships[0].jns_bayar;
