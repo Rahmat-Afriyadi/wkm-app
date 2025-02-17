@@ -63,6 +63,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const otrValue = watch("otr");
   const rateMtr = watch("rate_mtr");
   const amountValue = watch("amount");
+  const asuransiMtrAmount = watch("asuransi_mtr_amount");
   const biayaAdminMtr = watch("admin_mtr");
   const jnsMembership = watch("jns_membership");
   const alasanTdkMembershipSelected = watch("alasan_tdk_membership");
@@ -73,6 +74,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const stsAsuransiMtr = watch("sts_asuransi_mtr");
   const alasanPendingMembership = watch("alasan_pending_membership");
   const membershipId = watch("membership_id");
+  const asuransiPaId = watch("asuransi_pa_id");
+  const asuransiMtrId = watch("asuransi_mtr_id");
 
   const onSubmit = async (values) => {
     if (values.sts_membership !== "P" && values.sts_membership !== "O") {
@@ -122,6 +125,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     }
 
     values.asuransi_mtr_amount = parseInt(values?.amount?.replace(/Rp\s?|,/g, ""));
+    values.amount_asuransi_pa = parseInt(values?.amount_asuransi_pa);
     values.asuransi_mtr_tahun = parseInt(values.asuransi_mtr_tahun);
     values.renewal_ke = parseInt(values.renewal_ke);
     values.tgl_faktur = new Date(values.tgl_faktur);
@@ -318,6 +322,22 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       setDisabledOkeMembership(false);
     }
   }, [membershipId, stsMembership]); // eslint-disable-line
+
+  useEffect(() => {
+    if (asuransiPaId && stsAsuransiPa == "O") {
+      setDisabledOkeAsuransiPa(true);
+    } else {
+      setDisabledOkeAsuransiPa(false);
+    }
+  }, [asuransiPaId, stsAsuransiPa]); // eslint-disable-line
+
+  useEffect(() => {
+    if (asuransiMtrId && stsAsuransiMtr == "O") {
+      setDisabledOkeAsuransiMtr(true);
+    } else {
+      setDisabledOkeAsuransiMtr(false);
+    }
+  }, [asuransiMtrId, stsAsuransiMtr]); // eslint-disable-line
 
   useEffect(() => {
     if (ketWaInfo == 1 && validasiNoTelp.includes(ketNoHpFkt)) {
@@ -1659,6 +1679,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <RadioButtonComponent
                 register={register}
                 errors={errors}
+                disabled={disabledOkeAsuransiPa}
                 label={"Status Asuransi PA"}
                 name={"sts_asuransi_pa"}
                 options={[
@@ -1716,6 +1737,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
                 <input
                   readOnly
+                  disabled={disabledOkeAsuransiPa}
                   onClick={() => setOpenProdukAsuransiPa(true)}
                   id={"id_produk_asuransi_pa"}
                   placeholder="Id Produk"
@@ -1724,7 +1746,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       return stsAsuransiPa === "O" && !value ? "This field is required" : true;
                     }, // ✅ Validasi dinamis
                   })}
-                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
+                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm ${
+                    disabledOkeAsuransiPa ? "bg-gray-300 cursor-not-allowed" : ""
+                  }`}
                 />
                 {errors["id_produk_asuransi_pa"] && (
                   <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
@@ -1739,7 +1763,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nama Vendor"}
                 id={"nm_vendor_pa"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiPa}
                 errors={errors}
               />
             </div>
@@ -1749,7 +1773,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nama Produk"}
                 id={"nm_produk_asuransi_pa"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiPa}
                 errors={errors}
               />
             </div>
@@ -1759,7 +1783,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Rate"}
                 id={"rate_pa"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiPa}
                 errors={errors}
               />
             </div>
@@ -1769,7 +1793,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Biaya Admin"}
                 id={"admin_pa"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiPa}
                 errors={errors}
               />
             </div>
@@ -1779,7 +1803,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Biaya Premi"}
                 id={"amount_asuransi_pa"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiPa}
                 errors={errors}
               />
             </div>
@@ -1793,6 +1817,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 register={register}
                 errors={errors}
                 setValue={setValue}
+                disabled={disabledOkeAsuransiMtr}
                 label={"Status Asuransi Motor"}
                 name={"sts_asuransi_mtr"}
                 options={[
@@ -1850,6 +1875,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <div className="relative mt-1 rounded-md shadow-sm cursor-pointer">
                 <input
                   readOnly
+                  disabled={disabledOkeAsuransiMtr}
                   onClick={() => setOpenProdukAsuransiMtr(true)}
                   id={"id_produk"}
                   placeholder="Id Produk"
@@ -1858,7 +1884,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       return stsAsuransiMtr === "O" && !value ? "This field is required" : true;
                     }, // ✅ Validasi dinamis
                   })}
-                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
+                  className={`cursor-pointer block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm ${
+                    disabledOkeAsuransiMtr ? "bg-gray-300 cursor-not-allowed" : ""
+                  }`}
                 />
                 {errors["id_produk_asuransi_mtr"] && (
                   <p className="text-sm text-red absolute" style={{ marginTop: 2 }}>
@@ -1873,7 +1901,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nama Vendor"}
                 id={"nm_vendor_mtr"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
               />
             </div>
@@ -1883,7 +1911,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nama Produk"}
                 id={"nm_produk_asuransi_mtr"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
               />
             </div>
@@ -1893,7 +1921,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Rate"}
                 id={"rate_mtr"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
               />
             </div>
@@ -1903,7 +1931,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Biaya Admin"}
                 id={"admin_mtr"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
               />
             </div>
@@ -1913,7 +1941,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nama Motor"}
                 id={"asuransi_nm_mtr"}
                 register={register}
-                disabled={true}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
               />
             </div>
@@ -1924,7 +1952,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 placeholder={"Nomor Motor"}
                 id={"asuransi_no_mtr"}
                 register={register}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 readOnly
                 onClick={() => setOpenMstMtr(true)}
@@ -1936,7 +1964,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Tahun"}
                 id={"asuransi_mtr_tahun"}
                 register={register}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 type="number"
               />
@@ -1948,7 +1976,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 id={"warna"}
                 register={register}
                 validation={{ required: stsAsuransiMtr == "O" ? "This field is required" : false }}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 type="text"
               />
@@ -1960,7 +1988,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 id={"no_pol_wkm"}
                 register={register}
                 validation={{ required: stsAsuransiMtr == "O" ? "This field is required" : false }}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 type="text"
               />
@@ -1970,7 +1998,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"asuransi_mtr_otr"}
                 label={"OTR"}
                 id={"asuransi_mtr_otr"}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 type="text"
                 value={otrValue || ""}
@@ -1995,7 +2023,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"asuransi_mtr_amount"}
                 label={"Amount Asuransi Motor"}
                 id={"asuransi_mtr_amount"}
-                disabled={false}
+                disabled={disabledOkeAsuransiMtr}
                 errors={errors}
                 type="text"
                 value={amountValue || ""}

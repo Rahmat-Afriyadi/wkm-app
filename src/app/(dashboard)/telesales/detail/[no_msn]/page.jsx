@@ -41,7 +41,7 @@ export default function Page({ params, searchParams }) {
     faktur.data.nm_vendor_pa = faktur.data.asuransi_pa.produk.vendor.nm_vendor;
     faktur.data.rate_pa = faktur.data.asuransi_pa.produk.rate;
     faktur.data.admin_pa = faktur.data.asuransi_pa.produk.admin;
-    faktur.data.amount_asuransi_pa = faktur.data.asuransi_pa.amount;
+    faktur.data.amount_asuransi_pa = faktur.data.asuransi_pa.amount_asuransi_pa;
   }
   if (faktur.data.asuransi_mtr?.id !== "" && faktur.data.asuransi_mtr?.id !== undefined) {
     faktur.data.asuransi_mtr_id = faktur.data.asuransi_mtr?.id;

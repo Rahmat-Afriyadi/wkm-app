@@ -14,13 +14,18 @@ export default function RadioButtonComponent({ options = [], name, label, regist
         {options &&
           options.map((e) => {
             return (
-              <label key={e.value} className="flex items-center gap-1 cursor-pointer">
+              <label
+                key={e.value}
+                className={`flex items-center gap-1  ${props.disabled ? "cursor-not-allowed" : "cursor-pointer "}`}
+              >
                 <input
                   type="radio"
                   value={e.value}
                   disabled={props.disabled}
                   {...register(name, validation)}
-                  className={`w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 cursor-pointer `}
+                  className={`w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 ${
+                    props.disabled ? "cursor-not-allowed" : "cursor-pointer "
+                  }`}
                 />
                 <span className="text-gray-700">{e.name}</span>
               </label>
