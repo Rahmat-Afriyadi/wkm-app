@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 export default function SearchableSelect({ options, name, setValue, setOpen = (e) => e }) {
+  const inputRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -10,11 +11,16 @@ export default function SearchableSelect({ options, name, setValue, setOpen = (e
     return setValue(name, selectedOption);
   }, [selectedOption]); // eslint-disable-line
 
+  useEffect(() => {
+    return inputRef?.current?.focus();
+  }, [inputRef]); // eslint-disable-line
+
   return (
     <div className="flex flex-col items-center ">
       <p className="text-2xl font-semibold">Searchable Select Input</p>
       <div className="relative w-80">
         <input
+          ref={inputRef}
           type="text"
           placeholder="Search..."
           value={searchTerm}
