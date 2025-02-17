@@ -1,47 +1,61 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { CreateScript } from "@/server/master/mst-script"; // Ganti dengan path yang sesuai
+import { CreateScript } from "@/server/master/mst-script";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
-import "froala-editor/css/froala_editor.pkgd.min.css";
-import "froala-editor/css/froala_style.min.css";
-import "froala-editor/js/plugins/image.min.js";
-import "froala-editor/js/plugins/paragraph_format.min.js";
-import "froala-editor/js/plugins/font_size.min.js";
-import "froala-editor/js/plugins/lists.min.js";
-import "froala-editor/js/plugins/align.min.js";
-import "froala-editor/js/froala_editor.pkgd.min.js";
 
-const FroalaEditor = dynamic(() => import("react-froala-wysiwyg"), { ssr: false });
+// Dynamic import untuk Froala Editor dengan SSR dinonaktifkan
+const FroalaEditor = dynamic(() => import("react-froala-wysiwyg"), {
+  ssr: false,
+  loading: () => <p>Loading Editor...</p>,
+});
 
 export default function CreateScriptPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const [message, setMessage] = useState("");
-  const [editorContent, setEditorContent] = useState(""); // State for editor content
-
+  const [editorContent, setEditorContent] = useState("");
   const { handleSubmit, register, reset } = useForm();
+
+  // State untuk memastikan kode hanya dijalankan di browser
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      require("froala-editor/css/froala_editor.pkgd.min.css");
+      require("froala-editor/css/froala_style.min.css");
+      require("froala-editor/js/plugins/image.min.js");
+      require("froala-editor/js/plugins/paragraph_format.min.js");
+      require("froala-editor/js/plugins/font_size.min.js");
+      require("froala-editor/js/plugins/lists.min.js");
+      require("froala-editor/js/plugins/align.min.js");
+      require("froala-editor/js/froala_editor.pkgd.min.js");
+    }
+  }, []);
 
   const onSubmit = async (data) => {
     const formattedData = {
       title: data.title,
       script: editorContent,
-      isActive: data.isActive === "true" ? 1 : 0, // Mengubah nilai isActive menjadi 1 atau 0
+      isActive: data.isActive === "true" ? 1 : 0,
     };
 
     try {
-      // console.log("data dikirim:", formattedData);
-      const response = await CreateScript(formattedData); // Kirim data ke API untuk create
+      const response = await CreateScript(formattedData);
       if (response.message?.toLowerCase().includes("successfully")) {
         setMessage("Script berhasil dibuat!");
         setTimeout(() => {
           router.back();
           setTimeout(() => {
-            window.location.reload(); // Reload the page
-          }, 100); // Memuat ulang halaman sebelumnya
+            window.location.reload();
+          }, 100);
         }, 1000);
       } else {
         setMessage("Gagal membuat script. Silakan coba lagi.");
@@ -80,48 +94,50 @@ export default function CreateScriptPage() {
           <label htmlFor="script" className="block text-sm font-medium text-gray-700">
             Script
           </label>
-          <FroalaEditor
-            tag="textarea"
-            model={editorContent}
-            onModelChange={setEditorContent} // Update editor content
-            config={{
-              heightMin: 300, // Set the height of the editor to be more visible
-              placeholderText: "Tulis script di sini... tambahkan # di setiap topik judul topik",
-              toolbarInline: false, // Use a full toolbar
-              charCounterCount: true,
-              toolbarButtons: [
-                "undo",
-                "redo",
-                "|",
-                "bold",
-                "italic",
-                "underline",
-                "strikeThrough",
-                "|",
-                "fontSize",
-                "color",
-                "inlineStyle",
-                "|",
-                "paragraphFormat",
-                "align",
-                "|",
-                "formatOL",
-                "formatUL",
-                "outdent",
-                "indent",
-                "|",
-                "clearFormatting",
-              ],
-              fontFamily: {
-                arial: "Arial",
-                times: "Times New Roman",
-                courier: "Courier New",
-                georgia: "Georgia",
-                verdana: "Verdana",
-              },
-              fontSize: ["12", "14", "16", "18", "24", "36"],
-            }}
-          />
+          {isClient && (
+            <FroalaEditor
+              tag="textarea"
+              model={editorContent}
+              onModelChange={setEditorContent}
+              config={{
+                heightMin: 300,
+                placeholderText: "Tulis script di sini... tambahkan # di setiap topik judul topik",
+                toolbarInline: false,
+                charCounterCount: true,
+                toolbarButtons: [
+                  "undo",
+                  "redo",
+                  "|",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strikeThrough",
+                  "|",
+                  "fontSize",
+                  "color",
+                  "inlineStyle",
+                  "|",
+                  "paragraphFormat",
+                  "align",
+                  "|",
+                  "formatOL",
+                  "formatUL",
+                  "outdent",
+                  "indent",
+                  "|",
+                  "clearFormatting",
+                ],
+                fontFamily: {
+                  arial: "Arial",
+                  times: "Times New Roman",
+                  courier: "Courier New",
+                  georgia: "Georgia",
+                  verdana: "Verdana",
+                },
+                fontSize: ["12", "14", "16", "18", "24", "36"],
+              }}
+            />
+          )}
         </div>
 
         {/* Status Aktif */}
