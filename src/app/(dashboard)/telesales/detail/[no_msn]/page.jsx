@@ -41,12 +41,13 @@ export default function Page({ params, searchParams }) {
     faktur.data.nm_vendor_pa = faktur.data.asuransi_pa.produk.vendor.nm_vendor;
     faktur.data.rate_pa = faktur.data.asuransi_pa.produk.rate;
     faktur.data.admin_pa = faktur.data.asuransi_pa.produk.admin;
-    faktur.data.premi = faktur.data.asuransi_pa.premi;
+    faktur.data.amount_asuransi_pa = faktur.data.asuransi_pa.amount;
   }
   if (faktur.data.asuransi_mtr?.id !== "" && faktur.data.asuransi_mtr?.id !== undefined) {
     faktur.data.asuransi_mtr_id = faktur.data.asuransi_mtr?.id;
     faktur.data.id_produk_asuransi_mtr = faktur.data.asuransi_mtr.id_produk;
     faktur.data.nm_produk_asuransi_mtr = faktur.data.asuransi_mtr.produk.nm_produk;
+    faktur.data.warna = faktur.data.asuransi_mtr.warna;
     faktur.data.nm_vendor_mtr = faktur.data.asuransi_mtr.id_produk;
     faktur.data.rate_mtr = faktur.data.asuransi_mtr.produk.rate;
     faktur.data.admin_mtr = faktur.data.asuransi_mtr.produk.admin;
