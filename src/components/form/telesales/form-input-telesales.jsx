@@ -132,7 +132,15 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     values.tgl_lahir_fkt = new Date(values.tgl_lahir_fkt);
     values.tgl_lahir_wkm = new Date(values.tgl_lahir_wkm);
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
-    values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
+    if (values.sts_membership == "F") {
+      values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
+    }
+    if (values.sts_asuransi_pa == "F") {
+      values.tgl_prospect_asuransi_pa = new Date(values.tgl_prospect_asuransi_pa);
+    }
+    if (values.sts_asuransi_mtr == "F") {
+      values.tgl_prospect_asuransi_mtr = new Date(values.tgl_prospect_asuransi_mtr);
+    }
     console.log("ini values ", values);
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
@@ -449,7 +457,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   useEffect(() => {
     if (membershipId && stsMembership == "O") {
       setIsRequired(false);
-    } else if (stsMembership != "P" && stsMembership != "T" && !telpBermasalah) {
+    } else if (stsMembership == "O" && !telpBermasalah) {
       setIsRequired(true);
     } else {
       setIsRequired(false);
@@ -878,7 +886,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nomor Info"}
                 id={"no_wa"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{
+                  required: isRequired || (stsMembership == "T" && !telpBermasalah) ? "This field is Required" : false,
+                }}
                 disabled={false}
                 errors={errors}
               />
@@ -904,6 +914,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Alamat"}
                 id={"alamat_wkm"}
                 register={register}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 errors={errors}
                 rows={5}
               />
@@ -913,7 +924,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name="ket_alamat_wkm"
                 id="ket_alamat_wkm"
                 errors={errors}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 register={register}
                 options={[
                   { name: "", value: "" },
@@ -1006,7 +1017,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Kodepos"}
                 id={"kodepos_wkm"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 disabled={false}
                 errors={errors}
               />
@@ -1039,7 +1050,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kel_wkm"}
                 readOnly
                 label={"Kelurahan"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kel_wkm"}
                 register={register}
                 disabled={false}
@@ -1052,7 +1063,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kec_wkm"}
                 readOnly
                 label={"Kecamatan"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kec_wkm"}
                 register={register}
                 disabled={false}
@@ -1067,7 +1078,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kota_wkm"}
                 readOnly
                 label={"Kota"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kota_wkm"}
                 register={register}
                 disabled={false}
@@ -1134,10 +1145,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <InputGroup
                 name={"no_hub"}
                 readOnly
-                label={"No Hub"}
+                label={"Nomor di Hubungi"}
                 id={"no_hub"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{
+                  required: isRequired || (stsMembership == "T" && !telpBermasalah) ? "This field is Required" : false,
+                }}
                 disabled={false}
                 errors={errors}
               />
@@ -1337,12 +1350,13 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 </div>
                 <div className="col-span-3 relative">
                   <SelectGroup
+                    readOnly
                     name={"jns_membership"}
                     label={"Produk"}
                     id={"jns_membership"}
                     disabled={disabledOkeMembership}
                     register={register}
-                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
+                    validation={{ required: isRequired ? "This field is Required" : false }}
                     options={produkMembership?.data}
                     errors={errors}
                   />
@@ -1384,7 +1398,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     register={register}
                     disabled={disabledPromoTransfer || disabledOkeMembership}
                     options={promoTransfer?.data}
-                    validation={{ required: isRequired ? "This field is Required" : false }}
+                    validation={{ required: isRequired && !disabledPromoTransfer ? "This field is Required" : false }}
                     errors={errors}
                   />
                 </div>
