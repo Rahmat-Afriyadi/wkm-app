@@ -153,7 +153,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
         mutUpdateCustomer.mutate(values, {
           onSuccess: (data) => {
             Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-              // router.replace("/pending/membership");
+              router.replace("/telesales");
             });
           },
           onError: (e) => {
@@ -481,8 +481,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-x-9">
+      <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-x-9 mt-2">
         <div className="fixed bottom-6 right-6 z-10 bg-white">
+          <div className="relative group inline-block w-32 mr-4">
+            <div className="">
+              <button
+                id="button"
+                type="submit"
+                className="w-full px-6 py-1 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
+              >
+                Save
+              </button>
+            </div>
+          </div>
           <div className="relative group inline-block">
             <button className="px-4 py-2  rounded-md ring-1 ring-inset ring-gray-300">Help</button>
             <div className="absolute right-0 -top-24 w-48 ring-1 ring-inset ring-gray-300 bg-white text-black shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
@@ -582,7 +593,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
           isModalOpen={openMstMtr}
           setIsModalOpen={setOpenMstMtr}
         />
-        <div className="col-span-2 -mt-2 mb-2">
+        {/* <div className="col-span-2 -mt-2 mb-2">
           <div className="grid grid-cols-2">
             <div className="col-span-1"></div>
             <div className="col-span-1">
@@ -595,7 +606,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               </button>
             </div>
           </div>
-        </div>
+        </div> */}
         <div className="col-span-1">
           <p className="text-lg font-bold mb-3">Faktur</p>
           <div className="grid grid-cols-8 gap-3">
@@ -1012,7 +1023,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Tanggal Lahir"}
                 id={"tgl_lahir_wkm"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
                 disabled={false}
                 errors={errors}
                 type="date"
@@ -1266,7 +1276,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
           <div className="grid grid-cols-3 ">
             <div className="col-span-3">
               <div className="grid grid-cols-12 gap-3">
-                <div className="col-span-3 -mt-1">
+                <div className="col-span-4 -mt-1">
                   <RadioButtonComponent
                     register={register}
                     validation={{ required: isRequired ? "This field is Required" : false }}
@@ -1296,12 +1306,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     ]}
                   />
                 </div>
-                <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer"></div>
 
                 <div className="col-span-6 row-span-4 flex items-start justify-center">
                   <p className="font-bold text-3xl">Renewal ke {isEditing ? defaultValues.renewal_ke : ""}</p>
                 </div>
-                <div className="col-span-3">
+                <div className="col-span-4">
                   {stsMembership == "T" && (
                     <SelectGroup
                       name={"alasan_tdk_membership"}
@@ -1325,8 +1334,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       options={[
                         { name: "Pikir-pikir/ragu", value: 1 },
                         { name: "Telp Kembali", value: 2 },
-                        { name: "Telp Tidak Diangkat", value: 3 },
-                        { name: "Telp Salah Sambung", value: 5 },
                       ]}
                       errors={errors}
                     />
@@ -1370,19 +1377,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     ]}
                   />
                 </div>
-                <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer">
-                  {/* <p className="text-sm font-medium text-gray-900 -mt-1">Merchant</p>
-
-                  <Link
-                    className="w-10/12  h-8 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                    href="http://192.168.70.17:3002/merchant"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
-                  </Link> */}
-                </div>
-                <div className="col-span-3 relative">
+                <div className="col-span-4 relative">
                   <SelectGroup
                     readOnly
                     name={"jns_membership"}
@@ -1424,7 +1419,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   />
                 </div>
                 {/* <div className="col-span-7"></div> */}
-                <div className="col-span-3">
+                <div className="col-span-4">
                   <SelectGroup
                     name={"kd_promo_transfer"}
                     label={"Promo Transfer"}
@@ -1764,8 +1759,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   options={[
                     { name: "Pikir-pikir/ragu", value: 1 },
                     { name: "Telp Kembali", value: 2 },
-                    { name: "Telp Tidak Diangkat", value: 3 },
-                    { name: "Telp Salah Sambung", value: 5 },
                   ]}
                   errors={errors}
                 />
@@ -1902,8 +1895,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   options={[
                     { name: "Pikir-pikir/ragu", value: 1 },
                     { name: "Telp Kembali", value: 2 },
-                    { name: "Telp Tidak Diangkat", value: 3 },
-                    { name: "Telp Salah Sambung", value: 5 },
                   ]}
                   errors={errors}
                 />

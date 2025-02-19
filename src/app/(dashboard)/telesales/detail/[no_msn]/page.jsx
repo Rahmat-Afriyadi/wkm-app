@@ -126,6 +126,7 @@ export default function Page({ params, searchParams }) {
       <ModalListFaktur>
         <TableAmbilData options={listAmbilData1.data} handleChange={handleAmbilData} />
       </ModalListFaktur>
+      <br />
       <Suspense key={no_msn + faktur.data.no_msn}>
         <FormInputTelesales defaultValues={faktur.data} isEditing={true} />
       </Suspense>

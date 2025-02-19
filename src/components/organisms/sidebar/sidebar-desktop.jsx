@@ -1,7 +1,7 @@
 "use client";
 
 import { navigation, secondaryNavigation } from "./item";
-import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+import { useRouter, useSelectedLayoutSegment, usePathname } from "next/navigation";
 import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
 
@@ -10,7 +10,8 @@ function classNames(...classes) {
 }
 
 export default function SidebarDesktop({ open, setOpen }) {
-  const segment = useSelectedLayoutSegment();
+  // const pathName = useSelectedLayoutSegment();
+  const pathName = usePathname();
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -47,7 +48,7 @@ export default function SidebarDesktop({ open, setOpen }) {
                         <a
                           href={item.to}
                           className={classNames(
-                            item.to === `/${segment}`
+                            item.to === pathName
                               ? "bg-black text-yellow"
                               : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
                             "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -58,9 +59,7 @@ export default function SidebarDesktop({ open, setOpen }) {
                               transition: "transform 0.5s ease-in-out",
                             }}
                             className={classNames(
-                              item.to === `/${segment}`
-                                ? "bg-black text-yellow"
-                                : "text-cyan-200 group-hover:text-yellow",
+                              item.to === pathName ? "bg-black text-yellow" : "text-cyan-200 group-hover:text-yellow",
                               "h-6 w-6 shrink-0 mr-2",
                               !open ? "scale-125" : ""
                             )}
@@ -87,7 +86,7 @@ export default function SidebarDesktop({ open, setOpen }) {
                     <a
                       href={item.to}
                       className={classNames(
-                        item.to === `/${segment}`
+                        item.to === pathName
                           ? "bg-black text-yellow"
                           : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
                         "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
@@ -99,9 +98,7 @@ export default function SidebarDesktop({ open, setOpen }) {
                             transition: "transform 0.5s ease-in-out",
                           }}
                           className={classNames(
-                            item.to === `/${segment}`
-                              ? "bg-black text-yellow"
-                              : "text-cyan-200 group-hover:text-yellow",
+                            item.to === pathName ? "bg-black text-yellow" : "text-cyan-200 group-hover:text-yellow",
                             "h-6 w-6 shrink-0",
                             !open ? "scale-125" : ""
                           )}

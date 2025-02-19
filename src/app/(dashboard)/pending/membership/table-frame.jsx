@@ -40,7 +40,7 @@ export default function TableFrame({ searchParams }) {
     },
     {
       header: "Nama Customer",
-      accessorKey: "nm_customer_wkm",
+      accessorKey: "nm_customer_fkt",
     },
     {
       header: "Alasan Pending",
@@ -67,11 +67,11 @@ export default function TableFrame({ searchParams }) {
             })}
           </select>
         ),
-        // <PencilIcon
-        //   className="w-7 h-6 hover:bg-slate-300 rounded-sm"
-        //   aria-hidden="true"
-        //   onClick={() => router.push("/telesales/detail/" + row.original.no_msn)}
-        // />
+      // <PencilIcon
+      //   className="w-7 h-6 hover:bg-slate-300 rounded-sm"
+      //   aria-hidden="true"
+      //   onClick={() => router.push("/telesales/detail/" + row.original.no_msn)}
+      // />
     },
     {
       header: "Tanggal Call Telesales",

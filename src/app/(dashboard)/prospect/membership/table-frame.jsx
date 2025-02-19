@@ -40,7 +40,7 @@ export default function TableFrame({ searchParams }) {
     },
     {
       header: "Nama Customer",
-      accessorKey: "nm_customer_wkm",
+      accessorKey: "nm_customer_fkt",
     },
     {
       header: "Tanggal Prospect",

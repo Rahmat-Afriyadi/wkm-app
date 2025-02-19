@@ -46,6 +46,7 @@ export default function Page() {
       <ModalListFaktur>
         <TableAmbilData options={listAmbilData1.data} handleChange={handleAmbilData} />
       </ModalListFaktur>
+      <br />
       <FormInputTelesales />
     </>
   );
