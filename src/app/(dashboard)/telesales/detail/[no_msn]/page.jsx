@@ -78,6 +78,16 @@ export default function Page({ params, searchParams }) {
     faktur.data.no_hub = faktur.data.no_telp_wkm;
   }
 
+  if (faktur.data.sts_membership == "F") {
+    faktur.data.tgl_prospect_membership = faktur.data?.tgl_prospect_membership.substring(0, 10);
+  }
+  if (faktur.data.sts_asuransi_pa == "F") {
+    faktur.data.tgl_prospect_asuransi_pa = faktur.data?.tgl_prospect_asuransi_pa.substring(0, 10);
+  }
+  if (faktur.data.sts_asuransi_mtr == "F") {
+    faktur.data.tgl_prospect_asuransi_mtr = faktur.data?.tgl_prospect_asuransi_mtr.substring(0, 10);
+  }
+
   if (faktur.data.ket_wa_info == 1) {
     faktur.data.no_info = faktur.data.no_hp_fkt;
   } else if (faktur.data.ket_wa_info == 2) {

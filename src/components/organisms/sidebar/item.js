@@ -125,6 +125,41 @@ const navigation = [
     to: "/master-script",
     icon: FolderIcon,
   },
+  {
+    name: "Telesales",
+    to: "/telesales",
+    icon: FolderIcon,
+  },
+  {
+    name: "Pending Membership",
+    to: "/pending/membership",
+    icon: FolderIcon,
+  },
+  {
+    name: "Pending Asuransi PA",
+    to: "/pending/asuransi-pa",
+    icon: FolderIcon,
+  },
+  {
+    name: "Pending Asuransi Motor",
+    to: "/pending/asuransi-mtr",
+    icon: FolderIcon,
+  },
+  {
+    name: "Prospect Membership",
+    to: "/prospect/membership",
+    icon: FolderIcon,
+  },
+  {
+    name: "Prospect Asuransi PA",
+    to: "/prospect/asuransi-pa",
+    icon: FolderIcon,
+  },
+  {
+    name: "Prospect Asuransi Motor",
+    to: "/prospect/asuransi-mtr",
+    icon: FolderIcon,
+  },
 ];
 
 const secondaryNavigation = [{ name: "Settings", to: "/settings", icon: Cog6ToothIcon }];

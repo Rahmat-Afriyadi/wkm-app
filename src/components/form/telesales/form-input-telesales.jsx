@@ -132,8 +132,15 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     values.tgl_lahir_fkt = new Date(values.tgl_lahir_fkt);
     values.tgl_lahir_wkm = new Date(values.tgl_lahir_wkm);
     values.tgl_janji_bayar = new Date(values.tgl_janji_bayar);
-    values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
-    console.log("ini values ", values);
+    if (values.sts_membership == "F" || values.tgl_prospect_membership != null) {
+      values.tgl_prospect_membership = new Date(values.tgl_prospect_membership);
+    }
+    if (values.sts_asuransi_pa == "F" || values.tgl_prospect_asuransi_pa != null) {
+      values.tgl_prospect_asuransi_pa = new Date(values.tgl_prospect_asuransi_pa);
+    }
+    if (values.sts_asuransi_mtr == "F" || values.tgl_prospect_asuransi_mtr != null) {
+      values.tgl_prospect_asuransi_mtr = new Date(values.tgl_prospect_asuransi_mtr);
+    }
     Swal.fire({
       title: "Apakah data yang dimasukan sudah benar",
       icon: "question",
@@ -178,6 +185,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const [popUpMtr, setPopUpMtr] = useState(1);
   const [openScript, setOpenScript] = useState(false);
   const [openMstMtr, setOpenMstMtr] = useState(false);
+  const [validHub, setValidHub] = useState(false);
   const [openProdukMembership, setOpenProdukMembership] = useState(false);
   const [openProdukAsuransiPa, setOpenProdukAsuransiPa] = useState(false);
   const [openProdukAsuransiMtr, setOpenProdukAsuransiMtr] = useState(false);
@@ -340,6 +348,21 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [asuransiMtrId, stsAsuransiMtr]); // eslint-disable-line
 
   useEffect(() => {
+    if (
+      stsMembership == "F" ||
+      stsAsuransiPa == "F" ||
+      stsAsuransiMtr == "F" ||
+      stsMembership == "T" ||
+      stsAsuransiPa == "T" ||
+      stsAsuransiMtr == "T"
+    ) {
+      setValidHub(true);
+    } else {
+      setValidHub(false);
+    }
+  }, [stsMembership, stsAsuransiPa, stsAsuransiMtr]); // eslint-disable-line
+
+  useEffect(() => {
     if (ketWaInfo == 1 && validasiNoTelp.includes(ketNoHpFkt)) {
       setValue("no_wa", watch("no_hp_fkt"));
     } else if (ketWaInfo == 2) {
@@ -449,7 +472,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   useEffect(() => {
     if (membershipId && stsMembership == "O") {
       setIsRequired(false);
-    } else if (stsMembership != "P" && stsMembership != "T" && !telpBermasalah) {
+    } else if (stsMembership == "O" && !telpBermasalah) {
       setIsRequired(true);
     } else {
       setIsRequired(false);
@@ -459,6 +482,36 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-x-9">
+        <div className="fixed bottom-6 right-6 z-10 bg-white">
+          <div className="relative group inline-block">
+            <button className="px-4 py-2  rounded-md ring-1 ring-inset ring-gray-300">Help</button>
+            <div className="absolute right-0 -top-24 w-48 ring-1 ring-inset ring-gray-300 bg-white text-black shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+              <div className="hover:bg-black hover:text-yellow rounded-top-md">
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setOpenScript(true);
+                  }}
+                  className="w-full  h-12 flex justify-center items-center rounded-top-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                >
+                  Script
+                  <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
+                </button>
+              </div>
+              <div className="hover:bg-black hover:text-yellow rounded-bottom-md">
+                <Link
+                  className="w-full  h-12 flex justify-center items-center rounded-bottom-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
+                  href="http://192.168.70.17:3002/merchant"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Merchant
+                  <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
         <DrawerCenter open={openKodepos} setOpen={setOpenKodepos}>
           <div className="h-screen">
             <SearchableSelect options={kodepos?.data} name={"kodepos"} setValue={setValue} setOpen={setOpenKodepos} />
@@ -878,7 +931,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Nomor Info"}
                 id={"no_wa"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{
+                  required: isRequired || (validHub && !telpBermasalah) ? "This field is Required" : false,
+                }}
                 disabled={false}
                 errors={errors}
               />
@@ -904,6 +959,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Alamat"}
                 id={"alamat_wkm"}
                 register={register}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 errors={errors}
                 rows={5}
               />
@@ -913,7 +969,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name="ket_alamat_wkm"
                 id="ket_alamat_wkm"
                 errors={errors}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 register={register}
                 options={[
                   { name: "", value: "" },
@@ -1006,7 +1062,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 label={"Kodepos"}
                 id={"kodepos_wkm"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 disabled={false}
                 errors={errors}
               />
@@ -1039,7 +1095,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kel_wkm"}
                 readOnly
                 label={"Kelurahan"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kel_wkm"}
                 register={register}
                 disabled={false}
@@ -1052,7 +1108,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kec_wkm"}
                 readOnly
                 label={"Kecamatan"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kec_wkm"}
                 register={register}
                 disabled={false}
@@ -1067,7 +1123,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 name={"kota_wkm"}
                 readOnly
                 label={"Kota"}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
                 id={"kota_wkm"}
                 register={register}
                 disabled={false}
@@ -1134,10 +1190,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <InputGroup
                 name={"no_hub"}
                 readOnly
-                label={"No Hub"}
+                label={"Nomor di Hubungi"}
                 id={"no_hub"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
+                validation={{
+                  required: isRequired || (validHub && !telpBermasalah) ? "This field is Required" : false,
+                }}
                 disabled={false}
                 errors={errors}
               />
@@ -1238,18 +1296,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     ]}
                   />
                 </div>
-                <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer">
-                  <p className="text-sm font-medium text-gray-900 -mt-1">Script</p>
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setOpenScript(true);
-                    }}
-                    className="w-10/12  h-8 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
-                  >
-                    <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
-                  </button>
-                </div>
+                <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer"></div>
 
                 <div className="col-span-6 row-span-4 flex items-start justify-center">
                   <p className="font-bold text-3xl">Renewal ke {isEditing ? defaultValues.renewal_ke : ""}</p>
@@ -1324,7 +1371,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   />
                 </div>
                 <div className="col-span-1 flex flex-col items-start justify-center cursor-pointer">
-                  <p className="text-sm font-medium text-gray-900 -mt-1">Merchant</p>
+                  {/* <p className="text-sm font-medium text-gray-900 -mt-1">Merchant</p>
 
                   <Link
                     className="w-10/12  h-8 flex justify-center items-center rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600"
@@ -1333,16 +1380,17 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     rel="noopener noreferrer"
                   >
                     <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
-                  </Link>
+                  </Link> */}
                 </div>
                 <div className="col-span-3 relative">
                   <SelectGroup
+                    readOnly
                     name={"jns_membership"}
                     label={"Produk"}
                     id={"jns_membership"}
                     disabled={disabledOkeMembership}
                     register={register}
-                    validation={stsMembership == "O" ? { required: "This field is required" } : {}}
+                    validation={{ required: isRequired ? "This field is Required" : false }}
                     options={produkMembership?.data}
                     errors={errors}
                   />
@@ -1384,7 +1432,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     register={register}
                     disabled={disabledPromoTransfer || disabledOkeMembership}
                     options={promoTransfer?.data}
-                    validation={{ required: isRequired ? "This field is Required" : false }}
+                    validation={{ required: isRequired && !disabledPromoTransfer ? "This field is Required" : false }}
                     errors={errors}
                   />
                 </div>
@@ -1495,6 +1543,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               <div className="grid grid-cols-7 gap-3">
                 <div className="col-span-3 ">
                   <InputGroup
+                    readOnly
                     errors={errors}
                     name={"kodepos_ktr_wkm"}
                     label={"Kodepos"}
@@ -1530,6 +1579,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 </div>
                 <div className="col-span-3 ">
                   <InputGroup
+                    readOnly
                     errors={errors}
                     name={"kel_ktr_wkm"}
                     label={"Kelurahan"}
@@ -1563,6 +1613,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-1"></div>
                 <div className="col-span-3 ">
                   <InputGroup
+                    readOnly
                     errors={errors}
                     name={"kec_ktr_wkm"}
                     label={"Kecamatan"}
@@ -1587,6 +1638,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 </div>
                 <div className="col-span-3 ">
                   <InputGroup
+                    readOnly
                     errors={errors}
                     name={"kota_ktr_wkm"}
                     label={"Kecamatan"}
@@ -1723,7 +1775,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"tgl_prospect_asuransi_pa"}
                   label={"Tanggal Prospect"}
                   id={"tgl_prospect_asuransi_pa"}
-                  validation={{ required: isRequired ? "This field is Required" : false }}
+                  validation={{ required: isRequired || stsAsuransiPa == "F" ? "This field is Required" : false }}
                   register={register}
                   errors={errors}
                   type="date"
@@ -1861,7 +1913,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"tgl_prospect_asuransi_mtr"}
                   label={"Tanggal Prospect"}
                   id={"tgl_prospect_asuransi_mtr"}
-                  validation={{ required: isRequired ? "This field is Required" : false }}
+                  validation={{ required: isRequired || stsAsuransiMtr == "F" ? "This field is Required" : false }}
                   register={register}
                   errors={errors}
                   type="date"
