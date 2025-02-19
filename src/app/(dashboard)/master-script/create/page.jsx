@@ -142,12 +142,12 @@ export default function CreateScriptPage() {
 
         {/* Status Aktif */}
         <div className="form-group">
-          <label htmlFor="isActive" className="block text-sm font-medium text-gray-700">
+          <label htmlFor="is_active" className="block text-sm font-medium text-gray-700">
             Status Aktif
           </label>
           <select
-            id="isActive"
-            {...register("isActive")}
+            id="is_active"
+            {...register("is_active")}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
             required
           >

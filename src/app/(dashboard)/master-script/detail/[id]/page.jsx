@@ -48,7 +48,7 @@ export default function EditScriptPage({ params }) {
       // Reset form dengan data script yang diambil
       reset({
         title: scriptData.title,
-        is_active: scriptData.is_active ? "false" :"true",
+        is_active: scriptData.is_active === 1 ? "true" :"false",
       });
       setEditorContent(scriptData.script);
     }
@@ -151,7 +151,7 @@ export default function EditScriptPage({ params }) {
           </label>
           <select
             id="is_active"
-            {...register("isActive")}
+            {...register("is_active")}
             className="mt-1 block w-full border-gray-500 rounded-md shadow-sm"
             required
           >

@@ -9,8 +9,8 @@ const ItemScript = ({ data, id }) => {
   return (
     <tr className={id % 2 === 0 ? "bg-gray-50" : "hover:bg-gray-100"}>
       <td className="px-3 py-4 text-sm">{data.title}</td>
-      <td className="px-3 py-4 text-sm">{data.is_active}</td>
-      <td className="px-3 py-4 text-sm">{data.created ? new Date(data.assign_date).toLocaleDateString() : "Belum Ditetapkan"} {/* Assign Date */}</td>
+      <td className="px-3 py-4 text-sm">{data.is_active===1 ? "Aktif" : "Tidak Aktif"}</td>
+      <td className="px-3 py-4 text-sm">{data.created = new Date(data.created).toLocaleDateString()}</td>
       <td className="px-3 py-4 text-sm whitespace-nowrap">
         {/* Edit button */}
           <span
