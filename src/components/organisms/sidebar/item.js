@@ -126,6 +126,11 @@ const navigation = [
     icon: FolderIcon,
   },
   {
+    name: "Telesales",
+    to: "/telesales",
+    icon: FolderIcon,
+  },
+  {
     name: "Pending Membership",
     to: "/pending/membership",
     icon: FolderIcon,
