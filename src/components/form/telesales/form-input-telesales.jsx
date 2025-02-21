@@ -615,6 +615,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
         <div className="col-span-1">
           <p className="text-lg font-bold mb-3">Faktur</p>
           <div className="grid grid-cols-8 gap-3">
+            <div className="col-span-7">
+              <InputGroup
+                name={"nm_customer_fkt"}
+                label={"Nama Customer"}
+                id={"nm_customer_fkt"}
+                register={register}
+                disabled={true}
+                errors={errors}
+              />
+            </div>
             <div className="col-span-3">
               <InputGroup
                 name={"no_msn"}
@@ -640,9 +650,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
             <div className="col-span-3">
               <InputGroup
-                name={"nm_customer_fkt"}
-                label={"Nama Customer"}
-                id={"nm_customer_fkt"}
+                name={"jns_jual_fkt"}
+                label={"Jenis Jual"}
+                id={"jns_jual_fkt"}
                 register={register}
                 disabled={true}
                 errors={errors}
@@ -918,7 +928,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
         <div className="col-span-1 ">
           <p className="text-lg font-bold mb-3">WKM</p>
           <div className="grid grid-cols-8 gap-3">
-            <div className="col-span-3">
+            <div className="col-span-7">
               <InputGroup
                 name={"nm_customer_wkm"}
                 label={"Nama Customer"}
@@ -941,34 +951,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 ]}
               />
             </div>
-            <div className="col-span-3">
-              <InputGroup
-                name={"no_wa"}
-                label={"Nomor Info"}
-                id={"no_wa"}
-                register={register}
-                validation={{
-                  required: isRequired || (validHub && !telpBermasalah) ? "This field is Required" : false,
-                }}
-                disabled={false}
-                errors={errors}
-              />
-            </div>
-            <div className="col-span-1 flex items-end">
-              <SelectGroup
-                name={"ket_wa_info"}
-                id={"ket_wa_info"}
-                register={register}
-                disabled={false}
-                options={[
-                  { name: "1", value: "1" },
-                  { name: "2", value: "2" },
-                  { name: "4", value: "4" },
-                  { name: "5", value: "5" },
-                ]}
-                errors={errors}
-              />
-            </div>
+
             <div className="col-span-3 row-span-2">
               <TextAreaGroup
                 name={"alamat_wkm"}
@@ -1000,6 +983,35 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-3">
               <InputGroup
+                name={"no_wa"}
+                label={"Nomor Info"}
+                id={"no_wa"}
+                register={register}
+                validation={{
+                  required: isRequired || (validHub && !telpBermasalah) ? "This field is Required" : false,
+                }}
+                disabled={false}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1 flex items-end">
+              <SelectGroup
+                name={"ket_wa_info"}
+                id={"ket_wa_info"}
+                register={register}
+                disabled={false}
+                options={[
+                  { name: "1", value: "1" },
+                  { name: "2", value: "2" },
+                  { name: "4", value: "4" },
+                  { name: "5", value: "5" },
+                ]}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1"></div>
+            <div className="col-span-3">
+              <InputGroup
                 name={"no_ktpnpwp_wkm"}
                 label={"Nomor KTP"}
                 id={"no_ktpnpwp_wkm"}
@@ -1021,18 +1033,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 ]}
               />
             </div>
-            <div className="col-span-1 flex items-end"></div>
-            <div className="col-span-3">
-              <InputGroup
-                name={"tgl_lahir_wkm"}
-                label={"Tanggal Lahir"}
-                id={"tgl_lahir_wkm"}
-                register={register}
-                disabled={false}
-                errors={errors}
-                type="date"
-              />
-            </div>
+
             <div className="col-span-3">
               <div className="w-full grid grid-cols-2 gap-x-3">
                 <div className="col-span-1">
@@ -1059,18 +1060,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
-              <SelectGroup
-                name="kd_aktivitas_jual_membership"
-                id="kd_aktivitas_jual_membership"
-                label={"Aktivitas Jual"}
-                errors={errors}
+              <InputGroup
+                name={"tgl_lahir_wkm"}
+                label={"Tanggal Lahir"}
+                id={"tgl_lahir_wkm"}
                 register={register}
-                validation={{ required: isRequired ? "This field is Required" : false }}
-                options={aktifJual.data}
+                disabled={false}
+                errors={errors}
+                type="date"
               />
             </div>
-
-            <div className="col-span-1 flex items-end"></div>
             <div className="col-span-3">
               <InputGroup
                 name={"kodepos_wkm"}
@@ -1093,6 +1092,31 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <MagnifyingGlassIcon className="h-6 w-6 ml-1" />
               </button>
             </div>
+            <div className="col-span-3">
+              <SelectGroup
+                name="kd_aktivitas_jual_membership"
+                id="kd_aktivitas_jual_membership"
+                label={"Aktivitas Jual"}
+                errors={errors}
+                register={register}
+                validation={{ required: isRequired ? "This field is Required" : false }}
+                options={aktifJual.data}
+              />
+            </div>
+
+            <div className="col-span-3">
+              <InputGroup
+                name={"kel_wkm"}
+                readOnly
+                label={"Kelurahan"}
+                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
+                id={"kel_wkm"}
+                register={register}
+                disabled={false}
+                errors={errors}
+              />
+            </div>
+            <div className="col-span-1"></div>
             <div className="col-span-3 row-span-2">
               <TextAreaGroup
                 name={"alamat_bantuan_wkm"}
@@ -1107,19 +1131,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
             <div className="col-span-3">
               <InputGroup
-                name={"kel_wkm"}
-                readOnly
-                label={"Kelurahan"}
-                validation={{ required: isRequired && kirimKe == "1" ? "This field is Required" : false }}
-                id={"kel_wkm"}
-                register={register}
-                disabled={false}
-                errors={errors}
-              />
-            </div>
-            <div className="col-span-1"></div>
-            <div className="col-span-3">
-              <InputGroup
                 name={"kec_wkm"}
                 readOnly
                 label={"Kecamatan"}
@@ -1130,9 +1141,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 errors={errors}
               />
             </div>
-            <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
-            <div className="col-span-3"></div>
-            <div className="col-span-1"></div>
+
             <div className="col-span-3">
               <InputGroup
                 name={"kota_wkm"}
@@ -1847,7 +1856,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 errors={errors}
               />
             </div>
-            <div className="col-span-1">
+            <div className="col-span-1 mb-16">
               <InputGroup
                 name={"amount_asuransi_pa"}
                 label={"Biaya Premi"}

@@ -88,6 +88,12 @@ export default function Page({ params, searchParams }) {
     faktur.data.tgl_prospect_asuransi_mtr = faktur.data?.tgl_prospect_asuransi_mtr.substring(0, 10);
   }
 
+  if (faktur.data.jns_jual_fkt == 1) {
+    faktur.data.jns_jual_fkt = "Cash";
+  } else if (faktur.data.jns_jual_fkt == 2) {
+    faktur.data.jns_jual_fkt = "Kredit";
+  }
+
   if (faktur.data.ket_wa_info == 1) {
     faktur.data.no_info = faktur.data.no_hp_fkt;
   } else if (faktur.data.ket_wa_info == 2) {

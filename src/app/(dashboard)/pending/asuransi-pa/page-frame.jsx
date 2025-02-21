@@ -48,7 +48,7 @@ export default function PageFrame({ children }) {
     <>
       <div className="grid mb-6 md:grid-cols-12">
         <div className="w-full col-span-8 mb-3">
-          <p className="text-2xl font-bold">Prospect Asuransi PA</p>
+          <p className="text-2xl font-bold">Pending Asuransi PA</p>
         </div>
         <div className="w-full col-span-8 mr-2 mt-2 flex justify-start items-end ">
           {/* <p className="mr-5 text-lg font-bold">Pending Asuransi PA</p> */}

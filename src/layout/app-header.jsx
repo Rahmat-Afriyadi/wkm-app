@@ -6,10 +6,31 @@ import { useSidebar } from "@/context/sidebar-context";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState, useEffect, useRef } from "react";
+import { useSession } from "next-auth/react";
 
 const AppHeader = () => {
   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
   const { isMobileOpen, toggleSidebar, toggleMobileSidebar } = useSidebar();
+
+  const [message, setMessage] = useState("");
+  const { data: session, status } = useSession();
+
+  const handleMessage = () => {
+    var today = new Date();
+    var hrs = today.getHours();
+
+    if (hrs < 12) {
+      setMessage("Good morning");
+    } else if (hrs < 18) {
+      setMessage("Good afternoon");
+    } else {
+      setMessage("Good evening");
+    }
+  };
+
+  useEffect(() => {
+    handleMessage();
+  }, []);
 
   const handleToggle = () => {
     if (window.innerWidth >= 991) {
@@ -40,7 +61,7 @@ const AppHeader = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
+    <header className="sticky z-10 top-0 flex w-full bg-white border-gray-200 z-99999 dark:border-gray-800 dark:bg-gray-900 lg:border-b">
       <div className="flex flex-col items-center justify-between flex-grow lg:flex-row lg:px-6">
         <div className="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-gray-200 dark:border-gray-800 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
           <button
@@ -64,7 +85,18 @@ const AppHeader = () => {
           </button>
 
           <div className="hidden lg:block">
-            <form>
+            <div className="relative mx-4">
+              <div className="flex items-center max-w-xs text-sm">
+                <div className="hidden mr-0.5 lg:block">
+                  <strong>{message},</strong>
+                </div>
+                <span className="hidden text-sm font-medium text-gray-700 lg:block">
+                  <span className="sr-only">Open user menu for </span>
+                  {session?.user.name}
+                </span>
+              </div>
+            </div>
+            {/* <form>
               <div className="relative">
                 <input
                   ref={inputRef}
@@ -77,7 +109,7 @@ const AppHeader = () => {
                   <span> K </span>
                 </button>
               </div>
-            </form>
+            </form> */}
           </div>
         </div>
         <div
