@@ -48,7 +48,7 @@ export default function TableFrame({ searchParams }) {
         row.original.alasan_pending_asuransi_mtr != "" && (
           <select
             disabled={true}
-            readonly
+            readOnly
             value={row.original.alasan_pending_asuransi_mtr}
             className=" appearance-none block w-full rounded-md border-0 text-gray-900 shadow-sm  placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
           >

@@ -332,7 +332,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [membershipId, stsMembership]); // eslint-disable-line
 
   useEffect(() => {
-    if (asuransiPaId && stsAsuransiPa == "O") {
+    if ((asuransiPaId && stsAsuransiPa == "O") || stsAsuransiPa == "M") {
       setDisabledOkeAsuransiPa(true);
     } else {
       setDisabledOkeAsuransiPa(false);
@@ -495,7 +495,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             </div>
           </div>
           <div className="relative group inline-block">
-            <button className="px-4 py-2  rounded-md ring-1 ring-inset ring-gray-300">Help</button>
+            <button
+              onClick={(e) => e.preventDefault()}
+              className="px-4 py-2  rounded-md ring-1 ring-inset ring-gray-300"
+            >
+              Help
+            </button>
             <div className="absolute right-0 -top-24 w-48 ring-1 ring-inset ring-gray-300 bg-white text-black shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
               <div className="hover:bg-black hover:text-yellow rounded-top-md">
                 <button
@@ -549,9 +554,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
           </div>
         </DrawerCenter>
         <DrawerCenter open={openScript} setOpen={setOpenScript}>
-          <div className="">
-            <div className=" rounded-md bg-white shadow-md">
-              <div className="max-w-xl py-4 px-9 max-h-[450px] overflow-y-scroll">
+          <div className="w-full flex justify-center">
+            <div className=" rounded-md bg-white shadow-md w-3/4">
+              <div className=" py-4 px-9 max-h-[450px] overflow-y-scroll">
                 <div dangerouslySetInnerHTML={{ __html: scripts.data?.length > 0 ? scripts.data[0]?.script : "" }} />
               </div>
             </div>
@@ -1332,8 +1337,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       register={register}
                       disabled={false}
                       options={[
-                        { name: "Pikir-pikir/ragu", value: 1 },
                         { name: "Telp Kembali", value: 2 },
+                        { name: "Telepon tdk diangkat", value: 3 },
                       ]}
                       errors={errors}
                     />
@@ -1757,8 +1762,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   register={register}
                   disabled={false}
                   options={[
-                    { name: "Pikir-pikir/ragu", value: 1 },
                     { name: "Telp Kembali", value: 2 },
+                    { name: "Telepon tdk diangkat", value: 3 },
                   ]}
                   errors={errors}
                 />
@@ -1893,8 +1898,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   register={register}
                   disabled={false}
                   options={[
-                    { name: "Pikir-pikir/ragu", value: 1 },
                     { name: "Telp Kembali", value: 2 },
+                    { name: "Telepon tdk diangkat", value: 3 },
                   ]}
                   errors={errors}
                 />

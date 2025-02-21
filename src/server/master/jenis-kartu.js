@@ -7,5 +7,6 @@ export const masterJenisKartu = async () => {
   if (data.status == 200) {
     res.data = data.data;
   }
+  console.log("ini produk yaa ", res.data);
   return res;
 };

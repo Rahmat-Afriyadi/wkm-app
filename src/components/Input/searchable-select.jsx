@@ -16,7 +16,7 @@ export default function SearchableSelect({ options, name, setValue, setOpen = (e
   }, [inputRef]); // eslint-disable-line
 
   return (
-    <div className="flex flex-col items-center " onBlur={() => setOpen(false)}>
+    <div className="flex flex-col items-center ">
       <p className="text-2xl font-semibold">Searchable Select Input</p>
       <div className="relative w-[400px]">
         <input
