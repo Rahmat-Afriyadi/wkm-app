@@ -11,7 +11,7 @@ import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-export default function FormInputBayar({ defaultValues, setFaktur }) {
+export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, bayarApa }) {
   const { register, handleSubmit } = useForm({ defaultValues });
   const router = useRouter();
   const [tab, setTab] = useState(1);
@@ -99,6 +99,9 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
               <InputBase name={"no_kartu"} lable={"Nomor Kartu"} id={"no_kartu"} register={register} disabled={true} />
             </div>
             <div className="col-span-6 mt-5">
+              <InputBase name={"harga"} lable={"Harga Kartu"} id={"harga"} register={register} disabled={true} />
+            </div>
+            <div className="col-span-6 mt-5">
               <DatepickerBase
                 label={"Tanggal Expired"}
                 id={"tgl_expired"}
@@ -110,6 +113,9 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
                 setValue={setValueTglLhr}
               />
             </div>
+            <div className="col-span-6 mt-5">
+              <InputBase name={"nm_mtr"} lable={"Nama Motor"} id={"nm_mtr"} register={register} disabled={true} />
+            </div>
             <div className="col-span-12 mt-5">
               <InputBase
                 name={"nm_customer11"}
@@ -119,9 +125,7 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
                 disabled={true}
               />
             </div>
-            <div className="col-span-12 mt-5">
-              <InputBase name={"nm_mtr"} lable={"Nama Motor"} id={"nm_mtr"} register={register} disabled={true} />
-            </div>
+
             <div className="col-span-6 mt-5">
               <InputBase
                 name={"no_telp1"}
@@ -168,183 +172,315 @@ export default function FormInputBayar({ defaultValues, setFaktur }) {
           </div>
         </div>
 
-        <div className="col-span-6">
-          <div className="mt-[18px] border-b border-gray-200 dark:border-gray-700">
-            <ul
-              className="flex flex-wrap -mb-px text-sm font-medium text-center"
-              id="default-styled-tab"
-              data-tabs-toggle="#default-styled-tab-content"
-              data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
-              data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
-              role="tablist"
-            >
-              <li className="me-2" role="presentation">
-                <button
-                  onClick={() => setTab(1)}
-                  className={`${
-                    tab == 1 ? "text-yellow bg-black" : ""
-                  } inline-block p-4 border-b-2 rounded-t-lg hover:bg-yellow hover:text-black`}
-                  id="profile-styled-tab"
-                  data-tabs-target="#styled-profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="profile"
-                  aria-selected="false"
-                >
-                  Rumah
-                </button>
-              </li>
-              <li className="me-2" role="presentation">
-                <button
-                  onClick={() => setTab(2)}
-                  className={`${
-                    tab == 2 ? "text-yellow bg-black" : ""
-                  } inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`}
-                  id="dashboard-styled-tab"
-                  data-tabs-target="#styled-dashboard"
-                  type="button"
-                  role="tab"
-                  aria-controls="dashboard"
-                  aria-selected="false"
-                >
-                  Kantor
-                </button>
-              </li>
-              <li className="me-2" role="presentation">
-                <button
-                  onClick={() => setTab(3)}
-                  className={`${
-                    tab == 3 ? "text-yellow bg-black" : ""
-                  } inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`}
-                  id="settings-styled-tab"
-                  data-tabs-target="#styled-settings"
-                  type="button"
-                  role="tab"
-                  aria-controls="settings"
-                  aria-selected="false"
-                >
-                  ADC
-                </button>
-              </li>
-            </ul>
+        {bayarApa == 1 && (
+          <div className="col-span-6">
+            <div className="mt-[18px] border-b border-gray-200 dark:border-gray-700">
+              <ul
+                className="flex flex-wrap -mb-px text-sm font-medium text-center"
+                id="default-styled-tab"
+                data-tabs-toggle="#default-styled-tab-content"
+                data-tabs-active-classes="text-purple-600 hover:text-purple-600 dark:text-purple-500 dark:hover:text-purple-500 border-purple-600 dark:border-purple-500"
+                data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
+                role="tablist"
+              >
+                <li className="me-2" role="presentation">
+                  <button
+                    onClick={() => setTab(1)}
+                    className={`${
+                      tab == 1 ? "text-yellow bg-black" : ""
+                    } inline-block p-4 border-b-2 rounded-t-lg hover:bg-yellow hover:text-black`}
+                    id="profile-styled-tab"
+                    data-tabs-target="#styled-profile"
+                    type="button"
+                    role="tab"
+                    aria-controls="profile"
+                    aria-selected="false"
+                  >
+                    Rumah
+                  </button>
+                </li>
+                <li className="me-2" role="presentation">
+                  <button
+                    onClick={() => setTab(2)}
+                    className={`${
+                      tab == 2 ? "text-yellow bg-black" : ""
+                    } inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`}
+                    id="dashboard-styled-tab"
+                    data-tabs-target="#styled-dashboard"
+                    type="button"
+                    role="tab"
+                    aria-controls="dashboard"
+                    aria-selected="false"
+                  >
+                    Kantor
+                  </button>
+                </li>
+                <li className="me-2" role="presentation">
+                  <button
+                    onClick={() => setTab(3)}
+                    className={`${
+                      tab == 3 ? "text-yellow bg-black" : ""
+                    } inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 hover:bg-yellow`}
+                    id="settings-styled-tab"
+                    data-tabs-target="#styled-settings"
+                    type="button"
+                    role="tab"
+                    aria-controls="settings"
+                    aria-selected="false"
+                  >
+                    ADC
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div id="default-styled-tab-content">
+              <div
+                className={`${tab == 1 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-4`}
+                id="styled-profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+                <div className="col-span-12 mt-1">
+                  <InputBase name={"alamat21"} lable={"Alamat"} id={"alamat21"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kota2"} lable={"Kota"} id={"kota2"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kec2"} lable={"Kecamatan"} id={"kec2"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kel2"} lable={"Kelurahan"} id={"kel2"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"rw2"} lable={"RW"} id={"rw2"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"rt2"} lable={"RT"} id={"rt2"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kodepos2"} lable={"Kodepos"} id={"kodepos2"} register={register} disabled={true} />
+                </div>
+              </div>
+              <div
+                className={`${tab == 2 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-2 md:gap-x-4`}
+                id="styled-profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+                <div className="col-span-12">
+                  <InputBase name={"kerja_di"} lable={"Nama PT"} id={"kerja_di"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-12 mt-5">
+                  <InputBase
+                    name={"Alamat Kantor"}
+                    lable={"alamat_ktr"}
+                    id={"Alamat Kantor"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kota_ktr"} lable={"Kota"} id={"kota_ktr"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kec_ktr"} lable={"Kecamatan"} id={"kec_ktr"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kel_ktr"} lable={"Kelurahan"} id={"kel_ktr"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"rw_ktr"} lable={"RW"} id={"rw_ktr"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"rt_ktr"} lable={"RT"} id={"rt_ktr"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase
+                    name={"kodepos_ktr"}
+                    lable={"Kodepos"}
+                    id={"kodepos_ktr"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+              </div>
+              <div
+                className={`${tab == 3 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-4`}
+                id="styled-profile"
+                role="tabpanel"
+                aria-labelledby="profile-tab"
+              >
+                <div className="col-span-12">
+                  <InputBase
+                    name={"alamat_srt12"}
+                    lable={"Nama PT"}
+                    id={"alamat_srt12"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-12 mt-5">
+                  <InputBase
+                    name={"alamat_srt11"}
+                    lable={"Alamat"}
+                    id={"alamat_srt11"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"kota_srt1"} lable={"Kota"} id={"kota_srt1"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase
+                    name={"kec_srt1"}
+                    lable={"Kecamatan"}
+                    id={"kec_srt1"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase
+                    name={"kel_srt1"}
+                    lable={"Kelurahan"}
+                    id={"kel_srt1"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase
+                    name={"kodepos_srt1"}
+                    lable={"Kodepos"}
+                    id={"kodepos_srt1"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
-          <div id="default-styled-tab-content">
-            <div
-              className={`${tab == 1 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-4`}
-              id="styled-profile"
-              role="tabpanel"
-              aria-labelledby="profile-tab"
-            >
-              <div className="col-span-12 mt-1">
-                <InputBase name={"alamat21"} lable={"Alamat"} id={"alamat21"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kota2"} lable={"Kota"} id={"kota2"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kec2"} lable={"Kecamatan"} id={"kec2"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kel2"} lable={"Kelurahan"} id={"kel2"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"rw2"} lable={"RW"} id={"rw2"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"rt2"} lable={"RT"} id={"rt2"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kodepos2"} lable={"Kodepos"} id={"kodepos2"} register={register} disabled={true} />
-              </div>
+        )}
+        {bayarApa == 2 && (
+          <div className="col-span-6">
+            <div className="mt-[18px] border-b border-gray-200 dark:border-gray-700">
+              <p className="py-1 font-bold text-xl">Detail Asuransi PA</p>
             </div>
-            <div
-              className={`${tab == 2 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-2 md:gap-x-4`}
-              id="styled-profile"
-              role="tabpanel"
-              aria-labelledby="profile-tab"
-            >
-              <div className="col-span-12">
-                <InputBase name={"kerja_di"} lable={"Nama PT"} id={"kerja_di"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-12 mt-5">
+            <div className="grid grid-cols-12 gap-x-4 p-4">
+              <div className="col-span-6 mt-5">
                 <InputBase
-                  name={"Alamat Kantor"}
-                  lable={"alamat_ktr"}
-                  id={"Alamat Kantor"}
+                  name={"asuransi_pa.id_produk"}
+                  lable={"Id Produk"}
+                  id={"asuransi_pa.id_produk"}
                   register={register}
                   disabled={true}
                 />
               </div>
               <div className="col-span-6 mt-5">
-                <InputBase name={"kota_ktr"} lable={"Kota"} id={"kota_ktr"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kec_ktr"} lable={"Kecamatan"} id={"kec_ktr"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kel_ktr"} lable={"Kelurahan"} id={"kel_ktr"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"rw_ktr"} lable={"RW"} id={"rw_ktr"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"rt_ktr"} lable={"RT"} id={"rt_ktr"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
                 <InputBase
-                  name={"kodepos_ktr"}
-                  lable={"Kodepos"}
-                  id={"kodepos_ktr"}
-                  register={register}
-                  disabled={true}
-                />
-              </div>
-            </div>
-            <div
-              className={`${tab == 3 ? "" : "hidden"} p-4 grid grid-cols-12 gap-x-4`}
-              id="styled-profile"
-              role="tabpanel"
-              aria-labelledby="profile-tab"
-            >
-              <div className="col-span-12">
-                <InputBase
-                  name={"alamat_srt12"}
-                  lable={"Nama PT"}
-                  id={"alamat_srt12"}
-                  register={register}
-                  disabled={true}
-                />
-              </div>
-              <div className="col-span-12 mt-5">
-                <InputBase
-                  name={"alamat_srt11"}
-                  lable={"Alamat"}
-                  id={"alamat_srt11"}
+                  name={"asuransi_pa.nm_vendor"}
+                  lable={"Nama Vendor"}
+                  id={"asuransi_pa.nm_vendor"}
                   register={register}
                   disabled={true}
                 />
               </div>
               <div className="col-span-6 mt-5">
-                <InputBase name={"kota_srt1"} lable={"Kota"} id={"kota_srt1"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kec_srt1"} lable={"Kecamatan"} id={"kec_srt1"} register={register} disabled={true} />
-              </div>
-              <div className="col-span-6 mt-5">
-                <InputBase name={"kel_srt1"} lable={"Kelurahan"} id={"kel_srt1"} register={register} disabled={true} />
+                <InputBase
+                  name={"asuransi_pa.nm_produk"}
+                  lable={"Nama Produk"}
+                  id={"asuransi_pa.nm_produk"}
+                  register={register}
+                  disabled={true}
+                />
               </div>
               <div className="col-span-6 mt-5">
                 <InputBase
-                  name={"kodepos_srt1"}
-                  lable={"Kodepos"}
-                  id={"kodepos_srt1"}
+                  name={"asuransi_pa.amount_asuransi_pa"}
+                  lable={"Biaya Premi"}
+                  id={"asuransi_pa.amount_asuransi_pa"}
                   register={register}
                   disabled={true}
                 />
               </div>
             </div>
           </div>
-        </div>
+        )}
+        {bayarApa == 3 && (
+          <div className="col-span-6">
+            <div className="mt-[18px] border-b border-gray-200 dark:border-gray-700">
+              <p className="py-1 font-bold text-xl">Detail Asuransi Motor</p>
+            </div>
+            <div className="grid grid-cols-12 gap-x-4 p-4">
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.id_produk"}
+                  lable={"Id Produk"}
+                  id={"asuransi_mtr.id_produk"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.nm_vendor"}
+                  lable={"Nama Vendor"}
+                  id={"asuransi_mtr.nm_vendor"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.nm_produk"}
+                  lable={"Nama Produk"}
+                  id={"asuransi_mtr.nm_produk"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.nm_mtr"}
+                  lable={"Nama Motor"}
+                  id={"asuransi_mtr.nm_mtr"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.no_mtr"}
+                  lable={"Nomor Motor"}
+                  id={"asuransi_mtr.no_mtr"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.otr"}
+                  lable={"OTR"}
+                  id={"asuransi_mtr.otr"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"asuransi_mtr.amount_otr"}
+                  lable={"Amount OTR"}
+                  id={"asuransi_mtr.amount_otr"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </form>
       <br />
       <br />

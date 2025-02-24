@@ -8,14 +8,16 @@ import { formatDate } from "@/lib/utils/format-date";
 import { PencilIcon } from "@heroicons/react/24/solid";
 import { TrashIcon } from "lucide-react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { readAfterCall } from "@/server/telesales/lists";
 import { deleteTanggalMerah } from "@/server/tanggal-merah/delete-tanggal-merah";
 
 export default function TableFrame({ searchParams }) {
   const pageParams = searchParams?.page || 1;
   const router = useRouter();
+  const pathname = usePathname();
   const [selected, setSelected] = useState([]);
+  const params = new URLSearchParams(searchParams);
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["data-pending-membership", searchParams],
@@ -67,11 +69,6 @@ export default function TableFrame({ searchParams }) {
             })}
           </select>
         ),
-      // <PencilIcon
-      //   className="w-7 h-6 hover:bg-slate-300 rounded-sm"
-      //   aria-hidden="true"
-      //   onClick={() => router.push("/telesales/detail/" + row.original.no_msn)}
-      // />
     },
     {
       header: "Tanggal Call Telesales",
@@ -86,7 +83,10 @@ export default function TableFrame({ searchParams }) {
           <PencilIcon
             className="w-7 h-6 hover:bg-slate-300 rounded-sm"
             aria-hidden="true"
-            onClick={() => router.push("/telesales/detail/" + row.original.no_msn)}
+            onClick={() =>
+              // router.replace({ pathname: "/telesales/detail/" + row.original.no_msn, query: { ...router.query } })
+              router.replace(`/telesales/detail/${row.original.no_msn}?${params}`)
+            }
           />
         </div>
       ),

@@ -33,10 +33,12 @@ import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
 import ModalMotor from "@/components/Modal/mtr/modal-mtr";
 import { errorSelector } from "recoil";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const params = new URLSearchParams(searchParams);
   const {
     register,
     setValue,
@@ -152,8 +154,18 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       preConfirm: () => {
         mutUpdateCustomer.mutate(values, {
           onSuccess: (data) => {
+            queryCLient.invalidateQueries({
+              queryKey: [
+                "data-pending-membership",
+                "data-pending-asuransi-pa",
+                "data-pending-asuransi-mtr",
+                "data-prospect-membership",
+                "data-prospect-asuransi-pa",
+                "data-prospect-asuransi-mtr",
+              ],
+            });
             Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-              router.replace("/telesales");
+              router.push(`/pending/membership?${params}`);
             });
           },
           onError: (e) => {
@@ -650,9 +662,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
             <div className="col-span-3">
               <InputGroup
-                name={"jns_jual_fkt"}
+                name={"jns_jual_fkt_ket"}
                 label={"Jenis Jual"}
-                id={"jns_jual_fkt"}
+                id={"jns_jual_fkt_ket"}
                 register={register}
                 disabled={true}
                 errors={errors}

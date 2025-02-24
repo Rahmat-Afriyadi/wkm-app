@@ -12,12 +12,14 @@ export default function Search({ id, name, placeholder }) {
   function handleChange(e) {
     const params = new URLSearchParams(searchParams);
     params.set("search_query", e.target.value.trim());
+    params.set("page", 1);
     setTimeout(() => {}, 300);
     replace(`${pathname}?${params}`);
   }
 
   useEffect(() => {
     const params = new URLSearchParams(searchParams);
+    params.set("page", 1);
     params.set("search_query", "");
     replace(`${pathname}?${params}`);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps

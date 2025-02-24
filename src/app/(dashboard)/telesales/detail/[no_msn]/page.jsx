@@ -89,9 +89,9 @@ export default function Page({ params, searchParams }) {
   }
 
   if (faktur.data.jns_jual_fkt == 1) {
-    faktur.data.jns_jual_fkt = "Cash";
+    faktur.data.jns_jual_fkt_ket = "Cash";
   } else if (faktur.data.jns_jual_fkt == 2) {
-    faktur.data.jns_jual_fkt = "Kredit";
+    faktur.data.jns_jual_fkt_ket = "Kredit";
   }
 
   if (faktur.data.ket_wa_info == 1) {

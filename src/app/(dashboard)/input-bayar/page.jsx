@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { searchFaktur } from "@/server/faktur/search-faktur";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import Datepicker from "react-tailwindcss-datepicker";
+import { formatCurrency } from "@/lib/utils/format-currentcy";
 
 export default function Page() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ export default function Page() {
 
   const { register, reset, handleSubmit, setFocus } = useForm();
   const [faktur, setFaktur] = useState(null);
+  const [bayarApa, setBayarApa] = useState(1); // 1 Membership, 2 Asuransi PA, 3 Asuransi Motor
   const [message, setMessage] = useState(null);
 
   const today = new Date();
@@ -58,7 +60,13 @@ export default function Page() {
           setMessage(data.message);
         } else {
           setMessage(null);
-          setFaktur(data);
+          console.log("ini data faktur yaa ", data);
+          if (data.nomor_kartu != "" && data.mst_card.kd_card != "") {
+            data.harga = formatCurrency(
+              "" + (data.mst_card.asuransi + data.mst_card.asuransi_motor + data.mst_card.harga_pokok)
+            );
+          }
+          setFaktur(data.faktur);
         }
       },
       onError: (e) => {
@@ -70,7 +78,10 @@ export default function Page() {
   return (
     <>
       <div className="flex justify-between items-center">
-        <p className="text-xl font-bold">Input Bayar</p>
+        <p className="text-xl font-bold">
+          Input Bayar{" "}
+          {bayarApa == 1 ? "Memberhip" : bayarApa == 2 ? "Asuransi PA" : bayarApa == 3 ? "Asuransi Motor" : ""}
+        </p>
         <div className="w-4/12">
           <form onSubmit={handleSubmit(onSubmit)}>
             <InputBase name={"kode"} lable={"Search"} id={"kode"} register={register} disabled={false} />
@@ -80,7 +91,9 @@ export default function Page() {
       <br />
       <hr />
       <br />
-      {faktur?.kartu.sts_kartu == "2" && <FormInputBayar defaultValues={faktur} setFaktur={setFaktur} />}
+      {faktur?.kartu.sts_kartu == "2" && (
+        <FormInputBayar defaultValues={faktur} setFaktur={setFaktur} bayarApa={bayarApa} setBayarApa={setBayarApa} />
+      )}
       {message && (
         <div className="h-screen w-full pt-12 text-center">
           <p className="text-[90px]">{message}</p>
