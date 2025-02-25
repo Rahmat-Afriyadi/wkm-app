@@ -1457,6 +1457,26 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     errors={errors}
                   />
                 </div>
+                <div className="col-span-4">
+                  <InputGroup
+                    name={"no_kartu2"}
+                    label={"Nomor Kartu Sebelum"}
+                    id={"no_kartu2"}
+                    disabled={true}
+                    register={register}
+                    errors={errors}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <InputGroup
+                    name={"jns_membership_sebelum"}
+                    label={"Jenis Kartu Sebelum"}
+                    id={"jns_membership_sebelum"}
+                    disabled={true}
+                    register={register}
+                    errors={errors}
+                  />
+                </div>
               </div>
             </div>
           </div>

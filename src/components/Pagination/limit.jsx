@@ -1,0 +1,54 @@
+import React from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
+import { useEffect } from "react";
+import { useDebounce } from "../../lib/hooks/useDebounce";
+
+export default function Limit({ id, name, placeholder }) {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+
+  function handleChange(e) {
+    const params = new URLSearchParams(searchParams);
+    params.set("limit", e.target.value.trim());
+    params.set("page", 1);
+    setTimeout(() => {}, 300);
+    replace(`${pathname}?${params}`);
+  }
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", 1);
+    params.set("limit", "");
+    replace(`${pathname}?${params}`);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <>
+      <select
+        name={name}
+        id={id}
+        placeholder={placeholder}
+        onChange={handleChange}
+        className={`cursor-pointer appearance-none block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
+      >
+        <option value={10} className="py-1 cursor-pointer">
+          10
+        </option>
+        <option value={20} className="py-1 cursor-pointer">
+          20
+        </option>
+        <option value={30} className="py-1 cursor-pointer">
+          30
+        </option>
+        <option value={40} className="py-1 cursor-pointer">
+          40
+        </option>
+        <option value={50} className="py-1 cursor-pointer">
+          50
+        </option>
+      </select>
+    </>
+  );
+}

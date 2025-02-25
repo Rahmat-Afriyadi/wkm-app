@@ -104,6 +104,16 @@ export default function Page({ params, searchParams }) {
     faktur.data.no_info = faktur.data.no_telp_wkm;
   }
 
+  if (faktur.data.no_kartu2 != "") {
+    if (faktur.data.no_kartu2?.slice(2, 4) == "02") {
+      faktur.data.jns_membership_sebelum = "Gold";
+    } else if (faktur.data.no_kartu2?.slice(2, 4) == "03") {
+      faktur.data.jns_membership_sebelum = "Platinum";
+    } else if (faktur.data.no_kartu2?.slice(2, 4) == "23") {
+      faktur.data.jns_membership_sebelum = "Platinum Plus";
+    }
+  }
+
   const handleAmbilData = (item) => {
     ambilDataMut.mutate(
       {

@@ -1,8 +1,9 @@
-"use client"
+"use client";
 
 import React from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/solid";
-import  usePagination  from "@/hooks/usePagination";
+import usePagination from "@/hooks/usePagination";
+import Limit from "@/components/Pagination/limit";
 
 export default function Pagination({
   postsPerPage,
@@ -27,11 +28,11 @@ export default function Pagination({
       <div className="flex justify-between flex-1 items-center sm:hidden">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{start}</span> to{" "}
-            <span className="font-medium">{end}</span> of{" "}
+            Showing <span className="font-medium">{start}</span> to <span className="font-medium">{end}</span> of{" "}
             <span className="font-medium">{totalRows}</span> results
           </p>
         </div>
+
         <div>
           <button
             className="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
@@ -52,16 +53,17 @@ export default function Pagination({
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         <div>
           <p className="text-sm text-gray-700">
-            Showing <span className="font-medium">{start}</span> to{" "}
-            <span className="font-medium">{end}</span> of{" "}
+            Showing <span className="font-medium">{start}</span> to <span className="font-medium">{end}</span> of{" "}
             <span className="font-medium">{totalRows}</span> results
           </p>
         </div>
+
+        <div className="w-24">
+          <Limit id="limit" placeholder={"Limit"} name={"limit"} />
+        </div>
+
         <div>
-          <nav
-            className="inline-flex -space-x-px rounded-md shadow-sm isolate"
-            aria-label="Pagination"
-          >
+          <nav className="inline-flex -space-x-px rounded-md shadow-sm isolate" aria-label="Pagination">
             <button
               className="relative inline-flex items-center px-2 py-2 text-gray-400 rounded-l-md ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
               onClick={action.previous}

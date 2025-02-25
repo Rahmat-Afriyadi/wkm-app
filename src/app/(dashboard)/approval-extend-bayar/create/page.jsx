@@ -25,7 +25,7 @@ export default function Page() {
           setMessage(data.message);
         } else {
           setMessage(null);
-          setFaktur(data);
+          setFaktur(data.faktur);
         }
       },
       onError: (e) => {
