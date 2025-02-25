@@ -9,41 +9,39 @@ export default function usePagination({ currentPage: currentPageInput, lastPage,
   const previousPageNumber = currentPage <= 1 ? null : currentPage - 1;
 
   const pageNumbers = Array.from(Array(lastPage), (_, index) => index + 1);
-  const [arrOfCurrButton, setArrOfCurrButtin] = useState([]);
+  const [arrOfCurrButton, setArrOfCurrButton] = useState([]);
 
   const { replace } = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    let tempNumbers = [...arrOfCurrButton];
-    let dotsInitial = "...";
-    let dotsLeft = "... ";
-    let dotsRight = " ...";
-    if (pageNumbers.length < 6) {
-      tempNumbers = [...pageNumbers];
-    } else if (currentPage >= 1 && currentPage <= 3) {
-      tempNumbers = [1, 2, 3, 4, dotsInitial, pageNumbers.length];
-    } else if (currentPage === 4) {
-      const sliced = pageNumbers.slice(0, 5);
-      tempNumbers = [...sliced, dotsInitial, pageNumbers.length];
-    } else if (currentPage > 4 && currentPage < pageNumbers.length - 2) {
-      //from 5 to 8 -> (10 - 2)
-      let num = parseInt(currentPage);
-      const sliced = pageNumbers.slice(num - 2, num + 1); //sliced1 (5-2, 5) -> [3,6]
-      tempNumbers = [1, dotsLeft, ...sliced, dotsRight, pageNumbers.length]; // [1, ..., 4, 5, 6, ...., last]
-    } else if (currentPage > pageNumbers.length - 3 && pageNumbers.length - 3 >= 3) {
-      const sliced = pageNumbers.slice(pageNumbers.length - 4);
-      tempNumbers = [1, dotsLeft, ...sliced];
+    let tempNumbers = [];
+    const dots = "...";
+
+    if (pageNumbers.length <= shownPageNumber) {
+      tempNumbers = pageNumbers;
+    } else if (parseInt(currentPage) <= 3) {
+      tempNumbers = [1, 2, 3, 4, dots, lastPage];
+    } else if (parseInt(currentPage) >= lastPage - 2) {
+      tempNumbers = [1, dots, lastPage - 3, lastPage - 2, lastPage - 1, lastPage];
+    } else {
+      tempNumbers = [
+        1,
+        dots,
+        parseInt(currentPage) - 1,
+        parseInt(currentPage),
+        parseInt(currentPage) + 1,
+        dots,
+        lastPage,
+      ];
     }
-    const changed = JSON.stringify(tempNumbers) !== JSON.stringify(arrOfCurrButton);
-    if (changed) {
-      setArrOfCurrButtin(tempNumbers);
-    }
-  }, [arrOfCurrButton, currentPage, pageNumbers]);
+
+    setArrOfCurrButton(tempNumbers);
+  }, [parseInt(currentPage), lastPage, shownPageNumber]); // eslint-disable-line
 
   const nextPage = () => {
-    if (currentPage !== lastPage && lastPage !== 0) {
+    if (parseInt(currentPage) !== lastPage && lastPage !== 0) {
       let num = parseInt(currentPage);
       setCurrentPage((current) => current + 1);
       const params = new URLSearchParams(searchParams);
@@ -54,7 +52,7 @@ export default function usePagination({ currentPage: currentPageInput, lastPage,
   };
 
   const previousPage = () => {
-    if (currentPage !== 1 && lastPage !== 0) {
+    if (parseInt(currentPage) !== 1 && lastPage !== 0) {
       let num = parseInt(currentPage);
       setCurrentPage((current) => current - 1);
       const params = new URLSearchParams(searchParams);
@@ -83,7 +81,7 @@ export default function usePagination({ currentPage: currentPageInput, lastPage,
   return {
     page: {
       numbers: arrOfCurrButton,
-      current: currentPage,
+      current: parseInt(currentPage),
       next: nextPageNumber,
       previous: previousPageNumber,
       last: lastPage,

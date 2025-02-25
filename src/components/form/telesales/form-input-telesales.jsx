@@ -80,6 +80,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const asuransiMtrId = watch("asuransi_mtr_id");
 
   const onSubmit = async (values) => {
+    event.preventDefault();
     if (values.sts_membership !== "P" && values.sts_membership !== "O") {
       if ((values.sts_asuransi_pa == "P" || values.sts_asuransi_pa == "F") && popUpPa == 1) {
         return Swal.fire({
@@ -312,10 +313,13 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [selectedKodeposKtr]); // eslint-disable-line
 
   useEffect(() => {
-    if (!isEditing) {
-      reset();
-    } else if (defaultValues && pendidikan && agama && keluarBln && tujuPak && hobbies && produkMembership) {
-      reset(defaultValues);
+    if (defaultValues && pendidikan && agama && keluarBln && tujuPak && hobbies && produkMembership) {
+      setValue("kode_didik_fkt", defaultValues.kode_didik_fkt);
+      setValue("agama_fkt", defaultValues.agama_fkt);
+      setValue("keluar_bln_fkt", defaultValues.keluar_bln_fkt);
+      setValue("tujuan_pakai_fkt", defaultValues.tujuan_pakai_fkt);
+      setValue("hobby_fkt", defaultValues.hobby_fkt);
+      setValue("jns_membership_name", defaultValues.jns_membership_name);
     }
   }, [defaultValues, pendidikan, agama, keluarBln, tujuPak, hobbies, produkMembership]); // eslint-disable-line
 
