@@ -20,6 +20,7 @@ export default function Page() {
   const { register, reset, handleSubmit, setFocus } = useForm();
   const [faktur, setFaktur] = useState(null);
   const [bayarApa, setBayarApa] = useState(1); // 1 Membership, 2 Asuransi PA, 3 Asuransi Motor
+  const [akanBayar, setAkanBayar] = useState([]);
   const [message, setMessage] = useState(null);
 
   const today = new Date();
@@ -56,6 +57,7 @@ export default function Page() {
     searchMut.mutate(values, {
       onSuccess: (data) => {
         if (data.hasOwnProperty("message")) {
+          console.log("ini data faktur yaa gagal", data);
           setFaktur(null);
           setMessage(data.message);
         } else {
@@ -67,6 +69,8 @@ export default function Page() {
                 (data.faktur.mst_card.asuransi + data.faktur.mst_card.asuransi_motor + data.faktur.mst_card.harga_pokok)
             );
           }
+          setBayarApa(data.bayar_apa.shift());
+          setAkanBayar(data.bayar_apa);
           setFaktur(data.faktur);
         }
       },
@@ -93,7 +97,13 @@ export default function Page() {
       <hr />
       <br />
       {faktur?.kartu.sts_kartu == "2" && (
-        <FormInputBayar defaultValues={faktur} setFaktur={setFaktur} bayarApa={bayarApa} setBayarApa={setBayarApa} />
+        <FormInputBayar
+          defaultValues={faktur}
+          setFaktur={setFaktur}
+          bayarApa={bayarApa}
+          setBayarApa={setBayarApa}
+          akanBayar={akanBayar}
+        />
       )}
       {message && (
         <div className="h-screen w-full pt-12 text-center">

@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
 import { useDebounce } from "../../lib/hooks/useDebounce";
 
 export default function Limit({ id, name, placeholder }) {
+  const [limit, setLimit] = useState(10);
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
@@ -13,22 +14,23 @@ export default function Limit({ id, name, placeholder }) {
     const params = new URLSearchParams(searchParams);
     params.set("limit", e.target.value.trim());
     params.set("page", 1);
+    setLimit(e.target.value.trim());
     setTimeout(() => {}, 300);
     replace(`${pathname}?${params}`);
   }
 
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", 1);
-    params.set("limit", "");
-    replace(`${pathname}?${params}`);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    console.log("kesini gk sih ", searchParams.limit);
+    return setLimit(searchParams.get("limit"));
+  }, [searchParams]);
 
   return (
     <>
       <select
         name={name}
         id={id}
+        defaultValue={searchParams.get("limit")}
+        value={searchParams.get("limit")}
         placeholder={placeholder}
         onChange={handleChange}
         className={`cursor-pointer appearance-none block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}

@@ -1,30 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  getFacetedUniqueValues,
-  getFacetedRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import {
-  ChevronDoubleLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronDoubleRightIcon,
-  ArrowUpIcon,
-  ArrowDownIcon,
-} from "@heroicons/react/20/solid";
+import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
+import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
 import { useDebounce } from "@/lib/hooks/useDebounce";
 import Pagination from "../Pagination";
 
 const DataTable = ({ columns, data, rowSelection, setRowSelection, currentPage, totalRows, totalPages }) => {
   const [selected, setSelected] = useState([]);
-
-  // Debounced search function
-  // const debouncedGlobalFilter = useDebounce(globalFilter, 300); // 300ms debounce
 
   // Konfigurasi tabel
   const table = useReactTable({
@@ -32,17 +13,8 @@ const DataTable = ({ columns, data, rowSelection, setRowSelection, currentPage, 
     data: data,
     state: {
       rowSelection: selected,
-      // sorting,
-      // globalFilter: debouncedGlobalFilter,
     },
-    // onSortingChange: setSorting,
-    // onGlobalFilterChange: setGlobalFilter,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // getSortedRowModel: getSortedRowModel(),
-    // getFilteredRowModel: getFilteredRowModel(),
-    // getFacetedUniqueValues: getFacetedUniqueValues(),
-    // getFacetedRowModel: getFacetedRowModel(),
     onRowSelectionChange: setSelected,
     initialState: {
       pagination: { pageSize: 10 },
@@ -124,17 +96,19 @@ const DataTable = ({ columns, data, rowSelection, setRowSelection, currentPage, 
                     </td>
                   </tr>
                 )}
-                <tr>
-                  <td colSpan={10}>
-                    <Pagination
-                      rows={data.length}
-                      postsPerPage={10}
-                      currentPage={currentPage}
-                      totalRows={totalRows}
-                      totalPages={totalPages}
-                    />
-                  </td>
-                </tr>
+                {totalRows > 0 && (
+                  <tr>
+                    <td colSpan={10}>
+                      <Pagination
+                        rows={data.length}
+                        postsPerPage={10}
+                        currentPage={currentPage}
+                        totalRows={totalRows}
+                        totalPages={totalPages}
+                      />
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

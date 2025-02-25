@@ -17,13 +17,6 @@ export default function Search({ id, name, placeholder }) {
     replace(`${pathname}?${params}`);
   }
 
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("page", 1);
-    params.set("search_query", "");
-    replace(`${pathname}?${params}`);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
   return (
     <>
       <label htmlFor={id} className="sr-only">

@@ -13,6 +13,7 @@ export default function usePagination({ currentPage: currentPageInput, lastPage,
 
   const { replace } = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     let tempNumbers = [...arrOfCurrButton];
@@ -41,7 +42,6 @@ export default function usePagination({ currentPage: currentPageInput, lastPage,
     }
   }, [arrOfCurrButton, currentPage, pageNumbers]);
 
-  const searchParams = useSearchParams();
   const nextPage = () => {
     if (currentPage !== lastPage && lastPage !== 0) {
       let num = parseInt(currentPage);

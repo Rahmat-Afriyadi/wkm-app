@@ -8,10 +8,13 @@ import { Form, useForm } from "react-hook-form";
 import { DatepickerInputBayar } from "./datepicker-input-bayar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInputBayar } from "@/server/faktur/update-input-bayar";
+import { inputBayarPA } from "@/server/faktur/bayar-pa";
+import { inputBayarMtr } from "@/server/faktur/bayar-mtr";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, bayarApa }) {
+export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, bayarApa, akanBayar }) {
+  console.log("ini akan bayar ", akanBayar);
   const { register, handleSubmit } = useForm({ defaultValues });
   const router = useRouter();
   const [tab, setTab] = useState(1);
@@ -24,7 +27,14 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
 
   const queryCLient = useQueryClient();
   const mutInputBayar = useMutation({
-    mutationFn: updateInputBayar,
+    mutationFn:
+      bayarApa == 1
+        ? updateInputBayar
+        : bayarApa == 2
+        ? inputBayarPA
+        : bayarApa == 3
+        ? inputBayarMtr
+        : (e) => console.log(e),
   });
   const onSubmit = (values) => {
     values.tgl_bayar = new Date(valueTglLhr.startDate);
@@ -44,8 +54,23 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
           onSuccess: (data) => {
             if (data.status == "success") {
               Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
-                setFaktur(null);
-                router.refresh();
+                if (bayarApa.length > 0) {
+                  Swal.fire(
+                    "Success!",
+                    bayarApa[0] == 2
+                      ? "Asuransi PA Belum di Input Bayar"
+                      : bayarApa[0] == 3
+                      ? "Asuransi Motor Belum di Input Bayar"
+                      : "",
+                    "info"
+                  ).then(() => {
+                    setBayarApa(akanBayar.shift());
+                    setValueTglLhr({
+                      startDate: null,
+                      endDate: null,
+                    });
+                  });
+                }
               });
             } else {
               Swal.fire("Failed!", data.message, "error");

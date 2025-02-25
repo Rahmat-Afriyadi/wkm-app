@@ -9,41 +9,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 export default function PageFrame({ children }) {
-  const [file, setFile] = useState(null);
-  const [error, setError] = useState("");
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const { replace } = useRouter();
-  const pathname = usePathname();
-
-  const queryCLient = useQueryClient();
-  const importTransaksiMut = useMutation({
-    mutationFn: UploadTanggalMerahExcel,
-  });
-
-  const [value, setValue] = useState({ startDate: "", endDate: "" });
-
-  useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("tgl1", "");
-    params.set("tgl2", "");
-    replace(`${pathname}?${params}`);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const handleValueChange = (newValue) => {
-    const params = new URLSearchParams(searchParams);
-    if (newValue.startDate != null && newValue.endDate) {
-      params.set("tgl1", newValue.startDate);
-      params.set("tgl2", newValue.endDate);
-      replace(`${pathname}?${params}`);
-    } else {
-      params.set("tgl1", "");
-      params.set("tgl2", "");
-      replace(`${pathname}?${params}`);
-    }
-    setValue(newValue);
-  };
-
   return (
     <>
       <div className="grid mb-6 md:grid-cols-12">
