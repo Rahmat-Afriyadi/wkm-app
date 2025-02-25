@@ -54,23 +54,25 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
           onSuccess: (data) => {
             if (data.status == "success") {
               Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
-                if (bayarApa.length > 0) {
-                  Swal.fire(
-                    "Success!",
-                    bayarApa[0] == 2
-                      ? "Asuransi PA Belum di Input Bayar"
-                      : bayarApa[0] == 3
-                      ? "Asuransi Motor Belum di Input Bayar"
-                      : "",
-                    "info"
-                  ).then(() => {
-                    setBayarApa(akanBayar.shift());
-                    setValueTglLhr({
-                      startDate: null,
-                      endDate: null,
-                    });
-                  });
-                }
+                // if (bayarApa.length > 0) {
+                //   Swal.fire(
+                //     "Success!",
+                //     bayarApa[0] == 2
+                //       ? "Asuransi PA Belum di Input Bayar"
+                //       : bayarApa[0] == 3
+                //       ? "Asuransi Motor Belum di Input Bayar"
+                //       : "",
+                //     "info"
+                //   ).then(() => {
+                //     setBayarApa(akanBayar.shift());
+                //     setValueTglLhr({
+                //       startDate: null,
+                //       endDate: null,
+                //     });
+                //   });
+                // }
+                setFaktur(null);
+                router.refresh();
               });
             } else {
               Swal.fire("Failed!", data.message, "error");
