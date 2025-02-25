@@ -21,7 +21,7 @@ export default function TableAmbilData({ options, handleChange = (e) => console.
                     onClick={() => handleChange(item)}
                     className="cursor-pointer hover:text-yellow hover:bg-black"
                   >
-                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">1</td>
+                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.no_msn}</td>
                   </tr>
                 );
               })

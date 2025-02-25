@@ -61,9 +61,10 @@ export default function Page() {
         } else {
           setMessage(null);
           console.log("ini data faktur yaa ", data);
-          if (data.nomor_kartu != "" && data.mst_card.kd_card != "") {
-            data.harga = formatCurrency(
-              "" + (data.mst_card.asuransi + data.mst_card.asuransi_motor + data.mst_card.harga_pokok)
+          if (data.faktur.nomor_kartu != "" && data.faktur.mst_card.kd_card != "") {
+            data.faktur.harga = formatCurrency(
+              "" +
+                (data.faktur.mst_card.asuransi + data.faktur.mst_card.asuransi_motor + data.faktur.mst_card.harga_pokok)
             );
           }
           setFaktur(data.faktur);

@@ -42,10 +42,6 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
       preConfirm: () => {
         mutInputBayar.mutate(values, {
           onSuccess: (data) => {
-            Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
-              setFaktur(null);
-              router.refresh();
-            });
             if (data.status == "success") {
               Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
                 setFaktur(null);
