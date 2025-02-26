@@ -1,9 +1,8 @@
 "use client";
-import dynamic from "next/dynamic";
-const { InputBase } = dynamic(() => import("@/components/Input/input-base"));
-const { SelectBase } = dynamic(() => import("@/components/Input/select-base"));
-const { DatepickerBase } = dynamic(() => import("@/components/Input/date-picker"));
-const { DatepickerInputBayar } = dynamic(() => import("./datepicker-input-bayar"));
+import { InputBase } from "@/components/Input/input-base";
+import { SelectBase } from "@/components/Input/select-base";
+import { DatepickerBase } from "@/components/Input/date-picker";
+import { DatepickerInputBayar } from "./datepicker-input-bayar";
 
 import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
