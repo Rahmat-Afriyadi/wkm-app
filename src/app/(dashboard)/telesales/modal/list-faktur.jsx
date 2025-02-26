@@ -1,8 +1,8 @@
 "use client";
-
+import dynamic from "next/dynamic";
 import React, { useEffect, useState } from "react";
 
-import Modal from "@/components/Modal/index";
+const Modal = dynamic(() => import("@/components/Modal/index"));
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
 

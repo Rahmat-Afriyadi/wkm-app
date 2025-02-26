@@ -1,16 +1,14 @@
 "use client";
+import dynamic from "next/dynamic";
+const Datatable = dynamic(() => import("@/components/table/data-table"));
+// import Datatable from "@/components/table/data-table";
 
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Datatable from "@/components/table/data-table";
-import { readManyExtendBayar } from "@/server/faktur/lists";
 import { formatDate } from "@/lib/utils/format-date";
 import { PencilIcon } from "@heroicons/react/24/solid";
-import { TrashIcon } from "lucide-react";
-import Swal from "sweetalert2";
 import { useRouter, usePathname } from "next/navigation";
 import { readAfterCall } from "@/server/telesales/lists";
-import { deleteTanggalMerah } from "@/server/tanggal-merah/delete-tanggal-merah";
 
 export default function TableFrame({ searchParams }) {
   const pageParams = searchParams?.page || 1;
@@ -80,14 +78,9 @@ export default function TableFrame({ searchParams }) {
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2 text-blue-600 cursor-pointer">
-          <PencilIcon
-            className="w-7 h-6 hover:bg-slate-300 rounded-sm"
-            aria-hidden="true"
-            onClick={() =>
-              // router.replace({ pathname: "/telesales/detail/" + row.original.no_msn, query: { ...router.query } })
-              router.replace(`/telesales/detail/${row.original.no_msn}?${params}`)
-            }
-          />
+          <a href={`/telesales/detail/${row.original.no_msn}?${params}`}>
+            <PencilIcon className="w-7 h-6 hover:bg-slate-300 rounded-sm" aria-hidden="true" />
+          </a>
         </div>
       ),
     },

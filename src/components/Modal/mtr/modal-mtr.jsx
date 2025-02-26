@@ -1,12 +1,12 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import React, { useState } from "react";
 
-import Modal from "@/components/Modal/index";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import Search from "@/components/Search/dynamic";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import ListKodepos from "./list-mtr";
+const Modal = dynamic(() => import("@/components/Modal/index"));
+const ListKodepos = dynamic(() => import("./list-mtr"));
 
 export default function ModalMotor({ handleClick, isModalOpen, setIsModalOpen }) {
   const searchParams = useSearchParams();

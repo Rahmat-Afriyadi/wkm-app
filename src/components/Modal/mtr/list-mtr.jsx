@@ -1,6 +1,6 @@
 "use client";
-
-import Motor from "./mtr";
+import dynamic from "next/dynamic";
+const Motor = dynamic(() => import("./mtr"));
 import { useEffect, useState } from "react";
 
 export default function ListMotor({ setIsModalOpen, handleClick, query = "" }) {

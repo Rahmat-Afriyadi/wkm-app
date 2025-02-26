@@ -1,12 +1,8 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Datepicker from "react-tailwindcss-datepicker";
-import Search from "@/components/Search/index";
-import { UploadTanggalMerahExcel } from "@/server/tanggal-merah/upload-data-excel";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Swal from "sweetalert2";
+import dynamic from "next/dynamic";
+const Search = dynamic(() => import("@/components/Search/index"));
+// import Search from "@/components/Search/index";
 
 export default function PageFrame({ children }) {
   return (

@@ -1,11 +1,12 @@
 "use client";
+import dynamic from "next/dynamic";
+const { InputBase } = dynamic(() => import("@/components/Input/input-base"));
+const { SelectBase } = dynamic(() => import("@/components/Input/select-base"));
+const { DatepickerBase } = dynamic(() => import("@/components/Input/date-picker"));
+const { DatepickerInputBayar } = dynamic(() => import("./datepicker-input-bayar"));
 
-import { InputBase } from "@/components/Input/input-base";
-import { SelectBase } from "@/components/Input/select-base";
-import { DatepickerBase } from "@/components/Input/date-picker";
 import { useState, useRef } from "react";
 import { Form, useForm } from "react-hook-form";
-import { DatepickerInputBayar } from "./datepicker-input-bayar";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateInputBayar } from "@/server/faktur/update-input-bayar";
 import { inputBayarPA } from "@/server/faktur/bayar-pa";
@@ -14,7 +15,6 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
 export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, bayarApa, akanBayar }) {
-  console.log("ini akan bayar ", akanBayar);
   const { register, handleSubmit } = useForm({ defaultValues });
   const router = useRouter();
   const [tab, setTab] = useState(1);
@@ -54,12 +54,12 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
           onSuccess: (data) => {
             if (data.status == "success") {
               Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
-                // if (bayarApa.length > 0) {
-                //   Swal.fire(
+                // if (akanBayar.length > 0) {
+                //   return Swal.fire(
                 //     "Success!",
-                //     bayarApa[0] == 2
+                //     akanBayar[0] == 2
                 //       ? "Asuransi PA Belum di Input Bayar"
-                //       : bayarApa[0] == 3
+                //       : akanBayar[0] == 3
                 //       ? "Asuransi Motor Belum di Input Bayar"
                 //       : "",
                 //     "info"
@@ -129,8 +129,8 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
                 label={"Tanggal Expired"}
                 id={"tgl_expired"}
                 value={{
-                  startDate: new Date(defaultValues.kartu.tgl_expired),
-                  endDate: new Date(defaultValues.kartu.tgl_expired),
+                  startDate: new Date(defaultValues?.kartu?.tgl_expired),
+                  endDate: new Date(defaultValues?.kartu?.tgl_expired),
                 }}
                 disabled={true}
                 setValue={setValueTglLhr}

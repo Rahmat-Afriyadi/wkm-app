@@ -7,7 +7,6 @@ export const config = {
 };
 
 export const middleware: NextMiddleware = async (request: NextRequest) => {
-  console.log("middleware bisa nih");
   const cookiesList = request.cookies.getAll();
   const sessionCookie = process.env.NEXTAUTH_URL?.startsWith("https://")
     ? "__Secure-next-auth.session-token"

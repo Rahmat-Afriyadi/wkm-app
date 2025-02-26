@@ -1,5 +1,9 @@
+const withBundleAnalyzer = require("@next/bundle-analyzer")({
+  enabled: process.env.ANALYZE === "true",
+});
+
 /** @type {import('next').NextConfig} */
-module.exports = {
+module.exports = withBundleAnalyzer({
   images: {
     // limit of 25 deviceSizes values
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
@@ -37,16 +41,6 @@ module.exports = {
   },
 
   async headers() {
-    return [
-      {
-        source: "/img",
-        headers: [
-          {
-            key: "x-logo",
-            value: "logo-metrodataacademy",
-          },
-        ],
-      },
-    ];
+    return [];
   },
-};
+});

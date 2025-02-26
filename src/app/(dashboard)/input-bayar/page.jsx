@@ -1,15 +1,17 @@
 "use client";
+import dynamic from "next/dynamic";
 // import DatePicker from "@/components/form/datepicker/datepicker"
+const FormInputBayar = dynamic(() => import("../../../components/form/input-bayar/form-input-bayar"));
+const { InputBase } = dynamic(() => import("@/components/Input/input-base"));
 
 import { Suspense, useEffect, useRef } from "react";
-import FormInputBayar from "../../../components/form/input-bayar/form-input-bayar";
-import { InputBase } from "@/components/Input/input-base";
+// import FormInputBayar from "../../../components/form/input-bayar/form-input-bayar";
+// import { InputBase } from "@/components/Input/input-base";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchFaktur } from "@/server/faktur/search-faktur";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Datepicker from "react-tailwindcss-datepicker";
 import { formatCurrency } from "@/lib/utils/format-currentcy";
 
 export default function Page() {
@@ -62,12 +64,20 @@ export default function Page() {
           setMessage(data.message);
         } else {
           setMessage(null);
-          console.log("ini data faktur yaa ", data);
           if (data.faktur.nomor_kartu != "" && data.faktur.mst_card.kd_card != "") {
             data.faktur.harga = formatCurrency(
               "" +
                 (data.faktur.mst_card.asuransi + data.faktur.mst_card.asuransi_motor + data.faktur.mst_card.harga_pokok)
             );
+          }
+          if (data.faktur.asuransi_pa) {
+            data.faktur.asuransi_pa.amount_asuransi_pa = formatCurrency(
+              "" + data.faktur.asuransi_pa.amount_asuransi_pa
+            );
+          }
+          if (data.faktur.asuransi_mtr) {
+            data.faktur.asuransi_mtr.otr = formatCurrency("" + data.faktur.asuransi_mtr.otr);
+            data.faktur.asuransi_mtr.amount_otr = formatCurrency("" + data.faktur.asuransi_mtr.amount_otr);
           }
           setBayarApa(data.bayar_apa.shift());
           setAkanBayar(data.bayar_apa);
@@ -96,7 +106,7 @@ export default function Page() {
       <br />
       <hr />
       <br />
-      {faktur?.kartu.sts_kartu == "2" && (
+      {faktur && (
         <FormInputBayar
           defaultValues={faktur}
           setFaktur={setFaktur}
@@ -105,6 +115,15 @@ export default function Page() {
           akanBayar={akanBayar}
         />
       )}
+      {/* {faktur?.kartu.sts_kartu == "2" && (
+        <FormInputBayar
+          defaultValues={faktur}
+          setFaktur={setFaktur}
+          bayarApa={bayarApa}
+          setBayarApa={setBayarApa}
+          akanBayar={akanBayar}
+        />
+      )} */}
       {message && (
         <div className="h-screen w-full pt-12 text-center">
           <p className="text-[90px]">{message}</p>

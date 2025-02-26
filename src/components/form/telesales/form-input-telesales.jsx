@@ -1,17 +1,28 @@
 "use client";
+import dynamic from "next/dynamic";
 
 import React, { useEffect, useState } from "react";
-import InputGroup from "@/components/Input/input-group";
-import TextAreaGroup from "@/components/Input/text-area-group";
-import RadioButtonComponent from "@/components/Input/radio-button";
-import SearchableSelect from "@/components/Input/searchable-select";
+const InputGroup = dynamic(() => import("@/components/Input/input-group"), { ssr: false });
+const TextAreaGroup = dynamic(() => import("@/components/Input/text-area-group"), { ssr: false });
+const RadioButtonComponent = dynamic(() => import("@/components/Input/radio-button"), { ssr: false });
+const SearchableSelect = dynamic(() => import("@/components/Input/searchable-select"), { ssr: false });
+const SelectGroup = dynamic(() => import("@/components/Input/select-group"), { ssr: false });
+const TableProdukAsuransi = dynamic(() => import("./table-produk-asuransi"), { ssr: false });
+const ModalMotor = dynamic(() => import("@/components/Modal/mtr/modal-mtr"), { ssr: false });
+const Drawer = dynamic(() => import("@/components/drawer/drawer"));
+const DrawerCenter = dynamic(() => import("@/components/drawer/drawer-center"));
+
+// import InputGroup from "@/components/Input/input-group";
+// import TextAreaGroup from "@/components/Input/text-area-group";
+// import RadioButtonComponent from "@/components/Input/radio-button";
+// import SearchableSelect from "@/components/Input/searchable-select";
+// import SelectGroup from "@/components/Input/select-group";
+// import Drawer from "@/components/drawer/drawer";
+// import DrawerCenter from "@/components/drawer/drawer-center";
+
 import { Form, useForm } from "react-hook-form";
-import SelectGroup from "@/components/Input/select-group";
 import { ArrowDownCircleIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import DrawerCenter from "@/components/drawer/drawer-center";
-import Drawer from "@/components/drawer/drawer";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import TableProdukAsuransi from "./table-produk-asuransi";
 import { formatCurrency } from "@/lib/utils/format-currentcy";
 import Swal from "sweetalert2";
 import Link from "next/link";
@@ -31,8 +42,6 @@ import { masterTujuanPakai } from "@/server/master/tujuan-pakai";
 import { masterScript } from "@/server/master/script";
 import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership";
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
-import ModalMotor from "@/components/Modal/mtr/modal-mtr";
-import { errorSelector } from "recoil";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function FormInputTelesales({ defaultValues, isEditing = false }) {
@@ -301,6 +310,30 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       setValue("kota_wkm", fillKodepos[0]);
     }
   }, [selectedKodepos]); // eslint-disable-line
+
+  // useEffect(() => {
+  //   const handleKeyDown = (event) => {
+  //     if (event.key === "ArrowDown") {
+  //       console.log("Tombol panah bawah ditekan!");
+  //       console.log("Down");
+  //     }
+  //   };
+
+  //   const handleKeyUp = (event) => {
+  //     if (event.key === "ArrowDown") {
+  //       console.log("Up");
+  //       router.push(`/telesales/detail/${defaultValues.no_msn}?${params}`);
+  //     }
+  //   };
+
+  //   window.addEventListener("keydown", handleKeyDown);
+  //   window.addEventListener("keyup", handleKeyUp);
+
+  //   return () => {
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //     window.removeEventListener("keyup", handleKeyUp);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (selectedKodeposKtr) {

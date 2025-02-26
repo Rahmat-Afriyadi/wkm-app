@@ -1,8 +1,9 @@
+import dynamic from "next/dynamic";
+
 import React, { useEffect, useState } from "react";
 import { useReactTable, getCoreRowModel, flexRender } from "@tanstack/react-table";
 import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/20/solid";
-import { useDebounce } from "@/lib/hooks/useDebounce";
-import Pagination from "../Pagination";
+const Pagination = dynamic(() => import("../Pagination"));
 
 const DataTable = ({ columns, data, rowSelection, setRowSelection, currentPage, totalRows, totalPages }) => {
   const [selected, setSelected] = useState([]);

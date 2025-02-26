@@ -1,13 +1,17 @@
 "use client";
+import dynamic from "next/dynamic";
+const FormInputTelesales = dynamic(() => import("@/components/form/telesales/form-input-telesales"));
+const ModalListFaktur = dynamic(() => import("../../modal/list-faktur"));
+const TableAmbilData = dynamic(() => import("@/components/form/telesales/table-ambil-data"));
+// import FormInputTelesales from "@/components/form/telesales/form-input-telesales";
+// import ModalListFaktur from "../../modal/list-faktur";
+// import TableAmbilData from "@/components/form/telesales/table-ambil-data";
 
-import FormInputTelesales from "@/components/form/telesales/form-input-telesales";
 import { detailAmbilData } from "@/server/telesales/show";
-import ModalListFaktur from "../../modal/list-faktur";
 import { useRouter } from "next/navigation";
 import { listAmbilData } from "@/server/telesales/lists";
 import { ambilData } from "@/server/telesales/ambil-data";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import TableAmbilData from "@/components/form/telesales/table-ambil-data";
 import Swal from "sweetalert2";
 import { Suspense } from "react";
 

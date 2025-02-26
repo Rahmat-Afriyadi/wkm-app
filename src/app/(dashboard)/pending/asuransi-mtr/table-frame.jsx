@@ -1,16 +1,14 @@
 "use client";
+import dynamic from "next/dynamic";
+const Datatable = dynamic(() => import("@/components/table/data-table"));
+// import Datatable from "@/components/table/data-table";
 
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import Datatable from "@/components/table/data-table";
-import { readManyExtendBayar } from "@/server/faktur/lists";
 import { formatDate } from "@/lib/utils/format-date";
 import { PencilIcon } from "@heroicons/react/24/solid";
-import { TrashIcon } from "lucide-react";
-import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { readAfterCall } from "@/server/telesales/lists";
-import { deleteTanggalMerah } from "@/server/tanggal-merah/delete-tanggal-merah";
 
 export default function TableFrame({ searchParams }) {
   const pageParams = searchParams?.page || 1;
