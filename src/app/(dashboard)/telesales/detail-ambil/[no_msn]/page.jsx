@@ -8,7 +8,7 @@ const TableAmbilData = dynamic(() => import("@/components/form/telesales/table-a
 // import TableAmbilData from "@/components/form/telesales/table-ambil-data";
 
 import { detailAmbilData } from "@/server/telesales/show";
-import { formatDate } from "@/lib/utils/format-date";
+import { formatDate, formatDateIndo } from "@/lib/utils/format-date";
 import { useRouter } from "next/navigation";
 import { listAmbilData } from "@/server/telesales/lists";
 import { ambilData } from "@/server/telesales/ambil-data";
@@ -68,8 +68,8 @@ export default function Page({ params, searchParams }) {
     faktur.data.tgl_janji_bayar = faktur.data?.memberships[0].tgl_janji_bayar?.substring(0, 10);
   }
   faktur.data.tgl_faktur = faktur.data?.tgl_faktur ? formatDate(new Date(faktur.data?.tgl_faktur)) : "";
-  faktur.data.tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt ? formatDate(new Date(faktur.data?.tgl_lahir_fkt)) : "";
-  faktur.data.tgl_lahir_wkm = faktur.data?.tgl_lahir_wkm ? formatDate(new Date(faktur.data?.tgl_lahir_wkm)) : "";
+  faktur.data.desc_tgl_faktur = faktur.data?.tgl_faktur ? formatDateIndo(faktur.data?.tgl_faktur) : "";
+  faktur.data.desc_tgl_lahir_fkt = faktur.data?.tgl_lahir_fkt ? formatDateIndo(faktur.data?.tgl_lahir_fkt) : "";
   faktur.data.asuransi_mtr_tahun = new Date(faktur.data?.tgl_faktur).getFullYear();
   faktur.data.asuransi_nm_mtr = faktur.data?.nm_mtr;
   faktur.data.asuransi_no_mtr = faktur.data?.no_mtr;

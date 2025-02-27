@@ -701,13 +701,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-1 flex items-end justify-center cursor-pointer"></div>
             <div className="col-span-3">
               <InputGroup
-                name={"tgl_faktur"}
+                name={"desc_tgl_faktur"}
                 label={"Tanggal Faktur"}
-                id={"tgl_faktur"}
+                id={"desc_tgl_faktur"}
                 register={register}
                 disabled={true}
                 errors={errors}
-                type="date"
               />
             </div>
 
@@ -747,13 +746,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             {/* <div className="col-span-1 flex items-end justify-center cursor-pointer"></div> */}
             <div className="col-span-3">
               <InputGroup
-                name={"tgl_lahir_fkt"}
+                name={"desc_tgl_lahir_fkt"}
                 label={"Tanggal Lahir"}
-                id={"tgl_lahir_fkt"}
+                id={"desc_tgl_lahir_fkt"}
                 register={register}
                 disabled={true}
                 errors={errors}
-                type="date"
               />
             </div>
             <div className="col-span-1"></div>
