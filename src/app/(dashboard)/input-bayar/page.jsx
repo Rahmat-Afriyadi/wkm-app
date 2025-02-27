@@ -58,7 +58,6 @@ export default function Page() {
     searchMut.mutate(values, {
       onSuccess: (data) => {
         if (data.hasOwnProperty("message")) {
-          console.log("ini data faktur yaa gagal", data);
           setFaktur(null);
           setMessage(data.message);
         } else {

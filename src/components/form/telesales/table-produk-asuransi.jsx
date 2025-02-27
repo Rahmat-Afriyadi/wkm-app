@@ -1,4 +1,5 @@
 import React from "react";
+import { formatCurrency } from "@/lib/utils/format-currentcy";
 
 export default function TableProdukAsuransi({ options, handleChange = (e) => console.log(e) }) {
   return (
@@ -9,17 +10,17 @@ export default function TableProdukAsuransi({ options, handleChange = (e) => con
         <table className="min-w-full divide-y divide-gray-300 px-3">
           <thead className="bg-gray-50">
             <tr>
-              <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+              {/* <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                 Kode Produk
-              </th>
+              </th> */}
               <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
                 Nama Produk
               </th>
               <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                Rate Produk
+                Harga Produk
               </th>
               <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-                Id Vendor
+                Nama Vendor
               </th>
             </tr>
           </thead>
@@ -32,10 +33,12 @@ export default function TableProdukAsuransi({ options, handleChange = (e) => con
                     onClick={() => handleChange(item)}
                     className="cursor-pointer hover:text-yellow hover:bg-black"
                   >
-                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.kd_produk}</td>
+                    {/* <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.kd_produk}</td> */}
                     <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.nm_produk}</td>
-                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.rate}</td>
-                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.vendor_id}</td>
+                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">
+                      {formatCurrency("" + item.premi)}
+                    </td>
+                    <td className="px-3 py-3.5 text-left text-sm whitespace-nowrap">{item.vendor.nm_vendor}</td>
                   </tr>
                 );
               })

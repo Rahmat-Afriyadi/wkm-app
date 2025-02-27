@@ -35,7 +35,7 @@ export default function Page() {
       },
       {
         onSuccess: (data) => {
-          router.push("/telesales/detail/" + item.no_msn);
+          router.push("/telesales/detail-ambil/" + item.no_msn);
         },
         onError: (e) => {
           queryCLient.invalidateQueries({ queryKey: ["list-ambil-data"] });
