@@ -17,6 +17,7 @@ export default function TableFrame({ searchParams }) {
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["data-pending-asuransi-mtr", searchParams],
+    refetchOnWindowFocus: false,
     queryFn: async () =>
       await readAfterCall({
         search: searchParams.search_query ? searchParams.search_query : "",

@@ -245,47 +245,56 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   });
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterKodepos(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
   const { data: alasanTdkMembership } = useQuery({
     queryKey: ["alasan-tdk-membership", stsMembership],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterAlasanTdkMembership(stsMembership),
     initialData: { data: [{ value: "", nama: "" }] },
   });
   const { data: aktifJual } = useQuery({
     queryKey: ["aktif-jual"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterAktifJual(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
   const { data: produkAsuransiMtr } = useQuery({
     queryKey: ["produk-asuransi-mtr"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterProdukAsuransi(1),
     initialData: { data: [{ id: "", nama: "", rate: 0 }] },
   });
   const { data: produkAsuransiPa } = useQuery({
     queryKey: ["produk-asuransi-pa"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterProdukAsuransi(2),
     initialData: { data: [{ id: "", nama: "", rate: 0 }] },
   });
   const { data: produkMembership } = useQuery({
     queryKey: ["produk-membership"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterJenisKartu(),
     initialData: { data: [] },
   });
   const { data: promoTransfer } = useQuery({
     queryKey: ["promo-transfer"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterPromoTransfer(),
     initialData: { data: [] },
   });
   const { data: scripts } = useQuery({
     queryKey: ["scripts"],
+    refetchOnWindowFocus: false,
     queryFn: async () => await masterScript(),
     initialData: { data: [] },
   });
 
   const { data: detailOtr } = useQuery({
     queryKey: ["detail-otr-no-mtr", noMtrAsuransi, tahunMtr],
+    refetchOnWindowFocus: false,
     queryFn: async () => await detailOtrNoMtr({ no_mtr: noMtrAsuransi, tahun: parseInt(tahunMtr, 10) }),
     initialData: { data: { id: "", otr: 0, tahun: 0, no_mtr: "" } },
   });

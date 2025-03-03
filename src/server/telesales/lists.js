@@ -5,6 +5,12 @@ export async function listAmbilData() {
   return { data: response.data, page: 1 };
 }
 
+export async function seflCount() {
+  const response = await AuthGetApi("/customer-mtr/self-count");
+  console.log("dari api ", response);
+  return response;
+}
+
 export async function readAfterCall(query) {
   const { search, jns, sts, limit, pageParams } = query;
 
