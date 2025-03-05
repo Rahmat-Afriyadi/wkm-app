@@ -1,26 +1,44 @@
-"use server";
+"use client";
 import dynamic from "next/dynamic";
 const FormInputTelesales = dynamic(() => import("@/components/form/telesales/form-input-telesales"));
-import { AuthGetApi } from "../../../../../lib/fetchApi";
+const ModalListFaktur = dynamic(() => import("../../modal/list-faktur"));
+const TableAmbilData = dynamic(() => import("@/components/form/telesales/table-ambil-data"));
+// import FormInputTelesales from "@/components/form/telesales/form-input-telesales";
+// import ModalListFaktur from "../../modal/list-faktur";
+// import TableAmbilData from "@/components/form/telesales/table-ambil-data";
 
 import { detailAmbilData } from "@/server/telesales/show";
 import { formatDate, formatDateIndo } from "@/lib/utils/format-date";
+import { useRouter } from "next/navigation";
+import { listAmbilData } from "@/server/telesales/lists";
+import { ambilData } from "@/server/telesales/ambil-data";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 import { Suspense } from "react";
 import { formatCurrency } from "@/lib/utils/format-currentcy";
 
-export default async function Page({ params }) {
+export default function Page({ params, searchParams }) {
   const { no_msn } = params;
-  // const { data: faktur, isLoading } = useQuery({
-  //   queryKey: ["detail-ambil-data", { no_msn }],
-  //   queryFn: async () => await detailAmbilData(no_msn),
-  //   initialData: { data: {} },
-  // });
+  const router = useRouter();
 
-  // if (isLoading) {
-  //   return "Loading...";
-  // }
+  const queryCLient = useQueryClient();
+  const { data: faktur, isLoading } = useQuery({
+    queryKey: ["detail-ambil-data", { no_msn }],
+    queryFn: async () => await detailAmbilData(no_msn),
+    initialData: { data: {} },
+  });
+  const { data: listAmbilData1 } = useQuery({
+    queryKey: ["list-ambil-data-detail"],
+    queryFn: async () => await listAmbilData(),
+    initialData: { data: [{ no_msn: "" }] },
+  });
+  const ambilDataMut = useMutation({
+    mutationFn: ambilData,
+  });
 
-  const faktur = await AuthGetApi("/customer-mtr/show/" + no_msn);
+  if (isLoading) {
+    return "Loading...";
+  }
 
   if (faktur.data.asuransi_pa?.id !== "" && faktur.data.asuransi_pa?.id !== undefined) {
     faktur.data.asuransi_pa_id = faktur.data.asuransi_pa?.id;
@@ -102,9 +120,36 @@ export default async function Page({ params }) {
     }
   }
 
+  const handleAmbilData = (item) => {
+    ambilDataMut.mutate(
+      {
+        no_msn: item.no_msn,
+      },
+      {
+        onSuccess: (data) => {
+          queryCLient.invalidateQueries({
+            queryKey: ["list-ambil-data-detail"],
+          });
+          router.replace("/telesales/detail-ambil/" + item.no_msn);
+          queryCLient.invalidateQueries({
+            queryKey: ["detail-ambil-data", , { no_msn: item.no_msn }],
+          });
+        },
+        onError: (e) => {
+          queryCLient.invalidateQueries({ queryKey: ["list-ambil-data-detail"] });
+          Swal.fire("Failed!", e.response.data.message, "error");
+        },
+      }
+    );
+  };
+
   return (
     <>
-      <Suspense key={no_msn}>
+      <ModalListFaktur>
+        <TableAmbilData options={listAmbilData1.data} handleChange={handleAmbilData} />
+      </ModalListFaktur>
+      <br />
+      <Suspense key={no_msn + faktur.data.no_msn}>
         <FormInputTelesales defaultValues={faktur.data} isEditing={true} />
       </Suspense>
     </>

@@ -2,26 +2,30 @@
 import dynamic from "next/dynamic";
 import React from "react";
 
-const FormInputTelesales = dynamic(() => import("@/components/form/telesales/form-input-telesales"));
-const ModalListFaktur = dynamic(() => import("./modal/list-faktur"));
 const TableAmbilData = dynamic(() => import("@/components/form/telesales/table-ambil-data"));
-// import FormInputTelesales from "@/components/form/telesales/form-input-telesales";
-// import ModalListFaktur from "./modal/list-faktur";
-// import TableAmbilData from "@/components/form/telesales/table-ambil-data";
 
-import { listAmbilData } from "@/server/telesales/lists";
+import { useEffect } from "react";
+import { listAmbilData, seflCount } from "@/server/telesales/lists";
 import { ambilData } from "@/server/telesales/ambil-data";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
+import { formatDate } from "@/lib/utils/format-date";
 
 export default function Page() {
-  const router = useRouter();
+  const now = new Date();
 
   const queryCLient = useQueryClient();
+  const { data: jumlahAmbil } = useQuery({
+    queryKey: ["self-count"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await seflCount(),
+    initialData: 0,
+  });
   const { data: listAmbilData1 } = useQuery({
     queryKey: ["list-ambil-data"],
     queryFn: async () => await listAmbilData(),
+    refetchOnWindowFocus: false,
     initialData: { data: [{ no_msn: "" }] },
   });
   const ambilDataMut = useMutation({
@@ -35,7 +39,8 @@ export default function Page() {
       },
       {
         onSuccess: (data) => {
-          router.push("/telesales/detail-ambil/" + item.no_msn);
+          queryCLient.invalidateQueries({ queryKey: ["self-count"] });
+          Swal.fire("Success!", "Data berhasil di ambil", "info");
         },
         onError: (e) => {
           queryCLient.invalidateQueries({ queryKey: ["list-ambil-data"] });
@@ -47,11 +52,9 @@ export default function Page() {
 
   return (
     <>
-      <ModalListFaktur>
-        <TableAmbilData options={listAmbilData1.data} handleChange={handleAmbilData} />
-      </ModalListFaktur>
-      <br />
-      <FormInputTelesales />
+      <p className="">Ambil Data {formatDate(now)}</p>
+      <p className="font-bold text-xl">Jumlah: {jumlahAmbil}</p>
+      <TableAmbilData options={listAmbilData1.data} handleChange={handleAmbilData} />
     </>
   );
 }

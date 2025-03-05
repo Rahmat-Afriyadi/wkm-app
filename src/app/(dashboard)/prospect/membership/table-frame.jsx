@@ -18,6 +18,7 @@ export default function TableFrame({ searchParams }) {
 
   const { data, error, isLoading } = useQuery({
     queryKey: ["data-prospect-membership", searchParams],
+    refetchOnWindowFocus: false,
     queryFn: async () =>
       await readAfterCall({
         search: searchParams.search_query ? searchParams.search_query : "",
