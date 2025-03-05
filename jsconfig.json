@@ -31,7 +31,7 @@
     ".next/types/**/*.ts",
     "**/*.ts",
     "**/*.tsx"
-, "src/app/(dashboard)/asuransi/page2.jsx", "src/app/(dashboard)/asuransi/item.jsx", "src/app/(dashboard)/asuransi/list-items.jsx", "src/app/(dashboard)/asuransi/page-frame.jsx", "src/components/form/asuransi/action-combobox.jsx", "src/components/form/asuransi/action-input.jsx", "src/components/form/asuransi/action-select.jsx", "src/components/form/asuransi/modal-form-site.jsx", "src/components/Input/index.jsx", "src/components/Pagination/index.jsx", "src/hooks/usePagination.jsx"  ],
+, "src/app/(dashboard)/asuransi/page2.jsx", "src/app/(dashboard)/asuransi/item.jsx", "src/app/(dashboard)/asuransi/list-items.jsx", "src/app/(dashboard)/asuransi/page-frame.jsx", "src/components/form/asuransi/action-combobox.jsx", "src/components/form/asuransi/action-input.jsx", "src/components/form/asuransi/action-select.jsx", "src/components/form/asuransi/modal-form-site.jsx", "src/components/Input/index.jsx", "src/components/Pagination/index.jsx", "src/hooks/usePagination.jsx", "src/server/customer-mtr/lists.jsx"  ],
   "exclude": [
     "node_modules"
   ]

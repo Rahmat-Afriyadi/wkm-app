@@ -1,46 +1,24 @@
 "use server";
-import dynamic from "next/dynamic";
-import { readManyBerminatMembership } from "@/server/customer-mtr/lists";
-const Pagination = dynamic(() => import("@/components/Pagination/index"));
 
-function determineStatus(print, stsRenewal, stsKartu, stsBayarRenewal) {
-  if (print === 0 && stsRenewal === "O") {
-    return "Belum Print TT";
-  }
-  switch (stsKartu) {
-    case 1:
-      return "Print TT";
-    case 2:
-      return "Bawa Kurir";
-    case 3:
-      if (stsRenewal === "O" && stsBayarRenewal === "S") {
-        return "Sukses";
-      }
-      break;
-    case 4:
-      return "Check Kartu";
-    case 6:
-      return "Kartu Kembali TS";
-  }
-  return "";
-}
+import Pagination from "@/components/Pagination/index";
+import { readManyBerminatAsuransiMtr } from "@/server/customer-mtr/lists";
+import Site from "./item";
 
-export default async function ListMembership({ searchParams }) {
+export default async function ListAsuransiMtr({ searchParams }) {
   const pageParams = parseInt(searchParams?.page, 10) || 1;
   const limit = parseInt(searchParams?.limit, 10) || 10;  
   const search = searchParams?.search_query || "";
   const tgl1 = searchParams?.tgl1 || "";
   const tgl2 = searchParams?.tgl2 || "";
 
-  const response = await readManyBerminatMembership({
+  const response = await readManyBerminatAsuransiMtr({
     tgl1,
     tgl2,
     search,
     limit,
     pageParams,
   });
-  // console.log(response);
-  // console.log(response.data);
+
   const data = response.data || [];
   const tableData = response.data.data || [];
   // console.log(data.total_records);
@@ -48,7 +26,6 @@ export default async function ListMembership({ searchParams }) {
     total_rows: data.total_records,
     total_pages: data.total_pages || 1,
   };
-
   return (
     <table className="min-w-full divide-y divide-gray-300">
       <thead className="bg-gray-50">
@@ -60,13 +37,13 @@ export default async function ListMembership({ searchParams }) {
             Nama Customer
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-            Status Jenis Bayar
+            Status Asuransi
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-            Tanggal Bayar Renewal
+            Tanggal Beli
           </th>
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
-            Status
+            Produk
           </th>
         </tr>
       </thead>
@@ -75,18 +52,21 @@ export default async function ListMembership({ searchParams }) {
           tableData.map((item, i) => (
             <tr key={i}>
               <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.no_msn}</td>
-              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.nm_customer11}</td>
+              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.nm_customer_wkm === "" ? item.nm_customer_fkt : item.nm_customer_wkm}</td>
               <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">
-                {item.sts_jenis_bayar === "C" ? "Cash" : item.sts_jenis_bayar === "T" ? "Transfer" : item.sts_jenis_bayar}
+                {(() => {
+                  switch (item.sts_asuransi) {
+                  case 'P': return 'Pending';
+                  case 'O': return 'Oke';
+                  case 'F': return 'Prospect';
+                  case 'T': return 'Tidak Minat';
+                  default: return 'Unknown';
+                  }
+                })()}
               </td>
-              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">
-                {new Intl.DateTimeFormat("id-ID", {
-                year: "numeric",
-                month: "long",
-                day: "2-digit",
-                }).format(new Date(item.tgl_bayar_renewal))}
-              </td>
-              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{determineStatus(item.print, item.sts_renewal, parseInt(item.sts_kartu), item.sts_bayar_renewal)}</td>
+
+              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.tgl_beli}</td>
+              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.id_produk}</td>
             </tr>
           ))
         ) : (
@@ -97,7 +77,7 @@ export default async function ListMembership({ searchParams }) {
           </tr>
         )}
         <tr>
-          <td colSpan={10}>
+          <td colSpan={5}>
             <Pagination
               rows={data.total_records}
               postsPerPage={10}
