@@ -53,25 +53,28 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
           onSuccess: (data) => {
             if (data.status == "success") {
               Swal.fire("Success!", "Input Pembayaran Berhasil", "info").then(() => {
-                // if (akanBayar.length > 0) {
-                //   return Swal.fire(
-                //     "Success!",
-                //     akanBayar[0] == 2
-                //       ? "Asuransi PA Belum di Input Bayar"
-                //       : akanBayar[0] == 3
-                //       ? "Asuransi Motor Belum di Input Bayar"
-                //       : "",
-                //     "info"
-                //   ).then(() => {
-                //     setBayarApa(akanBayar.shift());
-                //     setValueTglLhr({
-                //       startDate: null,
-                //       endDate: null,
-                //     });
-                //   });
-                // }
-                setFaktur(null);
-                router.refresh();
+                if (akanBayar.length > 0) {
+                  return Swal.fire(
+                    "Success!",
+                    akanBayar[0] == 2
+                      ? "Asuransi PA Belum di Input Bayar"
+                      : akanBayar[0] == 3
+                      ? "Asuransi Motor Belum di Input Bayar"
+                      : "",
+                    "info"
+                  ).then(() => {
+                    setBayarApa(akanBayar.shift());
+                    setValueTglLhr({
+                      startDate: null,
+                      endDate: null,
+                    });
+                  });
+                } else {
+                  setFaktur(null);
+                  router.refresh();
+                }
+                // setFaktur(null);
+                // router.refresh();
               });
             } else {
               Swal.fire("Failed!", data.message, "error");
@@ -117,24 +120,35 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
                 disabled={true}
               />
             </div>
-            <div className="col-span-6 mt-5">
-              <InputBase name={"no_kartu"} lable={"Nomor Kartu"} id={"no_kartu"} register={register} disabled={true} />
-            </div>
-            <div className="col-span-6 mt-5">
-              <InputBase name={"harga"} lable={"Harga Kartu"} id={"harga"} register={register} disabled={true} />
-            </div>
-            <div className="col-span-6 mt-5">
-              <DatepickerBase
-                label={"Tanggal Expired"}
-                id={"tgl_expired"}
-                value={{
-                  startDate: new Date(defaultValues?.kartu?.tgl_expired),
-                  endDate: new Date(defaultValues?.kartu?.tgl_expired),
-                }}
-                disabled={true}
-                setValue={setValueTglLhr}
-              />
-            </div>
+            {bayarApa == 1 && (
+              <>
+                {" "}
+                <div className="col-span-6 mt-5">
+                  <InputBase
+                    name={"no_kartu"}
+                    lable={"Nomor Kartu"}
+                    id={"no_kartu"}
+                    register={register}
+                    disabled={true}
+                  />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <InputBase name={"harga"} lable={"Harga Kartu"} id={"harga"} register={register} disabled={true} />
+                </div>
+                <div className="col-span-6 mt-5">
+                  <DatepickerBase
+                    label={"Tanggal Expired"}
+                    id={"tgl_expired"}
+                    value={{
+                      startDate: new Date(defaultValues?.kartu?.tgl_expired),
+                      endDate: new Date(defaultValues?.kartu?.tgl_expired),
+                    }}
+                    disabled={true}
+                    setValue={setValueTglLhr}
+                  />
+                </div>
+              </>
+            )}
             <div className="col-span-6 mt-5">
               <InputBase name={"nm_mtr"} lable={"Nama Motor"} id={"nm_mtr"} register={register} disabled={true} />
             </div>

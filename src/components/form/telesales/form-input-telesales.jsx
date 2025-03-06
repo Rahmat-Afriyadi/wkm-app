@@ -83,8 +83,10 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
   const onSubmit = async (values) => {
     console.log("ini values yaa ", values);
-    if (values.sts_stnk) {
+    if (values.sts_stnk == 1) {
       values.sts_stnk = "O";
+    } else {
+      values.sts_stnk = "T";
     }
     event.preventDefault();
     if (values.sts_membership !== "P" && values.sts_membership !== "O") {
@@ -138,7 +140,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       }
     }
     values.asuransi_mtr_otr = parseInt(values?.otr?.replace(/Rp\s?|,/g, ""));
-    if (values.asuransi_mtr_otr < 1 && values.sts_asuransi_mtr == "O") {
+    if (values.asuransi_mtr_otr < 1 && values.sts_asuransi_mtr == "O" && !values.asuransi_mtr_id) {
       return Swal.fire({
         title: "Mohon isi otr motor",
         icon: "question",
@@ -1248,14 +1250,34 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
             {now.getFullYear() > tglFaktur.getFullYear() && now.getMonth() + 1 == tglFaktur.getMonth() ? (
               <div className="row-span-5 flex justify-center items-center col-span-3 ">
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <p className="font-bold text-lg text-center">STNK Akan Habis Masa Berlaku, Perpanjang STNK ?</p>
-                  <div className="w-1/2">
-                    <input
+                <div className="flex flex-col items-center justify-center gap-2 border-2 border-slate-400 bg-slate-50 rounded-lg p-2">
+                  <p className="font-bold text-lg text-center leading-tight">
+                    STNK Akan Habis Masa Berlaku, Perpanjang STNK ?
+                  </p>
+                  <div className="w-full flex justify-center gap-x-2">
+                    {/* <input
                       type="checkbox"
                       {...register("sts_stnk")}
                       className="block w-full h-12 cursor-pointer  rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                    />
+                    /> */}
+                    <label className={`flex items-center gap-1`}>
+                      <input
+                        type="radio"
+                        value={1}
+                        {...register("sts_stnk")}
+                        className={`w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 cursor-pointer`}
+                      />
+                      <span className="text-gray-700">Oke</span>
+                    </label>
+                    <label className={`flex items-center gap-1`}>
+                      <input
+                        type="radio"
+                        value={0}
+                        {...register("sts_stnk")}
+                        className={`w-4 h-4 text-blue-500 focus:ring-blue-500 border-gray-300 cursor-pointer`}
+                      />
+                      <span className="text-gray-700">Tidak</span>
+                    </label>
                   </div>
                 </div>
               </div>
