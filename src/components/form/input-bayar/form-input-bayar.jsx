@@ -107,19 +107,29 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
                 Save
               </button>
             </div>
-
-            <div className="col-span-6 mt-5">
-              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={true} />
-            </div>
-            <div className="col-span-6 mt-5">
+            <div className="col-span-12 mt-5">
               <InputBase
-                name={"no_tanda_terima"}
-                lable={"Nomor Tanda Terima"}
-                id={"no_tanda_terima"}
+                name={"nm_customer11"}
+                lable={"Nama Customer"}
+                id={"nm_customer11"}
                 register={register}
                 disabled={true}
               />
             </div>
+            <div className="col-span-6 mt-5">
+              <InputBase name={"no_msn"} lable={"Nomor Mesin"} id={"no_msn"} register={register} disabled={true} />
+            </div>
+            {defaultValues.type_kartu == "F" && (
+              <div className="col-span-6 mt-5">
+                <InputBase
+                  name={"no_tanda_terima"}
+                  lable={"Nomor Tanda Terima"}
+                  id={"no_tanda_terima"}
+                  register={register}
+                  disabled={true}
+                />
+              </div>
+            )}
             {bayarApa == 1 && (
               <>
                 {" "}
@@ -152,16 +162,6 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
             <div className="col-span-6 mt-5">
               <InputBase name={"nm_mtr"} lable={"Nama Motor"} id={"nm_mtr"} register={register} disabled={true} />
             </div>
-            <div className="col-span-12 mt-5">
-              <InputBase
-                name={"nm_customer11"}
-                lable={"Nama Customer"}
-                id={"nm_customer11"}
-                register={register}
-                disabled={true}
-              />
-            </div>
-
             <div className="col-span-6 mt-5">
               <InputBase
                 name={"no_telp1"}
@@ -188,6 +188,15 @@ export default function FormInputBayar({ defaultValues, setFaktur, setBayarApa, 
                 name={"mst_card.jns_card"}
                 lable={"Jenis Kartu"}
                 id={"mst_card.jns_card"}
+                register={register}
+                disabled={true}
+              />
+            </div>
+            <div className="col-span-6 mt-5">
+              <InputBase
+                name={"desc_type_kartu"}
+                lable={"Tipe Kartu"}
+                id={"desc_type_kartu"}
                 register={register}
                 disabled={true}
               />

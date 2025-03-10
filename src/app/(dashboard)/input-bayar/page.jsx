@@ -62,6 +62,7 @@ export default function Page() {
           setMessage(data.message);
         } else {
           setMessage(null);
+          data.faktur.desc_type_kartu = data.faktur.type_kartu == "E" ? "E-Card" : "Fisik";
           if (data.faktur.nomor_kartu != "" && data.faktur.mst_card.kd_card != "") {
             data.faktur.harga = formatCurrency(
               "" +

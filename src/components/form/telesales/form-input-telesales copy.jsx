@@ -124,7 +124,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       if (
         !values.sts_stnk &&
         now.getFullYear() > tglFaktur.getFullYear() &&
-        Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30 &&
+        now.getMonth() + 1 == tglFaktur.getMonth() &&
         popUpStnk == 1
       ) {
         return Swal.fire({
@@ -216,7 +216,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
   const now = new Date();
   const tglFaktur = new Date(defaultValues?.tgl_faktur);
-  const nextYearFaktur = new Date(`${now.getFullYear()}-${tglFaktur.getMonth() + 1}-${tglFaktur.getDate()}`);
   const validasiNoTelp = ["1", "1A", "1B"];
   const validasiAlamat = ["1", "2", "4"];
   const validasiAlasanTidak = ["Telp bermasalah", "Telp tidak diangkat/aktif"];
@@ -1244,13 +1243,18 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               />
             </div>
             <div className="col-span-1"></div>
+            {/* <p>
+                    {tglFaktur.getFullYear() > now.getFullYear() &&
+                      (tglFaktur.getMonth() == now.getMonth() || now.getMonth() - 1 == tglFaktur.getMonth())}
+                  </p> */}
 
-            {now.getFullYear() > tglFaktur.getFullYear() &&
-            Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30 ? (
+            {now.getFullYear() > tglFaktur.getFullYear() && now.getMonth() + 1 == tglFaktur.getMonth() ? (
               <div className="row-span-5 flex justify-center items-center col-span-3 ">
                 <div className="flex flex-col items-center justify-center gap-2 border-2 border-slate-400 bg-slate-50 rounded-lg p-2">
-                  <p className="font-bold text-center leading-tight">STNK Akan Habis Masa Berlaku, Perpanjang STNK ?</p>
-                  <div className="w-full flex justify-center gap-x-2 mt-1">
+                  <p className="font-bold text-lg text-center leading-tight">
+                    STNK Akan Habis Masa Berlaku, Perpanjang STNK ?
+                  </p>
+                  <div className="w-full flex justify-center gap-x-2">
                     {/* <input
                       type="checkbox"
                       {...register("sts_stnk")}
