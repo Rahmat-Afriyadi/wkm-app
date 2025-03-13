@@ -192,7 +192,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               ],
             });
             Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-              // router.push(`/pending/membership?${params}`);
+              router.push(`/pending/membership?${params}`);
             });
           },
           onError: (e) => {
