@@ -52,7 +52,7 @@ export default function TableFrame({ searchParams }) {
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2 text-blue-600 cursor-pointer">
-          <a href={`/telesales/detail/${row.original.no_msn}?${params}`}>
+          <a href={`/kartu-balikan/detail/${row.original.no_msn}?${params}`}>
             <PencilIcon className="w-7 h-6 hover:bg-slate-300 rounded-sm" aria-hidden="true" />
           </a>
         </div>

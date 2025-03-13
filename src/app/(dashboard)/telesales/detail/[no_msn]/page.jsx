@@ -3,10 +3,7 @@ import dynamic from "next/dynamic";
 const FormInputTelesales = dynamic(() => import("@/components/form/telesales/form-input-telesales"));
 import { AuthGetApi } from "../../../../../lib/fetchApi";
 
-import { detailAmbilData } from "@/server/telesales/show";
-import { formatDate, formatDateIndo } from "@/lib/utils/format-date";
 import { Suspense } from "react";
-import { formatCurrency } from "@/lib/utils/format-currentcy";
 
 export default async function Page({ params }) {
   const { no_msn } = params;
@@ -22,16 +19,6 @@ export default async function Page({ params }) {
   if (faktur.data.sts_asuransi_mtr == "F") {
     faktur.data.tgl_prospect_asuransi_mtr = faktur.data?.tgl_prospect_asuransi_mtr.substring(0, 10);
   }
-
-  // if (faktur.data.no_kartu2 != "") {
-  //   if (faktur.data.no_kartu2?.slice(2, 4) == "02") {
-  //     faktur.data.jns_membership_sebelum = "Gold";
-  //   } else if (faktur.data.no_kartu2?.slice(2, 4) == "03") {
-  //     faktur.data.jns_membership_sebelum = "Platinum";
-  //   } else if (faktur.data.no_kartu2?.slice(2, 4) == "23") {
-  //     faktur.data.jns_membership_sebelum = "Platinum Plus";
-  //   }
-  // }
 
   return (
     <>

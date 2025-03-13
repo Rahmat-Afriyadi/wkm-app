@@ -35,6 +35,7 @@ import { masterPromoTransfer } from "@/server/master/promo-transfer";
 import { masterProdukAsuransi } from "@/server/master/produk-asuransi";
 import { masterScript } from "@/server/master/script";
 import { masterAlasanTdkMembership } from "@/server/master/alasan_tdk_membership";
+import { masterAlasanVoidKonfirmasi } from "@/server/master/alasan_void_konfirmasi";
 import { detailOtrNoMtr } from "@/server/otr/otr-no-mtr";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -191,7 +192,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
               ],
             });
             Swal.fire("Success!", "Input Update Berhasil", "info").then(() => {
-              router.push(`/pending/membership?${params}`);
+              // router.push(`/pending/membership?${params}`);
             });
           },
           onError: (e) => {
@@ -267,6 +268,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     queryKey: ["alasan-tdk-motor", stsMembership],
     refetchOnWindowFocus: false,
     queryFn: async () => await masterAlasanTdkMembership(stsMembership, "M"),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: alasanVoidKonfirmasi } = useQuery({
+    queryKey: ["alasan-void-konfirmasi"],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await masterAlasanVoidKonfirmasi(),
     initialData: { data: [{ value: "", nama: "" }] },
   });
 
@@ -366,7 +373,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   }, [ketNoKtp]); // eslint-disable-line
 
   useEffect(() => {
-    if (membershipId && stsMembership == "O") {
+    if (membershipId && stsMembership == "O" && defaultValues.sts_bayar_membership != "B") {
       setDisabledOkeMembership(true);
     } else {
       setDisabledOkeMembership(false);
@@ -465,11 +472,11 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       setValue("kota_wkm", defaultValues.kota_fkt);
       setValue("alamat_wkm", defaultValues.alamat_fkt);
     } else {
-      setValue("kel_wkm", "");
-      setValue("kodepos_wkm", "");
-      setValue("kec_wkm", "");
-      setValue("kota_wkm", "");
-      setValue("alamat_wkm", "");
+      setValue("kel_wkm", defaultValues.kel_wkm);
+      setValue("kodepos_wkm", defaultValues.kodepos_wkm);
+      setValue("kec_wkm", defaultValues.kec_wkm);
+      setValue("kota_wkm", defaultValues.kota_wkm);
+      setValue("alamat_wkm", defaultValues.alamat_wkm);
     }
   }, [ketAlamatWkm]); // eslint-disable-line
 
@@ -1394,9 +1401,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   <div className="w-full flex items-start justify-center">
                     <p className="font-bold text-3xl">Renewal ke {isEditing ? defaultValues.renewal_ke : ""}</p>
                   </div>
-                  <div className="w-full grid grid-cols-2 gap-x-3 mt-9">
-                    <div className="col-span-1 ">
-                      <InputGroup
+                  <div className="w-full grid grid-cols-2 gap-5 mt-9">
+                    <div className="col-span-1">
+                      <TextAreaGroup
                         name={"desc_alasan_kurir"}
                         readOnly
                         label={"Alasan Kurir"}
@@ -1404,16 +1411,47 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                         register={register}
                         disabled={false}
                         errors={errors}
+                        rows={2}
                       />
                     </div>
                     <div className="col-span-1 ">
-                      <InputGroup
+                      <TextAreaGroup
                         name={"alasan_detail_kurir"}
                         readOnly
                         label={"Alasan Detail Kurir"}
                         id={"alasan_detail_kurir"}
                         register={register}
                         disabled={false}
+                        errors={errors}
+                        rows={2}
+                      />
+                    </div>
+                    <div className="col-span-1 ">
+                      <TextAreaGroup
+                        name={"alasan_tdk_ts_detail"}
+                        readOnly
+                        label={"Alasan Tidak Detail Telesales"}
+                        id={"alasan_tdk_ts_detail"}
+                        register={register}
+                        disabled={false}
+                        errors={errors}
+                        rows={3}
+                      />
+                    </div>
+                    <div className="col-span-1 ">
+                      <SelectGroup
+                        name={"alasan_void_konfirmasi"}
+                        label={"Alasan Void Konfirmasi"}
+                        id={"alasan_void_konfirmasi"}
+                        validation={{
+                          required:
+                            stsMembership == "T" && defaultValues.sts_bayar_membership == "B"
+                              ? "This field is Required"
+                              : false,
+                        }}
+                        register={register}
+                        disabled={false}
+                        options={alasanVoidKonfirmasi?.data}
                         errors={errors}
                       />
                     </div>
@@ -1426,7 +1464,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                       name={"alasan_tdk_membership"}
                       label={"Alasan Tidak"}
                       id={"alasan_tdk_membership"}
-                      validation={{ required: isRequired ? "This field is Required" : false }}
+                      validation={{ required: stsMembership == "T" ? "This field is Required" : false }}
                       register={register}
                       disabled={false}
                       options={alasanTdkMembership?.data}
@@ -1872,6 +1910,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_tdk_asuransi_pa"}
                   label={"Alasan Tidak"}
                   id={"alasan_tdk_asuransi_pa"}
+                  validation={{ required: stsAsuransiPa == "T" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={alasanTdkPa?.data}
@@ -1883,6 +1922,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_pa"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_pa"}
+                  validation={{ required: stsAsuransiPa == "P" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={[
@@ -2013,6 +2053,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_tdk_asuransi_mtr"}
                   label={"Alasan Tidak"}
                   id={"alasan_tdk_asuransi_mtr"}
+                  validation={{ required: stsAsuransiPa == "T" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={alasanTdkMtr?.data}
@@ -2024,6 +2065,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_mtr"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_mtr"}
+                  validation={{ required: stsAsuransiMtr == "P" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={[
