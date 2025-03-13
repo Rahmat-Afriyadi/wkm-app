@@ -1,8 +1,8 @@
 // import { axiosAuth } from "@/lib/axios";
 import { axiosAuth } from "@/lib/axios";
 
-export const masterAlasanTdkMembership = async (stsMembership) => {
-  const data = await axiosAuth.get("/mst-alasan-tdk-membership");
+export const masterAlasanTdkMembership = async (stsMembership, tipe = "V") => {
+  const data = await axiosAuth.get("/mst-alasan-tdk-membership/" + tipe);
   const res = { data: [] };
   if (data.status == 200) {
     const validasiAlasanTidak = ["Telp bermasalah", "Telp tidak diangkat/aktif"];

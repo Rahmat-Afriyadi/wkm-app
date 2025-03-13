@@ -254,7 +254,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const { data: alasanTdkMembership } = useQuery({
     queryKey: ["alasan-tdk-membership", stsMembership],
     refetchOnWindowFocus: false,
-    queryFn: async () => await masterAlasanTdkMembership(stsMembership),
+    queryFn: async () => await masterAlasanTdkMembership(stsMembership, "V"),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: alasanTdkPa } = useQuery({
+    queryKey: ["alasan-tdk-pa", stsMembership],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await masterAlasanTdkMembership(stsMembership, "P"),
+    initialData: { data: [{ value: "", nama: "" }] },
+  });
+  const { data: alasanTdkMtr } = useQuery({
+    queryKey: ["alasan-tdk-motor", stsMembership],
+    refetchOnWindowFocus: false,
+    queryFn: async () => await masterAlasanTdkMembership(stsMembership, "M"),
     initialData: { data: [{ value: "", nama: "" }] },
   });
   const { data: aktifJual } = useQuery({
@@ -1908,7 +1920,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   id={"alasan_tdk_asuransi_pa"}
                   register={register}
                   disabled={false}
-                  options={alasanTdkMembership?.data}
+                  options={alasanTdkPa?.data}
                   errors={errors}
                 />
               )}
@@ -2049,7 +2061,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   id={"alasan_tdk_asuransi_mtr"}
                   register={register}
                   disabled={false}
-                  options={alasanTdkMembership?.data}
+                  options={alasanTdkMtr?.data}
                   errors={errors}
                 />
               )}

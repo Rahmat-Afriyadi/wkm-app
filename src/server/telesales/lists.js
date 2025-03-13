@@ -41,3 +41,30 @@ export async function readAfterCall(query) {
     },
   };
 }
+
+export async function listKartuBalikan(query) {
+  const { search, limit, pageParams } = query;
+
+  const response = await AuthGetApi(
+    "/customer-mtr/master-data-balikan?" +
+      new URLSearchParams({
+        search,
+        limit,
+        pageParams,
+      })
+  );
+
+  const resultLength = await AuthGetApi(
+    "/customer-mtr/master-data-balikan-count?" +
+      new URLSearchParams({
+        search,
+      })
+  );
+  return {
+    data: response,
+    page: {
+      total_rows: resultLength, // Total data
+      total_pages: Math.ceil(resultLength / limit), // Total page
+    },
+  };
+}
