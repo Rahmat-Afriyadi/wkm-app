@@ -1922,7 +1922,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_pa"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_pa"}
-                  validation={{ required: stsAsuransiPa == "P" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={[
@@ -2065,7 +2064,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                   name={"alasan_pending_asuransi_mtr"}
                   label={"Alasan Pending"}
                   id={"alasan_pending_asuransi_mtr"}
-                  validation={{ required: stsAsuransiMtr == "P" ? "This field is Required" : false }}
                   register={register}
                   disabled={false}
                   options={[
