@@ -22,6 +22,8 @@ export default function TableFrame({ searchParams }) {
         search: searchParams.search_query ? searchParams.search_query : "",
         limit: searchParams?.limit || 10,
         pageParams: searchParams?.page || 1,
+        tgl1: searchParams?.tgl1 || "",
+        tgl2: searchParams?.tgl2 || "",
       }),
   });
 

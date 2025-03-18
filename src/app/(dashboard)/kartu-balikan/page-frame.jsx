@@ -2,8 +2,38 @@
 import dynamic from "next/dynamic";
 const Search = dynamic(() => import("@/components/Search/index"));
 // import Search from "@/components/Search/index";
+import Datepicker from "react-tailwindcss-datepicker";
+import { useEffect, useState } from "react";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export default function PageFrame({ children }) {
+  const searchParams = useSearchParams();
+  const { replace } = useRouter();
+  const pathname = usePathname();
+  const [value, setValue] = useState({ startDate: "", endDate: "" });
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    params.set("tgl1", "");
+    params.set("tgl2", "");
+    replace(`${pathname}?${params}`);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleValueChange = (newValue) => {
+    const params = new URLSearchParams(searchParams);
+    if (newValue.startDate != null && newValue.endDate) {
+      params.set("tgl1", newValue.startDate);
+      params.set("tgl2", newValue.endDate);
+      replace(`${pathname}?${params}`);
+    } else {
+      params.set("tgl1", "");
+      params.set("tgl2", "");
+      replace(`${pathname}?${params}`);
+    }
+    setValue(newValue);
+  };
+
   return (
     <>
       <div className="grid mb-6 md:grid-cols-12">
@@ -20,7 +50,7 @@ export default function PageFrame({ children }) {
 
           <Search id="search-query" name="search_query" placeholder={"Search..."} />
           <div className="w-3"></div>
-          {/* <div className="w-64">
+          <div className="w-64">
             <Datepicker
               id={"range_tgl_merah"}
               toggleClassName="absolute rounded-r-lg -top-0 right-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
@@ -30,7 +60,7 @@ export default function PageFrame({ children }) {
               primaryColor={"amber"}
               onChange={handleValueChange}
             />
-          </div> */}
+          </div>
         </div>
       </div>
 

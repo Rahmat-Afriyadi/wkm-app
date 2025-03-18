@@ -43,12 +43,14 @@ export async function readAfterCall(query) {
 }
 
 export async function listKartuBalikan(query) {
-  const { search, limit, pageParams } = query;
+  const { search, tgl1, tgl2, limit, pageParams } = query;
 
   const response = await AuthGetApi(
     "/customer-mtr/master-data-balikan?" +
       new URLSearchParams({
         search,
+        tgl1,
+        tgl2,
         limit,
         pageParams,
       })
@@ -58,6 +60,8 @@ export async function listKartuBalikan(query) {
     "/customer-mtr/master-data-balikan-count?" +
       new URLSearchParams({
         search,
+        tgl1,
+        tgl2,
       })
   );
   return {

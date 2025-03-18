@@ -1399,7 +1399,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
 
                 <div className="col-span-6 row-span-4">
                   <div className="w-full flex items-start justify-center">
-                    <p className="font-bold text-3xl">Renewal ke {isEditing ? defaultValues.renewal_ke : ""}</p>
+                    <p className="font-bold text-3xl">Renewal ke {isEditing ? defaultValues?.renewal_ke : ""}</p>
                   </div>
                   <div className="w-full grid grid-cols-2 gap-5 mt-9">
                     <div className="col-span-1">
