@@ -75,6 +75,11 @@ export default function TableFrame({ searchParams }) {
       accessorFn: (row) => formatDate(new Date(row.tgl_call_tele)),
     },
     {
+      header: "Tanggal Faktur",
+      accessorKey: "tgl_faktur",
+      accessorFn: (row) => formatDate(new Date(row.tgl_faktur)),
+    },
+    {
       accessorKey: "actions",
       header: "Actions",
       cell: ({ row }) => (
