@@ -85,6 +85,9 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const onSubmit = async (values) => {
     if (values.sts_stnk == 1) {
       values.sts_stnk = "O";
+      values.id_produk_asuransi_pa = "PRODUK-006";
+      values.sts_asuransi_pa = "O";
+      values.amount_asuransi_pa = "" + produkAsuransiPa.data.filter((e) => e.kd_produk == "PRODUK-006")[0]?.premi;
     } else {
       values.sts_stnk = "T";
     }

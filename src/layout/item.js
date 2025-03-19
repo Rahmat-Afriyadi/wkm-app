@@ -131,6 +131,16 @@ const navigation = [
     icon: FolderIcon,
   },
   {
+    name: "Kartu Balikan",
+    to: "/kartu-balikan",
+    icon: FolderIcon,
+  },
+  {
+    name: "State",
+    to: "/state",
+    icon: FolderIcon,
+  },
+  {
     name: "Pending Membership",
     to: "/pending/membership",
     icon: FolderIcon,

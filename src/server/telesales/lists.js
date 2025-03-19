@@ -42,6 +42,33 @@ export async function readAfterCall(query) {
   };
 }
 
+export async function readAllStatusAfterCall(query) {
+  const { search, limit, pageParams } = query;
+
+  const response = await AuthGetApi(
+    "/customer-mtr/all-status-master-data?" +
+      new URLSearchParams({
+        search,
+        limit,
+        pageParams,
+      })
+  );
+
+  const resultLength = await AuthGetApi(
+    "/customer-mtr/all-status-master-data-count?" +
+      new URLSearchParams({
+        search,
+      })
+  );
+  return {
+    data: response,
+    page: {
+      total_rows: resultLength, // Total data
+      total_pages: Math.ceil(resultLength / limit), // Total page
+    },
+  };
+}
+
 export async function listKartuBalikan(query) {
   const { search, tgl1, tgl2, limit, pageParams } = query;
 
