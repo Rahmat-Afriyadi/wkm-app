@@ -42,13 +42,21 @@ export default function TableFrame({ searchParams }) {
       accessorKey: "nm_customer",
     },
     {
-      accessorKey: "actions",
+      accessorKey: "status_renewal",
       header: "Status Renewal",
       cell: ({ row }) => {
-        if (row.original.sts_membership == "O") {
-          return <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">Oke</p>;
+        if (row.original.sts_membership == "O" && row.original.sts_bayar == "S") {
+          return (
+            <p className="shadow-md bg-green-500 text-center rounded-lg p-1 font-bold text-md text-white">
+              Sudah Bayar
+            </p>
+          );
         } else if (row.original.sts_membership == "P") {
           return <p className="shadow-md bg-orange-400 text-center rounded-lg p-1 font-bold text-white">Pending</p>;
+        } else if (row.original.sts_membership == "O") {
+          return <p className="shadow-md bg-green-400 text-center rounded-lg p-1 font-bold text-white">Oke (UNPAID)</p>;
+        } else if (row.original.sts_membership == "C") {
+          return <p className="shadow-md bg-gray-500 text-center rounded-lg p-1 font-bold text-white">Cancel</p>;
         } else if (row.original.sts_membership == "T") {
           return <p className="shadow-md bg-red text-center rounded-lg p-1 font-bold text-white">Tidak</p>;
         } else if (row.original.sts_membership == "F") {
@@ -68,7 +76,7 @@ export default function TableFrame({ searchParams }) {
       header: "Actions",
       cell: ({ row }) => (
         <div className="flex space-x-2 text-blue-600 cursor-pointer">
-          <a href={`/telesales/detail/${row.original.no_msn}?${params}`}>
+          <a href={`/all-status-membership/detail/${row.original.no_msn}/${row.original.from_table}?${params}`}>
             <PencilIcon className="w-7 h-6 hover:bg-slate-300 rounded-sm" aria-hidden="true" />
           </a>
         </div>

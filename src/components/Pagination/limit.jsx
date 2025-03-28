@@ -20,7 +20,6 @@ export default function Limit({ id, name, placeholder }) {
   }
 
   useEffect(() => {
-    console.log("kesini gk sih ", searchParams.limit);
     return setLimit(searchParams.get("limit"));
   }, [searchParams]);
 

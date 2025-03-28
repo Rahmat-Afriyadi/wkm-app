@@ -88,6 +88,8 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       values.id_produk_asuransi_pa = "PRODUK-006";
       values.sts_asuransi_pa = "O";
       values.amount_asuransi_pa = "" + produkAsuransiPa.data.filter((e) => e.kd_produk == "PRODUK-006")[0]?.premi;
+    } else if (values.sts_stnk == "") {
+      values.sts_stnk = "";
     } else {
       values.sts_stnk = "T";
     }
@@ -347,17 +349,17 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   useEffect(() => {
     if (!defaultValues) return; // Early return jika defaultValues tidak ada
 
-    const isDataReady = [produkMembership].every(Boolean);
+    const isDataReady = [produkMembership, alasanVoidKonfirmasi].every(Boolean);
     if (!isDataReady) return; // Early return jika ada data yang belum siap
 
-    const fields = ["jns_membership_name", "jns_membership"];
+    const fields = ["jns_membership_name", "jns_membership", "alasan_void_konfirmasi"];
 
     fields.forEach((field) => {
       if (defaultValues?.[field]) {
         setValue(field, defaultValues[field]);
       }
     });
-  }, [defaultValues, produkMembership]); // eslint-disable-line
+  }, [defaultValues, produkMembership, alasanVoidKonfirmasi]); // eslint-disable-line
 
   useEffect(() => {
     if (ketNmWkm == 1) {
@@ -1372,7 +1374,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="col-span-4 -mt-1">
                   <RadioButtonComponent
                     register={register}
-                    validation={{ required: isRequired ? "This field is Required" : false }}
+                    validation={{ required: "This field is Required" }}
                     errors={errors}
                     label={"Status Membership"}
                     name={"sts_membership"}
@@ -1455,6 +1457,17 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                         register={register}
                         disabled={false}
                         options={alasanVoidKonfirmasi?.data}
+                        errors={errors}
+                      />
+                    </div>
+                    <div className="col-span-1 ">
+                      <InputGroup
+                        name={"nm_kurir"}
+                        readOnly
+                        label={"Nama Kurir"}
+                        id={"nm_kurir"}
+                        register={register}
+                        disabled={false}
                         errors={errors}
                       />
                     </div>
@@ -1578,6 +1591,16 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                     register={register}
                     disabled={disabledPromoTransfer || disabledOkeMembership}
                     options={promoTransfer?.data}
+                    errors={errors}
+                  />
+                </div>
+                <div className="col-span-2">
+                  <InputGroup
+                    name={"desc_sts_bayar_membership"}
+                    label={"Status Bayar"}
+                    id={"desc_sts_bayar_membership"}
+                    disabled={true}
+                    register={register}
                     errors={errors}
                   />
                 </div>

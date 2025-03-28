@@ -2,8 +2,9 @@
 
 import { navigation, secondaryNavigation } from "./item";
 import { useRouter, useSelectedLayoutSegment, usePathname } from "next/navigation";
-import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
+import { ArrowDownIcon, ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");

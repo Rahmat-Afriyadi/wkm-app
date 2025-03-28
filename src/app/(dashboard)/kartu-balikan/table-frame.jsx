@@ -45,6 +45,10 @@ export default function TableFrame({ searchParams }) {
       accessorKey: "alasan_belum_bayar2",
     },
     {
+      header: "Nama Kurir",
+      accessorKey: "nm_kurir",
+    },
+    {
       header: "Tanggal Update Kartu Balikan",
       accessorKey: "tgl_update_kartu_balikan",
       accessorFn: (row) => formatDate(new Date(row.tgl_update_kartu_balikan)),

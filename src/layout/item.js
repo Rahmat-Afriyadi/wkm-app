@@ -6,6 +6,7 @@ import {
   LockClosedIcon,
   CurrencyDollarIcon,
   SignalIcon,
+  ArrowDownIcon,
 } from "@heroicons/react/24/outline";
 
 const navigation = [
@@ -131,45 +132,55 @@ const navigation = [
     icon: FolderIcon,
   },
   {
-    name: "Kartu Balikan",
-    to: "/kartu-balikan",
-    icon: FolderIcon,
-  },
-
-  {
     name: "State",
     to: "/state",
     icon: FolderIcon,
   },
   {
-    name: "Pending Membership",
-    to: "/pending/membership",
+    name: "Membership",
     icon: FolderIcon,
+    children: [
+      {
+        name: "All Data",
+        to: "/all-status-membership",
+        icon: FolderIcon,
+      },
+      {
+        name: "Kartu Balikan",
+        to: "/kartu-balikan",
+        icon: FolderIcon,
+      },
+      { name: "Pending", to: "/pending/membership", icon: FolderIcon },
+      {
+        name: "Prospect",
+        to: "/prospect/membership",
+        icon: FolderIcon,
+      },
+    ],
   },
   {
-    name: "Pending Asuransi PA",
-    to: "/pending/asuransi-pa",
+    name: "Asuransi PA",
     icon: FolderIcon,
+    children: [
+      { name: "Pending", to: "/pending/asuransi-pa", icon: FolderIcon },
+      {
+        name: "Prospect",
+        to: "/prospect/asuransi-pa",
+        icon: FolderIcon,
+      },
+    ],
   },
   {
-    name: "Pending Asuransi Motor",
-    to: "/pending/asuransi-mtr",
+    name: "Asuransi Motor",
     icon: FolderIcon,
-  },
-  {
-    name: "Prospect Membership",
-    to: "/prospect/membership",
-    icon: FolderIcon,
-  },
-  {
-    name: "Prospect Asuransi PA",
-    to: "/prospect/asuransi-pa",
-    icon: FolderIcon,
-  },
-  {
-    name: "Prospect Asuransi Motor",
-    to: "/prospect/asuransi-mtr",
-    icon: FolderIcon,
+    children: [
+      { name: "Pending", to: "/pending/asuransi-mtr", icon: FolderIcon },
+      {
+        name: "Prospect",
+        to: "/prospect/asuransi-mtr",
+        icon: FolderIcon,
+      },
+    ],
   },
 ];
 

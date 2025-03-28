@@ -5,6 +5,7 @@ import { navigation, secondaryNavigation } from "./item";
 import { useRouter, usePathname } from "next/navigation";
 import { ArrowLeftStartOnRectangleIcon, Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { ArrowDownIcon } from "@heroicons/react/24/solid";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -58,13 +59,114 @@ const AppSidebar = () => {
               {navigation.map((item) => {
                 if (session?.user?.permissions?.includes(item.name)) {
                   return (
+                    <li
+                      key={item.name}
+                      className={classNames(
+                        "h-10 overflow-hidden hover:h-auto cursor-pointer",
+                        item.children?.filter((z) => z.to == pathName).length > 0 && isExpanded ? "h-auto" : ""
+                      )}
+                    >
+                      <a
+                        href={item.children ? undefined : item.to}
+                        className={classNames(
+                          item.to === pathName || item.children?.filter((z) => z.to == pathName).length > 0
+                            ? "bg-black text-yellow"
+                            : "text-cyan-200 hover:text-yellow hover:bg-black",
+                          "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
+                        )}
+                      >
+                        <item.icon
+                          style={{
+                            transition: "transform 0.5s ease-in-out",
+                          }}
+                          className={classNames(
+                            item.to === pathName ? "bg-black text-yellow" : "text-cyan-200 group-hover:text-yellow",
+                            "h-6 w-6 shrink-0 mr-2",
+                            !isExpanded ? "scale-125" : ""
+                          )}
+                          aria-hidden="true"
+                        />
+                        <span
+                          style={{ transition: "transform 0.5s ease-in-out" }}
+                          className={` whitespace-nowrap overflow-hidden ${
+                            !isExpanded && !isHovered ? "translate-x-2 opacity-0" : ""
+                          }`}
+                        >
+                          {item.name}
+                        </span>
+                        <span className=" right-5 absolute group-hover:rotate-180 group-hover:right-7 group-hover:mt-1">
+                          {item.children && (
+                            <ArrowDownIcon
+                              style={{
+                                transition: "transform 0.5s ease-in-out",
+                              }}
+                              className={classNames(
+                                item.to === pathName ? "bg-black text-yellow" : "text-cyan-200 group-hover:text-yellow",
+                                "h-4 w-4 shrink-0 mr-2 mt-1",
+                                !isExpanded ? "scale-125" : ""
+                              )}
+                              aria-hidden="true"
+                            />
+                          )}
+                        </span>
+                      </a>
+                      {item.children && (
+                        <div className=" w-full flex flex-col items-end mt-1 bg-slate-100 rounded-md">
+                          {item.children.map((itemA) => {
+                            return (
+                              <a
+                                key={itemA.name}
+                                href={itemA.to}
+                                className={classNames(
+                                  itemA.to === pathName
+                                    ? "bg-black text-yellow"
+                                    : "text-cyan-200 hover:text-yellow hover:bg-black",
+                                  "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold w-2/3"
+                                )}
+                              >
+                                <itemA.icon
+                                  style={{
+                                    transition: "transform 0.5s ease-in-out",
+                                  }}
+                                  className={classNames(
+                                    itemA.to === pathName
+                                      ? "bg-black text-yellow"
+                                      : "text-cyan-200 group-hover:text-yellow",
+                                    "h-6 w-6 shrink-0 mr-2",
+                                    !isExpanded ? "scale-125" : ""
+                                  )}
+                                  aria-hidden="true"
+                                />
+                                <span
+                                  style={{ transition: "transform 0.5s ease-in-out" }}
+                                  className={` whitespace-nowrap overflow-hidden ${
+                                    !isExpanded && !isHovered ? "translate-x-2 opacity-0" : ""
+                                  }`}
+                                >
+                                  {itemA.name}
+                                </span>
+                              </a>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </li>
+                  );
+                }
+                return null;
+              })}
+            </ul>
+            {/* <ul role="list" className="-mx-2 space-y-1">
+              {navigation.map((item) => {
+                if (session?.user?.permissions?.includes(item.name)) {
+                  return (
                     <li key={item.name}>
                       <a
                         href={item.to}
                         className={classNames(
                           item.to === pathName
                             ? "bg-black text-yellow"
-                            : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
+                            : "text-cyan-200 hover:text-yellow hover:bg-black",
                           "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                         )}
                       >
@@ -93,7 +195,7 @@ const AppSidebar = () => {
                 }
                 return null;
               })}
-            </ul>
+            </ul> */}
           </li>
           <li>
             <ul role="list" className="-mx-2 mt-2 space-y-1">
@@ -102,9 +204,7 @@ const AppSidebar = () => {
                   <a
                     href={item.to}
                     className={classNames(
-                      item.to === pathName
-                        ? "bg-black text-yellow"
-                        : "text-cyan-200 hover:text-yellow hover:bg-cyan-700",
+                      item.to === pathName ? "bg-black text-yellow" : "text-cyan-200 hover:text-yellow hover:bg-black",
                       "group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold"
                     )}
                   >
@@ -140,7 +240,7 @@ const AppSidebar = () => {
                       void signIn();
                     });
                   }}
-                  className="text-cyan-200 hover:text-yellow hover:bg-cyan-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold cursor-pointer"
+                  className="text-cyan-200 hover:text-yellow hover:bg-black group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold cursor-pointer"
                 >
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg bg-cyan-500">
                     <ArrowLeftStartOnRectangleIcon
