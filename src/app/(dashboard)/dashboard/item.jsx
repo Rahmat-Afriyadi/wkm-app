@@ -55,6 +55,9 @@ const Membership = ({ site, id }) => {
       <td className="px-3 py-4 text-sm whitespace-nowrap">
         {determineStatus(site.print, site.sts_renewal, parseInt(site.sts_kartu), site.sts_bayar_renewal)}
       </td>
+      <td className="px-3 py-4 text-sm whitespace-nowrap">
+        {site.nm_kurir}
+      </td>
     </tr>
   );
 };

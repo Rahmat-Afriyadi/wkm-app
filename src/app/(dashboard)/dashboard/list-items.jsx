@@ -68,6 +68,9 @@ export default async function ListMembership({ searchParams }) {
           <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
             Status
           </th>
+          <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 whitespace-nowrap">
+            Nama Kurir
+          </th>
         </tr>
       </thead>
       <tbody className="bg-white">
@@ -87,6 +90,7 @@ export default async function ListMembership({ searchParams }) {
                 }).format(new Date(item.tgl_bayar_renewal))}
               </td>
               <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{determineStatus(item.print, item.sts_renewal, parseInt(item.sts_kartu), item.sts_bayar_renewal)}</td>
+              <td className="px-3 py-4 text-sm text-gray-900 whitespace-nowrap">{item.nm_kurir}</td>
             </tr>
           ))
         ) : (

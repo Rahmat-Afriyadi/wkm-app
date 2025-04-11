@@ -1,22 +1,37 @@
 "use client";
-import {LockClosedIcon,CurrencyDollarIcon,SignalIcon} from "@heroicons/react/24/outline";
+import {
+  LockClosedIcon,
+  CurrencyDollarIcon,
+  SignalIcon,
+} from "@heroicons/react/24/outline";
+import dynamic from "next/dynamic";
 import { ChevronUpIcon, ChevronDownIcon } from "@heroicons/react/24/solid";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import Search from "@/components/Search/index";
+import { useEffect, useState, useRef } from "react";
+const Search = dynamic(() => import("@/components/Search/index"));
 import Datepicker from "react-tailwindcss-datepicker";
 import { useSession } from "next-auth/react";
 import ButttonExportReportTele from "@/components/form/report-tele/form-export";
-import ChartComponent from "@/components/chart/chart";
+const ChartComponent = dynamic(() => import("@/components/chart/chart"), {
+  ssr: false,
+  loading: () => <p className="text-center py-10">Loading chart...</p>,
+});
+import { generateChartMapKota } from "./jakarta-map";
 
-export default function PageFrame({ children, data }) {
+export default function PageFrame({ children, data, dataWilayah }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
-
+  const { data: session } = useSession();
   const [value, setValue] = useState({ startDate: "", endDate: "" });
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSearchLoading, setIsSearchLoading] = useState(false);
+  const [isDateLoading, setIsDateLoading] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Membership");
-  //  console.log("tanggal", data.Dari, data.Sampai)
+  const tableRef = useRef(null);
+  
+  // Store current scroll position before navigation
+  const [lastScrollPosition, setLastScrollPosition] = useState(0);
   const dataBerminatMembership = Object.values(
     data.data?.data_berminat_membership_per_bulan || {}
   );
@@ -27,14 +42,42 @@ export default function PageFrame({ children, data }) {
     data.data?.data_berminat_mtr_per_bulan || {}
   );
   useEffect(() => {
-    const params = new URLSearchParams(searchParams);
-    params.set("tgl1", value.startDate);
-    params.set("tgl2", value.endDate);
-    replace(`${pathname}?${params}`);
-  }, [searchParams]); // eslint-disable-line react-hooks/exhaustive-deps
-
+    if (data && dataWilayah && children) {
+      setIsLoading(false);
+      setIsDateLoading(false);
+      if (lastScrollPosition > 0 && !isSearchLoading) {
+        setTimeout(() => {
+          window.scrollTo(0, lastScrollPosition);
+        }, 100);
+      }
+    }
+  }, [data, dataWilayah,children, lastScrollPosition, isSearchLoading]);
+  useEffect(() => {
+    const query = searchParams.get("search_query");
+    const page = searchParams.get("page");
+  
+    if (query !== null || page !== null) {
+      // Save current scroll position before loading
+      setLastScrollPosition(window.scrollY);
+      setIsSearchLoading(true);
+      
+      const timeout = setTimeout(() => {
+        setIsSearchLoading(false);
+        
+        if (tableRef.current) {
+          setTimeout(() => {
+            tableRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }, 100);
+        }
+      }, 100);
+      
+      return () => clearTimeout(timeout);
+    }
+  }, [searchParams]);
+  
   const handleValueChange = (newValue) => {
     setValue(newValue);
+    setIsDateLoading(true); // ← Aktifkan loading
     const params = new URLSearchParams(searchParams);
     params.set("tgl1", newValue.startDate);
     params.set("tgl2", newValue.endDate);
@@ -53,10 +96,6 @@ export default function PageFrame({ children, data }) {
     // Pastikan current & previous dalam bentuk angka
     current = Number(current);
     previous = Number(previous);
-
-    // console.log("Current:", current, "Previous:", previous);
-
-    // Jika previous 0 dan current > 0, naik 100%
     if (previous === 0) {
       return {
         percent: current > 0 ? "100.00" : "0.00",
@@ -73,116 +112,174 @@ export default function PageFrame({ children, data }) {
     };
   };
   let stats = [];
-  if (selectedCategory === "Membership") {
-    stats = [
-      {
-        id: 1,
-        name: "Jumlah Data Call",
-        stat: `${data.data?.jumlah_data_membership || 0}`,
-        before: `${data.data?.jumlah_data_membership_before || 0}`,
-        icon: SignalIcon,
-      },
-      {
-        id: 2,
-        name: "Berminat",
-        stat: `${data.data?.data_berminat_membership || 0}`,
-        before: `${data.data?.data_berminat_membership_before || 0}`,
-        icon: CurrencyDollarIcon,
-        extra: `Cash: ${
-          data.data?.data_berminat_membership_cash || 0
-        }, Transfer: ${data.data?.data_berminat_membership_transfer || 0}`,
-      },
-      {
-        id: 3,
-        name: "Sukses",
-        stat: `${data.data?.data_sukses_membership || 0}`,
-        before: `${data.data?.data_sukses_membership_before || 0}`,
-        icon: CurrencyDollarIcon,
-      },
-      {
-        id: 4,
-        name: "Prospect",
-        stat: `${data.data?.data_prospect_membership || 0}`,
-        before: `${data.data?.data_prospect_membership_before || 0}`,
-        icon: SignalIcon,
-      },
-      {
-        id: 5,
-        name: "Tidak Berminat",
-        stat: `${data.data?.data_tidak_berminat_membership || 0}`,
-        before: `${data.data?.data_tidak_berminat_membership_before || 0}`,
-        icon: LockClosedIcon,
-      },
-      {
-        id: 6,
-        name: "Pending",
-        stat: `${data.data?.data_pending_membership || 0}`,
-        before: `${data.data?.data_pending_membership_before || 0}`,
-        icon: LockClosedIcon,
-      },
-    ];
-  } else {
-    const isPA = selectedCategory === "Asuransi PA";
-    stats = [
-      {
-        id: 2,
-        name: "Berminat",
-        stat: isPA
-          ? `${data.data?.data_berminat_pa || 0}`
-          : `${data.data?.data_berminat_mtr || 0}`,
-        before: isPA
-          ? `${data.data?.data_berminat_pa_before || 0}`
-          : `${data.data?.data_berminat_mtr_before || 0}`,
-        icon: CurrencyDollarIcon,
-      },
-      {
-        id: 3,
-        name: "Sukses",
-        stat: isPA
-          ? `${data.data?.data_sukses_pa || 0}`
-          : `${data.data?.data_sukses_mtr || 0}`,
-        before: isPA
-          ? `${data.data?.data_sukses_pa_before || 0}`
-          : `${data.data?.data_sukses_mtr_before || 0}`,
-        icon: CurrencyDollarIcon,
-      },
-      {
-        id: 4,
-        name: "Prospect",
-        stat: isPA
-          ? `${data.data?.data_prospect_pa || 0}`
-          : `${data.data?.data_prospect_mtr || 0}`,
-        before: isPA
-          ? `${data.data?.data_prospect_pa_before || 0}`
-          : `${data.data?.data_prospect_mtr_before || 0}`,
-        icon: SignalIcon,
-      },
-      {
-        id: 5,
-        name: "Tidak Berminat",
-        stat: isPA
-          ? `${data.data?.data_tidak_berminat_pa || 0}`
-          : `${data.data?.data_tidak_berminat_mtr || 0}`,
-        before: isPA
-          ? `${data.data?.data_tidak_berminat_pa_before || 0}`
-          : `${data.data?.data_tidak_berminat_mtr_before || 0}`,
-        icon: LockClosedIcon,
-      },
-      {
-        id: 6,
-        name: "Pending",
-        stat: isPA
-          ? `${data.data?.data_pending_pa || 0}`
-          : `${data.data?.data_pending_mtr || 0}`,
-        before: isPA
-          ? `${data.data?.data_pending_pa_before || 0}`
-          : `${data.data?.data_pending_mtr_before || 0}`,
-        icon: LockClosedIcon,
-      },
-    ];
-  }
+  const formatNumber = (num) => new Intl.NumberFormat("id-ID").format(Number(num) || 0);
+if (selectedCategory === "Membership") {
+  stats = [
+    {
+      id: 1,
+      name: "Jumlah Data Call",
+      stat: formatNumber(data.data?.jumlah_data_membership),
+      before: formatNumber(data.data?.jumlah_data_membership_before),
+      icon: SignalIcon,
+    },
+    {
+      id: 2,
+      name: "Berminat",
+      stat: formatNumber(data.data?.data_berminat_membership),
+      before: formatNumber(data.data?.data_berminat_membership_before),
+      icon: CurrencyDollarIcon,
+      extra: `Cash: ${formatNumber(data.data?.data_berminat_membership_cash)}, Transfer: ${formatNumber(data.data?.data_berminat_membership_transfer)}`,
+    },
+    {
+      id: 3,
+      name: "Sukses",
+      stat: formatNumber(data.data?.data_sukses_membership),
+      before: formatNumber(data.data?.data_sukses_membership_before),
+      icon: CurrencyDollarIcon,
+    },
+    {
+      id: 4,
+      name: "Prospect",
+      stat: formatNumber(data.data?.data_prospect_membership),
+      before: formatNumber(data.data?.data_prospect_membership_before),
+      icon: SignalIcon,
+    },
+    {
+      id: 5,
+      name: "Tidak Berminat",
+      stat: formatNumber(data.data?.data_tidak_berminat_membership),
+      before: formatNumber(data.data?.data_tidak_berminat_membership_before),
+      icon: LockClosedIcon,
+    },
+    {
+      id: 6,
+      name: "Pending",
+      stat: formatNumber(data.data?.data_pending_membership),
+      before: formatNumber(data.data?.data_pending_membership_before),
+      icon: LockClosedIcon,
+    },
+  ];
+} else {
+  const isPA = selectedCategory === "Asuransi PA";
+  stats = [
+    {
+      id: 2,
+      name: "Berminat",
+      stat: formatNumber(isPA ? data.data?.data_berminat_pa : data.data?.data_berminat_mtr),
+      before: formatNumber(isPA ? data.data?.data_berminat_pa_before : data.data?.data_berminat_mtr_before),
+      icon: CurrencyDollarIcon,
+    },
+    {
+      id: 3,
+      name: "Sukses",
+      stat: formatNumber(isPA ? data.data?.data_sukses_pa : data.data?.data_sukses_mtr),
+      before: formatNumber(isPA ? data.data?.data_sukses_pa_before : data.data?.data_sukses_mtr_before),
+      icon: CurrencyDollarIcon,
+    },
+    {
+      id: 4,
+      name: "Prospect",
+      stat: formatNumber(isPA ? data.data?.data_prospect_pa : data.data?.data_prospect_mtr),
+      before: formatNumber(isPA ? data.data?.data_prospect_pa_before : data.data?.data_prospect_mtr_before),
+      icon: SignalIcon,
+    },
+    {
+      id: 5,
+      name: "Tidak Berminat",
+      stat: formatNumber(isPA ? data.data?.data_tidak_berminat_pa : data.data?.data_tidak_berminat_mtr),
+      before: formatNumber(isPA ? data.data?.data_tidak_berminat_pa_before : data.data?.data_tidak_berminat_mtr_before),
+      icon: LockClosedIcon,
+    },
+    {
+      id: 6,
+      name: "Pending",
+      stat: formatNumber(isPA ? data.data?.data_pending_pa : data.data?.data_pending_mtr),
+      before: formatNumber(isPA ? data.data?.data_pending_pa_before : data.data?.data_pending_mtr_before),
+      icon: LockClosedIcon,
+    },
+  ];
+}
 
-  const chartOptions = {
+
+  const chartPieWithDrilldown = {
+    chart: {
+      type: "pie",
+    },
+    title: {
+      text: "Data Berminat Produk",
+    },
+    accessibility: {
+      announceNewData: {
+        enabled: true,
+      },
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: "{point.name}: {point.y}",
+        },
+      },
+    },
+
+    series: [
+      {
+        name: "Kategori",
+        colorByPoint: true,
+        data: [
+          {
+            name: "Membership",
+            y: data.data?.data_berminat_membership || 0,
+            drilldown: "membership",
+          },
+          {
+            name: "PA",
+            y: data.data?.data_berminat_pa || 0,
+            drilldown: "pa",
+          },
+          {
+            name: "Motor",
+            y: data.data?.data_berminat_mtr || 0,
+            drilldown: "mtr",
+          },
+        ],
+      },
+    ],
+    drilldown: {
+      series: [
+        {
+          name: "Membership",
+          id: "membership",
+          data: [
+            ["Basic", data.data?.data_member_basic || 0],
+            ["Gold", data.data?.data_member_gold || 0],
+            ["Platinum", data.data?.data_member_plat || 0],
+            ["Platinum Plus", data.data?.data_member_plat_plus || 0],
+          ],
+        },
+        {
+          name: "PA",
+          id: "pa",
+          data: [
+            ["Panda 1", data.data?.data_panda1 || 0],
+            ["Panda 2", data.data?.data_panda2 || 0],
+            ["Panda 3", data.data?.data_panda3 || 0],
+          ],
+        },
+        {
+          name: "Motor",
+          id: "mtr",
+          data: [
+            ["TLO", data.data?.data_tlo || 0],
+            ["TLO Plus", data.data?.data_tlo_plus || 0],
+            ["Komersial", data.data?.data_komersial || 0],
+          ],
+        },
+      ],
+    },
+  };
+
+  const chartTs = {
     chart: {
       type: "spline",
     },
@@ -215,23 +312,35 @@ export default function PageFrame({ children, data }) {
     },
     series: [
       {
-        name: "Berminat Membership",
+        name: "Membership",
         data: dataBerminatMembership,
         color: "#1E88E5", // Biru
       },
       {
-        name: "Berminat PA",
+        name: "Asuransi PA",
         data: dataBerminatPA,
         color: "#F57C00", // Oranye
       },
       {
-        name: "Berminat Motor",
+        name: "Asuransi Motor",
         data: dataBerminatMTR,
         color: "#43A047", // Hijau
       },
     ],
   };
-
+  
+  if (isLoading || isDateLoading) {
+    return (
+      <div className="w-full h-[500px] flex items-center justify-center">
+        <div className="text-center">
+          <div className="loader mb-2"></div>
+          <p className="text-gray-600 text-sm">
+            Sedang memuat data...
+          </p>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="grid gap-6 mb-6 md:grid-cols-3">
@@ -272,7 +381,11 @@ export default function PageFrame({ children, data }) {
         </div>
 
         <ButttonExportReportTele
-          params={{ awal_tgl: value.startDate, akhir_tgl: value.endDate }}
+          params={{
+            awal_tgl: value.startDate,
+            akhir_tgl: value.endDate,
+            role: session?.user?.role,
+          }}
         />
       </div>
 
@@ -335,27 +448,38 @@ export default function PageFrame({ children, data }) {
           );
         })}
       </div>
+      <div className="flex w-full overflow-x-auto">
+        <div className="flex w-full">
+          {/* Chart Disini */}
+          <ChartComponent chartOptions={chartTs} />
+        </div>
+      </div>
       <div className="flex w-full">
         {/* Chart Disini */}
-        <ChartComponent chartOptions={chartOptions} />
+        {session?.user?.role == 2 && (
+          <ChartComponent chartOptions={chartPieWithDrilldown} />
+        )}
       </div>
-      <br></br>
-
+      <div className="flex w-full">
+        {/* Chart Disini */}
+        {session?.user?.role == 2 && (
+          <ChartComponent chartOptions={generateChartMapKota(dataWilayah)} />
+        )}
+      </div>
+      <br />
+      {isSearchLoading && (
+      <div className="text-center py-4 text-sm text-gray-500">Memuat hasil pencarian...</div>
+      )}
       <div className="sm:flex lg:items-center">
         <div className="sm:flex-auto">
           <div className="flex flex-col lg:flex-row gap-3 lg:gap-0 lg:items-end">
             <div className="max-w-xs mr-2 w-80">
-              <Search
-                id="search-query"
-                name="search_query"
-                placeholder={"Search for a customer..."}
-              />
+            <Search id="search-query" name="search_query" placeholder={"Search..."} />
             </div>
           </div>
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none"></div>
-      </div>
-
+      </div>  
       <div className="flex flex-col mt-8">
         <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">

@@ -28,12 +28,15 @@ export default function Limit({ id, name, placeholder }) {
       <select
         name={name}
         id={id}
-        defaultValue={searchParams.get("limit")}
+        defaultValue={searchParams.get("limit") || 10}
         value={searchParams.get("limit")}
         placeholder={placeholder}
         onChange={handleChange}
         className={`cursor-pointer appearance-none block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm`}
       >
+        <option value={5} className="py-1 cursor-pointer">
+          5
+        </option>
         <option value={10} className="py-1 cursor-pointer">
           10
         </option>
