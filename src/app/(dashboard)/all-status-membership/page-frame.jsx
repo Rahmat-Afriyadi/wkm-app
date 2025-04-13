@@ -4,6 +4,7 @@ const Search = dynamic(() => import("@/components/Search/index"));
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import Datepicker from "react-tailwindcss-datepicker";
 
 // import Search from "@/components/Search/index";
 
@@ -12,6 +13,7 @@ export default function PageFrame({ children }) {
   const searchParams = useSearchParams();
   const { replace } = useRouter();
   const pathname = usePathname();
+  const [valueDate, setValueDate] = useState({ startDate: "", endDate: "" });
 
   const handleChange = (e) => {
     setSearch(e.target.value);
@@ -30,6 +32,20 @@ export default function PageFrame({ children }) {
     params.set("page", 1);
     setTimeout(() => {}, 300);
     replace(`${pathname}?${params}`);
+  };
+
+  const handleValueChange = (newValue) => {
+    const params = new URLSearchParams(searchParams);
+    if (newValue.startDate != null && newValue.endDate) {
+      params.set("tgl_bayar1", newValue.startDate);
+      params.set("tgl_bayar2", newValue.endDate);
+      replace(`${pathname}?${params}`);
+    } else {
+      params.set("tgl_bayar1", "");
+      params.set("tgl_bayar2", "");
+      replace(`${pathname}?${params}`);
+    }
+    setValueDate(newValue);
   };
 
   return (
@@ -72,17 +88,17 @@ export default function PageFrame({ children }) {
             </button>
           </div>
           <div className="w-3"></div>
-          {/* <div className="w-64">
+          <div className="w-64">
             <Datepicker
               id={"range_tgl_merah"}
               toggleClassName="absolute rounded-r-lg -top-0 right-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
               inputClassName="block w-full border-gray-300 rounded-md focus:ring-cyan-500 focus:border-cyan-500 pl-4 sm:text-sm"
               name={"range_tgl_merah"}
-              value={value}
+              value={valueDate}
               primaryColor={"amber"}
               onChange={handleValueChange}
             />
-          </div> */}
+          </div>
         </div>
       </div>
 

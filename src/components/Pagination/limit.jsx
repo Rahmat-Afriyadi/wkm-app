@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
-import { useDebounce } from "../../lib/hooks/useDebounce";
 
 export default function Limit({ id, name, placeholder }) {
   const [limit, setLimit] = useState(10);
