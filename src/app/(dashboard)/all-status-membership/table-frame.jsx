@@ -77,10 +77,11 @@ export default function TableFrame({ searchParams }) {
       header: "Tanggal Bayar",
       accessorKey: "tgl_bayar_renewal_fin",
       accessorFn: (row) => {
+        console.log(row.tgl_bayar_renewal_fin);
         if (row.tgl_bayar_renewal_fin == null) {
           return "-";
         }
-        formatDate(new Date(row.tgl_bayar_renewal_fin));
+        return formatDate(new Date(row.tgl_bayar_renewal_fin));
       },
     },
     {
