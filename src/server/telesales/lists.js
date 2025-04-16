@@ -43,12 +43,14 @@ export async function readAfterCall(query) {
 }
 
 export async function readAllStatusAfterCall(query) {
-  const { search, limit, pageParams } = query;
+  const { search, tgl_bayar1, tgl_bayar2, limit, pageParams } = query;
 
   const response = await AuthGetApi(
     "/customer-mtr/all-status-master-data?" +
       new URLSearchParams({
         search,
+        tgl_bayar1,
+        tgl_bayar2,
         limit,
         pageParams,
       })
@@ -58,6 +60,8 @@ export async function readAllStatusAfterCall(query) {
     "/customer-mtr/all-status-master-data-count?" +
       new URLSearchParams({
         search,
+        tgl_bayar1,
+        tgl_bayar2,
       })
   );
   return {

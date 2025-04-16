@@ -23,6 +23,8 @@ export default function TableFrame({ searchParams }) {
     queryFn: async () =>
       await readAllStatusAfterCall({
         search: searchParams.search_query ? searchParams.search_query : "",
+        tgl_bayar1: searchParams.tgl_bayar1 ? searchParams.tgl_bayar1 : "",
+        tgl_bayar2: searchParams.tgl_bayar2 ? searchParams.tgl_bayar2 : "",
         limit: searchParams?.limit || 10,
         pageParams: searchParams?.page || 1,
       }),
@@ -70,6 +72,11 @@ export default function TableFrame({ searchParams }) {
       header: "Tanggal Verifikasi",
       accessorKey: "tgl_verifikasi",
       accessorFn: (row) => formatDate(new Date(row.tgl_verifikasi)),
+    },
+    {
+      header: "Tanggal Bayar",
+      accessorKey: "tgl_bayar_renewal_fin",
+      accessorFn: (row) => formatDate(new Date(row.tgl_bayar_renewal_fin)),
     },
     {
       accessorKey: "actions",

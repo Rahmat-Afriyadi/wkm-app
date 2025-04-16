@@ -89,6 +89,8 @@ export default function PageFrame({ children }) {
           </div>
           <div className="w-3"></div>
           <div className="w-64">
+            <label htmlFor="-mt-2">Tanggal Bayar</label>
+            <div className="h-1 w-full"></div>
             <Datepicker
               id={"range_tgl_merah"}
               toggleClassName="absolute rounded-r-lg -top-0 right-0 h-full px-3 text-black focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed"
