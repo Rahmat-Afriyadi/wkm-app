@@ -52,7 +52,14 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     setFocus,
     setError,
     formState: { errors },
-  } = useForm({ defaultValues: isEditing ? { ...defaultValues, alasan_tdk_membership: "" } : {} });
+  } = useForm({
+    defaultValues: isEditing
+      ? {
+          ...defaultValues,
+          alasan_tdk_membership: defaultValues.alasan_tdk_membership ? defaultValues.alasan_tdk_membership : "",
+        }
+      : {},
+  });
 
   const kirimKe = watch("kirim_ke");
   const ketNmWkm = watch("ket_nm_wkm");
