@@ -104,6 +104,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     }
     if (
       now.getFullYear() > tglFaktur.getFullYear() &&
+      Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) >= 0 &&
       Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30
     ) {
       if (values.sts_stnk == 1) {
@@ -117,7 +118,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
         values.sts_stnk = "T";
       }
     }
-    console.log("values sts_stnk ", values.sts_stnk);
     if (values.sts_membership !== "P" && values.sts_membership !== "O") {
       if ((values.sts_asuransi_pa == "P" || values.sts_asuransi_pa == "F") && popUpPa == 1) {
         return Swal.fire({
@@ -153,6 +153,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
       if (
         !values.sts_stnk &&
         now.getFullYear() > tglFaktur.getFullYear() &&
+        Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) >= 0 &&
         Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30 &&
         popUpStnk == 1
       ) {
@@ -681,20 +682,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
           isModalOpen={openMstMtr}
           setIsModalOpen={setOpenMstMtr}
         />
-        {/* <div className="col-span-2 -mt-2 mb-2">
-          <div className="grid grid-cols-2">
-            <div className="col-span-1"></div>
-            <div className="col-span-1">
-              <button
-                id="button"
-                type="submit"
-                className="w-full px-6 py-1 mt-2 text-lg text-black transition-all duration-150 ease-linear rounded-lg shadow outline-none bg-yellow hover:bg-white hover:shadow-lg focus:outline-none border-2 border-yellow"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div> */}
         <div className="col-span-1">
           <p className="text-lg font-bold mb-3">Faktur</p>
           <div className="grid grid-cols-8 gap-3">
@@ -1232,6 +1219,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
             <div className="col-span-1"></div>
 
             {now.getFullYear() > tglFaktur.getFullYear() &&
+            Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) >= 0 &&
             Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30 ? (
               <div className="row-span-5 flex justify-center items-center col-span-3 ">
                 <div className="flex flex-col items-center justify-center gap-2 border-2 border-slate-400 bg-slate-50 rounded-lg p-2">
