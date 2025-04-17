@@ -56,7 +56,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     defaultValues: isEditing
       ? {
           ...defaultValues,
-          alasan_tdk_membership: defaultValues.alasan_tdk_membership ? defaultValues.alasan_tdk_membership : "",
+          alasan_tdk_membership: defaultValues.alasan_tdk_membership != "" ? defaultValues.alasan_tdk_membership : "",
         }
       : {},
   });
@@ -350,6 +350,12 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     queryFn: async () => await detailOtrNoMtr({ no_mtr: noMtrAsuransi, tahun: parseInt(tahunMtr, 10) }),
     initialData: { data: { id: "", otr: 0, tahun: 0, no_mtr: "" } },
   });
+
+  useEffect(() => {
+    if (stsMembership != "T") {
+      setValue("alasan_tdk_membership", "");
+    }
+  }, [stsMembership]); // eslint-disable-line
 
   useEffect(() => {
     if (selectedKodepos) {
