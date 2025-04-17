@@ -52,7 +52,7 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     setFocus,
     setError,
     formState: { errors },
-  } = useForm({ defaultValues: isEditing ? defaultValues : {} });
+  } = useForm({ defaultValues: isEditing ? { ...defaultValues, alasan_tdk_membership: "" } : {} });
 
   const kirimKe = watch("kirim_ke");
   const ketNmWkm = watch("ket_nm_wkm");
@@ -83,17 +83,34 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const asuransiMtrId = watch("asuransi_mtr_id");
 
   const onSubmit = async (values) => {
-    if (values.sts_stnk == 1) {
-      values.sts_stnk = "O";
-      values.id_produk_asuransi_pa = "PRODUK-006";
-      values.sts_asuransi_pa = "O";
-      values.amount_asuransi_pa = "" + produkAsuransiPa.data.filter((e) => e.kd_produk == "PRODUK-006")[0]?.premi;
-    } else if (values.sts_stnk == "") {
-      values.sts_stnk = "";
-    } else {
-      values.sts_stnk = "T";
+    if (values.sts_membership == "T" && values.alasan_tdk_membership == "") {
+      return Swal.fire({
+        title: "Alasan Tidak Membership Harus Diisi",
+        icon: "question",
+        confirmButtonColor: "#0891B2",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Oke",
+        showLoaderOnConfirm: true,
+      }).then(() => {
+        setFocus("alasan_tdk_membership");
+      });
     }
-    event.preventDefault();
+    if (
+      now.getFullYear() > tglFaktur.getFullYear() &&
+      Math.floor((nextYearFaktur - now) / (1000 * 60 * 60 * 24)) <= 30
+    ) {
+      if (values.sts_stnk == 1) {
+        values.sts_stnk = "O";
+        values.id_produk_asuransi_pa = "PRODUK-006";
+        values.sts_asuransi_pa = "O";
+        values.amount_asuransi_pa = "" + produkAsuransiPa.data.filter((e) => e.kd_produk == "PRODUK-006")[0]?.premi;
+      } else if (values.sts_stnk == "") {
+        values.sts_stnk = "";
+      } else if (values.sts_stnk == 0) {
+        values.sts_stnk = "T";
+      }
+    }
+    console.log("values sts_stnk ", values.sts_stnk);
     if (values.sts_membership !== "P" && values.sts_membership !== "O") {
       if ((values.sts_asuransi_pa == "P" || values.sts_asuransi_pa == "F") && popUpPa == 1) {
         return Swal.fire({
@@ -202,13 +219,18 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
           },
           onError: (e) => {
             console.log("ini error ", e);
-            Swal.fire("Failed!", e.response.data.message, "error");
+            Swal.fire("Failed!", e.response.data.details, "error");
           },
         });
       },
       allowOutsideClick: () => !Swal.isLoading(),
     });
   };
+
+  const queryCLient = useQueryClient();
+  const mutUpdateCustomer = useMutation({
+    mutationFn: updateOkeMembership,
+  });
 
   const handleRpChange = (e, field) => {
     const inputValue = e.target.value.replace(/Rp\s?|,/g, ""); // Remove existing currency symbol and commas
@@ -247,10 +269,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
   const [menuTab, setMenuTab] = useState(1);
   const [asuransiTypeTab, setAsuransiTypeTab] = useState(1);
 
-  const queryCLient = useQueryClient();
-  const mutUpdateCustomer = useMutation({
-    mutationFn: updateOkeMembership,
-  });
   const { data: kodepos } = useQuery({
     queryKey: ["kodepos"],
     refetchOnWindowFocus: false,
@@ -261,19 +279,19 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
     queryKey: ["alasan-tdk-membership", stsMembership],
     refetchOnWindowFocus: false,
     queryFn: async () => await masterAlasanTdkMembership(stsMembership, "V"),
-    initialData: { data: [{ value: "", nama: "" }] },
+    initialData: { data: [{ value: "", name: "Pilih Alasan Tidak" }] },
   });
   const { data: alasanTdkPa } = useQuery({
     queryKey: ["alasan-tdk-pa", stsMembership],
     refetchOnWindowFocus: false,
     queryFn: async () => await masterAlasanTdkMembership(stsMembership, "P"),
-    initialData: { data: [{ value: "", nama: "" }] },
+    initialData: { data: [{ value: "", name: "" }] },
   });
   const { data: alasanTdkMtr } = useQuery({
     queryKey: ["alasan-tdk-motor", stsMembership],
     refetchOnWindowFocus: false,
     queryFn: async () => await masterAlasanTdkMembership(stsMembership, "M"),
-    initialData: { data: [{ value: "", nama: "" }] },
+    initialData: { data: [{ value: "", name: "" }] },
   });
   const { data: alasanVoidKonfirmasi } = useQuery({
     queryKey: ["alasan-void-konfirmasi"],
@@ -1206,11 +1224,6 @@ export default function FormInputTelesales({ defaultValues, isEditing = false })
                 <div className="flex flex-col items-center justify-center gap-2 border-2 border-slate-400 bg-slate-50 rounded-lg p-2">
                   <p className="font-bold text-center leading-tight">STNK Akan Habis Masa Berlaku, Perpanjang STNK ?</p>
                   <div className="w-full flex justify-center gap-x-2 mt-1">
-                    {/* <input
-                      type="checkbox"
-                      {...register("sts_stnk")}
-                      className="block w-full h-12 cursor-pointer  rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm"
-                    /> */}
                     <label className={`flex items-center gap-1`}>
                       <input
                         type="radio"
